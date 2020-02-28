@@ -23,24 +23,19 @@ namespace GigglyLib.Systems
             ref var sprite = ref entity.Get<CSprite>();
             ref var move = ref entity.Get<CMoving>();
 
-            float amount = move.Remaining - Math.Min(speed, move.Remaining);
-            Console.WriteLine($"Amount: { amount }");
-            Console.WriteLine($"Before: [{ sprite.X }, { sprite.Y }]");
+            move.Remaining -= Math.Min(speed, move.Remaining);
+
             sprite.Y +=
-                pos.Facing == Direction.NORTH ? amount :
-                pos.Facing == Direction.SOUTH ? -amount :
+                pos.Facing == Direction.NORTH ? move.Remaining :
+                pos.Facing == Direction.SOUTH ? -move.Remaining :
                 0;
 
             sprite.X +=
-                pos.Facing == Direction.WEST ? amount :
-                pos.Facing == Direction.EAST ? -amount :
+                pos.Facing == Direction.WEST ? move.Remaining :
+                pos.Facing == Direction.EAST ? -move.Remaining :
                 0;
-            Console.WriteLine($"After: [{ sprite.X }, { sprite.Y }]");
 
             sprite.Rotation = (float)Math.PI / 2 * (int)pos.Facing;
-
-            move.Remaining -= Math.Min(speed, move.Remaining);
-            Console.WriteLine($"Remaining: { move.Remaining }");
 
             if (move.Remaining <= 0.0000001) {
                 entity.Remove<CMoving>();
