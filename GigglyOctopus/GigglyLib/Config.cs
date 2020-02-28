@@ -8,6 +8,11 @@ namespace GigglyLib
 {
     public static class Config
     {
+        private static Random _random = new Random();
         public static float TileSize = 48;
+        public static float Rand()
+        {
+            return (float)_random.NextDouble();
+        }
     }
 }

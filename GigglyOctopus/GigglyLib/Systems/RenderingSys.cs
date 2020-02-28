@@ -21,13 +21,11 @@ namespace GigglyLib.Systems
         {
             CSprite sprite = entity.Get<CSprite>();
             Texture2D texture = entity.Get<CSprite>().Texture;
-            CGridPosition pos = entity.Get<CGridPosition>();
             float scale = 1;
             if (entity.Has<CScalable>())
             {
                 scale = entity.Get<CScalable>().Scale;
             }
-            sb.Begin();
             sb.Draw(
                 // Texture
                 texture,
@@ -40,7 +38,7 @@ namespace GigglyLib.Systems
                 // Rotation
                 sprite.Rotation,
                 // Origin
-                new Vector2(texture.Width / 2 * scale, texture.Height / 2 * scale),
+                new Vector2(texture.Width / 2, texture.Height / 2),
                 // Scale
                 scale,
                 // Sprite Effects
@@ -48,8 +46,6 @@ namespace GigglyLib.Systems
                 // Render Depth
                 sprite.Depth
             );
-            sb.End();
-
             base.Update(state, entity);
         }
     }

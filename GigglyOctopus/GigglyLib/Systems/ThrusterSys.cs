@@ -21,6 +21,43 @@ namespace GigglyLib.Systems
 
         protected override void Update(float state, in Entity entity)
         {
+            float offset = 0.12f;
+
+            var pos = entity.Get<CGridPosition>();
+            var particle = _world.CreateEntity();
+
+            float x = pos.X;
+            float y = pos.Y;
+
+            if (entity.Has<CMoving>())
+            {
+                offset = entity.Get<CMoving>().Remaining / Config.TileSize + 0.12f;
+            }
+
+            x += (Config.Rand() - 0.5f) * 0.2f;
+            y += (Config.Rand() - 0.5f) * 0.2f;
+
+            x +=
+                pos.Facing == Direction.WEST ? offset :
+                pos.Facing == Direction.EAST ? -offset :
+                0;
+
+            y +=
+                pos.Facing == Direction.NORTH ? offset :
+                pos.Facing == Direction.SOUTH ? -offset :
+                0;
+
+            particle.Set(new CGridPosition { X = x, Y = y });
+
+            particle.Set(new CSprite {
+                Texture = _particleTexture,
+                Rotation = Config.Rand() * 2 * (float)Math.PI,
+                Transparency = (Config.Rand() * 0.2f) + 0.12f
+            });
+
+            particle.Set(new CScalable { Scale = (Config.Rand() * 0.4f) + 0.3f });
+            particle.Set(new CParticle { DeltaRotation = Config.Rand() * 0.05f, Velocity = Config.Rand() * 18 });
+
             base.Update(state, entity);
         }
     }

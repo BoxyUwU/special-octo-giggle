@@ -52,13 +52,14 @@ namespace GigglyLib
             player.Set(new CPlayer());
             player.Set(new CGridPosition());
             player.Set(new CMovable());
-            player.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/player") });
+            player.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/player"), Depth = 1 });
 
             updateSys = new SequentialSystem<float>(
                 new InputSys(world),
                 new GridTransformSys(world),
-                new MoverSys(world)
-                //new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star"))
+                new MoverSys(world),
+                new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
+                new ParticleSys(world)
             );
 
             drawSys = new SequentialSystem<float>(
@@ -99,7 +100,9 @@ namespace GigglyLib
             GraphicsDevice.Clear(new Color(15, 15, 15));
             // TODO: Add your drawing code here
 
+            spriteBatch.Begin(SpriteSortMode.FrontToBack);
             drawSys.Update(0.0f);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
