@@ -16,7 +16,8 @@ namespace GigglyLib
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         World world = new World();
-        SequentialSystem<float> seqSys;
+        SequentialSystem<float> updateSys;
+        SequentialSystem<float> drawSys;
 
         public Game1()
         {
@@ -35,14 +36,6 @@ namespace GigglyLib
         /// </summary>
         protected override void Initialize()
         {
-            var testEntity = world.CreateEntity();
-            testEntity.Set(new CPosition());
-            testEntity.Set(new CMovable());
-
-            seqSys = new SequentialSystem<float>(
-                new TestSys(world)
-            );
-
             base.Initialize();
         }
 
@@ -55,7 +48,18 @@ namespace GigglyLib
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            var testEntity = world.CreateEntity();
+            testEntity.Set(new CPosition());
+            testEntity.Set(new CMovable());
+            testEntity.Set(new CRenderable { Texture = Content.Load<Texture2D>("Sprites/player") });
+
+            updateSys = new SequentialSystem<float>(
+                new TestSys(world)
+            );
+
+            drawSys = new SequentialSystem<float>(
+                new RenderingSys(world, spriteBatch)
+            );
         }
 
         /// <summary>
@@ -77,7 +81,7 @@ namespace GigglyLib
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            seqSys.Update(0.0f);
+            updateSys.Update(0.0f);
 
             base.Update(gameTime);
         }
@@ -88,9 +92,10 @@ namespace GigglyLib
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(new Color(15,15,15));
-
+            GraphicsDevice.Clear(new Color(15, 15, 15));
             // TODO: Add your drawing code here
+
+            drawSys.Update(0.0f);
 
             base.Draw(gameTime);
         }
