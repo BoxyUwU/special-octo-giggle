@@ -48,14 +48,17 @@ namespace GigglyLib
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            var testEntity = world.CreateEntity();
-            testEntity.Set(new CPosition());
-            testEntity.Set(new CMovable());
-            testEntity.Set(new CRenderable { Texture = Content.Load<Texture2D>("Sprites/player") });
+            var player = world.CreateEntity();
+            player.Set(new CPlayer());
+            player.Set(new CGridPosition());
+            player.Set(new CMovable());
+            player.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/player") });
 
             updateSys = new SequentialSystem<float>(
                 new InputSys(world),
+                new GridTransformSys(world),
                 new MoverSys(world)
+                //new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star"))
             );
 
             drawSys = new SequentialSystem<float>(

@@ -10,7 +10,7 @@ namespace GigglyLib.Components
         WEST,
     }
 
-    public struct CPosition
+    public struct CGridPosition
     {
         public float X;
         public float Y;

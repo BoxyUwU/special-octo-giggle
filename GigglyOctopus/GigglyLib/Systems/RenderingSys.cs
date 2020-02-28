@@ -12,18 +12,42 @@ namespace GigglyLib.Systems
         SpriteBatch sb;
 
         public RenderingSys(World world, SpriteBatch spriteBatch)
-            : base(world.GetEntities().With<CPosition>().With<CRenderable>().AsSet())
+            : base(world.GetEntities().With<CSprite>().AsSet())
         {
             sb = spriteBatch;
         }
 
         protected override void Update(float state, in Entity entity)
         {
-            Texture2D texture = entity.Get<CRenderable>().Texture;
-            CPosition pos = entity.Get<CPosition>();
-            double rotation = (int) pos.Facing * Math.PI / 2;
+            CSprite sprite = entity.Get<CSprite>();
+            Texture2D texture = entity.Get<CSprite>().Texture;
+            CGridPosition pos = entity.Get<CGridPosition>();
+            float scale = 1;
+            if (entity.Has<CScalable>())
+            {
+                scale = entity.Get<CScalable>().Scale;
+            }
             sb.Begin();
-            sb.Draw(texture, new Vector2(pos.X + 24, pos.Y + 24), null, null, new Vector2(24, 24), (float)rotation);
+            sb.Draw(
+                // Texture
+                texture,
+                // Position
+                new Vector2(sprite.X, sprite.Y),
+                // Source Rectangle (for animations)
+                null,
+                // Tint + Opacity
+                Color.White * (1 - sprite.Transparency),
+                // Rotation
+                sprite.Rotation,
+                // Origin
+                new Vector2(texture.Width / 2 * scale, texture.Height / 2 * scale),
+                // Scale
+                scale,
+                // Sprite Effects
+                SpriteEffects.None,
+                // Render Depth
+                sprite.Depth
+            );
             sb.End();
 
             base.Update(state, entity);
