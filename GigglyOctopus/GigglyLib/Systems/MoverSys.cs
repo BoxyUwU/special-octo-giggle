@@ -41,7 +41,7 @@ namespace GigglyLib.Systems
             else
                 drained.x += moveTo.X;
 
-            if ((moveTo.Y > 0 && moveTo.Y >= drain) || (moveTo.Y > 0 && moveTo.Y <= -drain))
+            if ((moveTo.Y > 0 && moveTo.Y >= drain) || (moveTo.Y < 0 && moveTo.Y <= -drain))
                 drained.y += moveTo.Y != 0 ? (moveTo.Y > 0 ? drain : -drain) : 0;
             else
                 drained.y += moveTo.Y;
