@@ -54,7 +54,8 @@ namespace GigglyLib
             testEntity.Set(new CRenderable { Texture = Content.Load<Texture2D>("Sprites/player") });
 
             updateSys = new SequentialSystem<float>(
-                new TestSys(world)
+                new InputSys(world),
+                new MoverSys(world)
             );
 
             drawSys = new SequentialSystem<float>(
