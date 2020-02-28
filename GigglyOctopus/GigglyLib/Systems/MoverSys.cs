@@ -33,7 +33,7 @@ namespace GigglyLib.Systems
 
         private (int x, int y) DrainMoveTo(ref CMoveTo moveTo)
         {
-            int drain = 6;
+            int drain = 5;
             (int x, int y) drained = (x: 0, y: 0);
 
             if ((moveTo.X > 0 && moveTo.X >= drain) || (moveTo.X < 0 && moveTo.X <= -drain))

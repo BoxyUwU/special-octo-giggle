@@ -19,13 +19,13 @@ namespace GigglyLib.Systems
 
             var keyState = Keyboard.GetState();
             if (keyState.IsKeyDown(Keys.W))
-                y -= 64;
+                y -= 48;
             if (keyState.IsKeyDown(Keys.S))
-                y += 64;
+                y += 48;
             if (keyState.IsKeyDown(Keys.A))
-                x -= 64;
+                x -= 48;
             if (keyState.IsKeyDown(Keys.D))
-                x += 64;
+                x += 48;
 
             entity.Set(new CMoveTo { X = x, Y = y });
 
