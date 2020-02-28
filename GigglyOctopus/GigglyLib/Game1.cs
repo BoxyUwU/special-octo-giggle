@@ -32,7 +32,9 @@ namespace GigglyLib
         /// </summary>
         protected override void Initialize()
         {
-            world.CreateEntity().Set(new CPosition());
+            var testEntity = world.CreateEntity();
+            testEntity.Set(new CPosition());
+            testEntity.Set(new CMovable());
 
             seqSys = new SequentialSystem<float>(
                 new TestSys(world)

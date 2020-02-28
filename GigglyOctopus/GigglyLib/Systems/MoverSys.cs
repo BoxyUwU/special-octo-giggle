@@ -1,6 +1,7 @@
 ﻿using System;
 using DefaultEcs;
 using DefaultEcs.System;
+using Microsoft.Xna.Framework.Input;
 using GigglyLib.Components;
 
 namespace GigglyLib.Systems
@@ -10,7 +11,7 @@ namespace GigglyLib.Systems
         private World _world;
 
         public TestSys(World world)
-            : base(world.GetEntities().With<CPosition>().AsSet())
+            : base(world.GetEntities().With<CPosition>().With<CMovable>().AsSet())
         {
             _world = world;
         }
@@ -19,8 +20,15 @@ namespace GigglyLib.Systems
         {
             ref var pos = ref entity.Get<CPosition>();
             Console.WriteLine(pos.X + ", " + pos.Y);
-            pos.X += 1;
-            pos.Y += 1;
+            var keyState = Keyboard.GetState();
+            if (keyState.IsKeyDown(Keys.W))
+                pos.Y--;
+            if (keyState.IsKeyDown(Keys.S))
+                pos.Y++;
+            if (keyState.IsKeyDown(Keys.A))
+                pos.X--;
+            if (keyState.IsKeyDown(Keys.D))
+                pos.X++;
 
             base.Update(state, entity);
         }
