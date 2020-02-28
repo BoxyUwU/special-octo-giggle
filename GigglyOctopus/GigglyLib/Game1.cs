@@ -1,6 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using DefaultEcs;
+using DefaultEcs.System;
+using GigglyLib.Systems;
+using GigglyLib.Components;
 
 namespace GigglyLib
 {
@@ -11,6 +15,8 @@ namespace GigglyLib
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        World world = new World();
+        SequentialSystem<float> seqSys;
 
         public Game1()
         {
@@ -26,7 +32,11 @@ namespace GigglyLib
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            world.CreateEntity().Set(new CPosition());
+
+            seqSys = new SequentialSystem<float>(
+                new TestSys(world)
+            );
 
             base.Initialize();
         }
@@ -62,7 +72,7 @@ namespace GigglyLib
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            seqSys.Update(0.0f);
 
             base.Update(gameTime);
         }
