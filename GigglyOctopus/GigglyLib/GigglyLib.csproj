@@ -12,9 +12,4 @@
     <PackageReference Include="MonoGame.Framework.Portable" Version="3.7.1.189" />
     <PackageReference Include="DefaultEcs" Version="0.14.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Systems\" />
-    <Folder Include="Components\" />
-  </ItemGroup>
 </Project>

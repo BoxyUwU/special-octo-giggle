@@ -9,39 +9,38 @@ namespace GigglyLib.Systems
     public class InputSys : AEntitySystem<float>
     {
         public InputSys(World world)
-            : base(world.GetEntities().With<CPosition>().With<CMovable>().Without<CMoveTo>().AsSet())
+            : base(world.GetEntities().With<CGridPosition>().With<CMovable>().With<CPlayer>().Without<CMoving>().AsSet())
         { }
 
         protected override void Update(float state, in Entity entity)
         {
-            int x = 0;
-            int y = 0;
-
             var keyState = Keyboard.GetState();
-            ref var pos = ref entity.Get<CPosition>();
+            ref var pos = ref entity.Get<CGridPosition>();
 
             if (keyState.IsKeyDown(Keys.W))
             {
-                y -= 48;
+                pos.Y--;
                 pos.Facing = Direction.NORTH;
+                entity.Set(new CMoving { Remaining = Config.TileSize });
             }
             else if (keyState.IsKeyDown(Keys.S))
             {
-                y += 48;
+                pos.Y++;
                 pos.Facing = Direction.SOUTH;
+                entity.Set(new CMoving { Remaining = Config.TileSize });
             }
             else if (keyState.IsKeyDown(Keys.A))
             {
-                x -= 48;
+                pos.X--;
                 pos.Facing = Direction.WEST;
+                entity.Set(new CMoving { Remaining = Config.TileSize });
             }
             else if (keyState.IsKeyDown(Keys.D))
             {
-                x += 48;
+                pos.X++;
                 pos.Facing = Direction.EAST;
+                entity.Set(new CMoving { Remaining = Config.TileSize });
             }
-
-            entity.Set(new CMoveTo { X = x, Y = y });
 
             base.Update(state, entity);
         }

@@ -11,44 +11,62 @@ namespace GigglyLib.Systems
         private World _world;
 
         public MoverSys(World world)
-            : base(world.GetEntities().With<CPosition>().With<CMovable>().With<CMoveTo>().AsSet())
+            : base(world.GetEntities().With<CGridPosition>().With<CMovable>().With<CSprite>().With<CMoving>().AsSet())
         {
             _world = world;
         }
 
         protected override void Update(float state, in Entity entity)
         {
-            ref var pos = ref entity.Get<CPosition>();
-            ref var moveTo = ref entity.Get<CMoveTo>();
+            float speed = 6;
+            ref var pos = ref entity.Get<CGridPosition>();
+            ref var sprite = ref entity.Get<CSprite>();
+            ref var move = ref entity.Get<CMoving>();
 
-            var (x, y) = DrainMoveTo(ref moveTo);
-            pos.X += x;
-            pos.Y += y;
+            float amount = move.Remaining - Math.Min(speed, move.Remaining);
+            Console.WriteLine($"Amount: { amount }");
+            Console.WriteLine($"Before: [{ sprite.X }, { sprite.Y }]");
+            sprite.Y +=
+                pos.Facing == Direction.NORTH ? amount :
+                pos.Facing == Direction.SOUTH ? -amount :
+                0;
 
-            if (moveTo.X == 0 && moveTo.Y == 0)
-                entity.Remove<CMoveTo>();
+            sprite.X +=
+                pos.Facing == Direction.WEST ? amount :
+                pos.Facing == Direction.EAST ? -amount :
+                0;
+            Console.WriteLine($"After: [{ sprite.X }, { sprite.Y }]");
 
+            sprite.Rotation = (float)Math.PI / 2 * (int)pos.Facing;
+
+            move.Remaining -= Math.Min(speed, move.Remaining);
+            Console.WriteLine($"Remaining: { move.Remaining }");
+
+            if (move.Remaining <= 0.0000001) {
+                entity.Remove<CMoving>();
+            }
+                
             base.Update(state, entity);
         }
 
-        private (int x, int y) DrainMoveTo(ref CMoveTo moveTo)
-        {
-            int drain = 5;
-            (int x, int y) drained = (x: 0, y: 0);
+        //private (int x, int y) DrainMoveTo(ref CMoveTo moveTo)
+        //{
+        //    int drain = 5;
+        //    (int x, int y) drained = (x: 0, y: 0);
 
-            if ((moveTo.X > 0 && moveTo.X >= drain) || (moveTo.X < 0 && moveTo.X <= -drain))
-                drained.x += moveTo.X != 0 ? (moveTo.X > 0 ? drain : -drain) : 0;
-            else
-                drained.x += moveTo.X;
+        //    if ((moveTo.X > 0 && moveTo.X >= drain) || (moveTo.X < 0 && moveTo.X <= -drain))
+        //        drained.x += moveTo.X != 0 ? (moveTo.X > 0 ? drain : -drain) : 0;
+        //    else
+        //        drained.x += moveTo.X;
 
-            if ((moveTo.Y > 0 && moveTo.Y >= drain) || (moveTo.Y < 0 && moveTo.Y <= -drain))
-                drained.y += moveTo.Y != 0 ? (moveTo.Y > 0 ? drain : -drain) : 0;
-            else
-                drained.y += moveTo.Y;
+        //    if ((moveTo.Y > 0 && moveTo.Y >= drain) || (moveTo.Y < 0 && moveTo.Y <= -drain))
+        //        drained.y += moveTo.Y != 0 ? (moveTo.Y > 0 ? drain : -drain) : 0;
+        //    else
+        //        drained.y += moveTo.Y;
                 
-            moveTo.X -= drained.x;
-            moveTo.Y -= drained.y;
-            return drained;
-        }
+        //    moveTo.X -= drained.x;
+        //    moveTo.Y -= drained.y;
+        //    return drained;
+        //}
     }
 }
