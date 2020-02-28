@@ -56,10 +56,10 @@ namespace GigglyLib
 
             updateSys = new SequentialSystem<float>(
                 new InputSys(world),
-                new GridTransformSys(world),
-                new MoverSys(world),
                 new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
-                new ParticleSys(world)
+                new ParticleSys(world),
+                new GridTransformSys(world),
+                new MoverSys(world)
             );
 
             drawSys = new SequentialSystem<float>(
