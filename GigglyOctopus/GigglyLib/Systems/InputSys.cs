@@ -18,14 +18,28 @@ namespace GigglyLib.Systems
             int y = 0;
 
             var keyState = Keyboard.GetState();
+            ref var pos = ref entity.Get<CPosition>();
+
             if (keyState.IsKeyDown(Keys.W))
+            {
                 y -= 48;
-            if (keyState.IsKeyDown(Keys.S))
+                pos.Facing = Direction.NORTH;
+            }
+            else if (keyState.IsKeyDown(Keys.S))
+            {
                 y += 48;
-            if (keyState.IsKeyDown(Keys.A))
+                pos.Facing = Direction.SOUTH;
+            }
+            else if (keyState.IsKeyDown(Keys.A))
+            {
                 x -= 48;
-            if (keyState.IsKeyDown(Keys.D))
+                pos.Facing = Direction.WEST;
+            }
+            else if (keyState.IsKeyDown(Keys.D))
+            {
                 x += 48;
+                pos.Facing = Direction.EAST;
+            }
 
             entity.Set(new CMoveTo { X = x, Y = y });
 

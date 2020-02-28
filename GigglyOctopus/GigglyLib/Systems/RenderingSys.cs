@@ -21,8 +21,9 @@ namespace GigglyLib.Systems
         {
             Texture2D texture = entity.Get<CRenderable>().Texture;
             CPosition pos = entity.Get<CPosition>();
+            double rotation = (int) pos.Facing * Math.PI / 2;
             sb.Begin();
-            sb.Draw(texture, new Vector2(pos.X, pos.Y), Color.White);
+            sb.Draw(texture, new Vector2(pos.X + 24, pos.Y + 24), null, null, new Vector2(24, 24), (float)rotation);
             sb.End();
 
             base.Update(state, entity);
