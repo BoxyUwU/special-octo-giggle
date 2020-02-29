@@ -27,6 +27,8 @@ namespace GigglyLib.Systems
                 scale = entity.Get<CScalable>().Scale;
             }
 
+            float rotation = sprite.Rotation == 0f ? (entity.Has<CGridPosition>() ? (int)entity.Get<CGridPosition>().Facing * (float)(Math.PI / 2f) : sprite.Rotation) : sprite.Rotation;
+
             if (entity.Has<CSourceRectangle>())
                 sb.Draw(
                     // Texture
@@ -38,7 +40,7 @@ namespace GigglyLib.Systems
                     // Tint + Opacity
                     Color.White * (1 - sprite.Transparency),
                     // Rotation
-                    sprite.Rotation,
+                    rotation,
                     // Origin
                     new Vector2(texture.Width / 2, texture.Height / 2),
                     // Scale
@@ -59,7 +61,7 @@ namespace GigglyLib.Systems
                     // Tint + Opacity
                     Color.White * (1 - sprite.Transparency),
                     // Rotation
-                    sprite.Rotation,
+                    rotation,
                     // Origin
                     new Vector2(texture.Width / 2, texture.Height / 2),
                     // Scale
