@@ -22,8 +22,8 @@ namespace GigglyLib
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = Config.ScreenWidth;
+            graphics.PreferredBackBufferHeight = Config.ScreenHeight;
             IsMouseVisible = true;
             Content.RootDirectory = "Content";
         }
@@ -52,7 +52,22 @@ namespace GigglyLib
             player.Set(new CPlayer());
             player.Set(new CGridPosition());
             player.Set(new CMovable());
-            player.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/player"), Depth = 1 });
+            player.Set(new CSprite { 
+                Texture = Content.Load<Texture2D>("Sprites/player"), 
+                Transparency = 0.1f, 
+                Depth = 1  
+            });
+
+            var background1 = world.CreateEntity();
+            background1.Set(new CParallaxBackground { ScrollVelocity = 0.1f });
+            background1.Set(new CSprite { 
+                X = 225,
+                Y = 225,
+                Texture = Content.Load<Texture2D>("Sprites/bg-stars-1")
+            });
+            background1.Set(new CSourceRectangle { 
+                Rectangle = new Rectangle(0, 0, Config.ScreenWidth + 450, Config.ScreenHeight + 450) 
+            });
 
             updateSys = new SequentialSystem<float>(
                 new InputSys(world),
@@ -100,7 +115,7 @@ namespace GigglyLib
             GraphicsDevice.Clear(new Color(15, 15, 15));
             // TODO: Add your drawing code here
 
-            spriteBatch.Begin(SpriteSortMode.FrontToBack);
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, null, SamplerState.LinearWrap, null, null);
             drawSys.Update(0.0f);
             spriteBatch.End();
 
