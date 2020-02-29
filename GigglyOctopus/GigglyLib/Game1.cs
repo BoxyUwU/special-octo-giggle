@@ -31,6 +31,8 @@ namespace GigglyLib
 
         SequentialSystem<float> drawSys;
 
+        Entity _player;
+
         public static TurnState TurnState = TurnState.Player;
 
         public Game1()
@@ -62,11 +64,11 @@ namespace GigglyLib
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            var player = world.CreateEntity();
-            player.Set(new CPlayer());
-            player.Set(new CGridPosition());
-            player.Set(new CMovable());
-            player.Set(new CSprite { 
+            _player = world.CreateEntity();
+            _player.Set(new CPlayer());
+            _player.Set(new CGridPosition());
+            _player.Set(new CMovable());
+            _player.Set(new CSprite { 
                 Texture = Content.Load<Texture2D>("Sprites/player"), 
                 Transparency = 0.1f, 
                 Depth = 1  
@@ -146,7 +148,7 @@ namespace GigglyLib
                 new ParticleSys(world),
                 new GridTransformSys(world),
                 new InputSys(world),
-                new ParallaxSys(world, player)
+                new ParallaxSys(world, _player)
             );
 
             actionSys = new SequentialSystem<float>(
@@ -155,7 +157,7 @@ namespace GigglyLib
                 new GridTransformSys(world),
                 new MoverSys(world),
                 new EndActionStateSys(world),
-                new ParallaxSys(world, player)
+                new ParallaxSys(world, _player)
             );
 
             AISys = new SequentialSystem<float>(
@@ -163,7 +165,7 @@ namespace GigglyLib
                 new ParticleSys(world),
                 //new GridTransformSys(world),
                 new AISys(world),
-                new ParallaxSys(world, player)
+                new ParallaxSys(world, _player)
             );
         }
 
@@ -210,7 +212,9 @@ namespace GigglyLib
         {
             GraphicsDevice.Clear(new Color(15, 15, 15));
 
-            spriteBatch.Begin(SpriteSortMode.FrontToBack, null, SamplerState.LinearWrap, null, null);
+            (float x, float y) = (-_player.Get<CSprite>().X, -_player.Get<CSprite>().Y);
+            var matrix = Matrix.CreateTranslation(new Vector3(x + 640, y + 360, 0));
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, null, SamplerState.LinearWrap, null, null, null, matrix);
             drawSys.Update(0.0f);
             spriteBatch.End();
 
