@@ -148,8 +148,7 @@ namespace GigglyLib
                 new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
                 new ParticleSys(world),
                 new GridTransformSys(world),
-                new InputSys(world),
-                new ParallaxSys(world, _player)
+                new InputSys(world)
             );
 
             actionSys = new SequentialSystem<float>(
@@ -165,8 +164,7 @@ namespace GigglyLib
                 new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
                 new ParticleSys(world),
                 //new GridTransformSys(world),
-                new AISys(world),
-                new ParallaxSys(world, _player)
+                new AISys(world)
             );
         }
 

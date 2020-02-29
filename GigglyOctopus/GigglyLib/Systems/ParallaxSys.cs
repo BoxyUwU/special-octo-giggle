@@ -26,8 +26,6 @@ namespace GigglyLib.Systems
             ref var sprite = ref entity.Get<CSprite>();
             ref var parallax = ref entity.Get<CParallaxBackground>();
 
-            if (_player.Has<CMoving>())
-            {
                 parallax.OffsetX +=
                     pos.Facing == Direction.WEST ? parallax.ScrollVelocity :
                     pos.Facing == Direction.EAST ? -parallax.ScrollVelocity :
@@ -52,7 +50,6 @@ namespace GigglyLib.Systems
 
                 sprite.X = playerSprite.X - Config.ScreenWidth / 2 + parallax.OffsetX;
                 sprite.Y = playerSprite.Y - Config.ScreenHeight / 2 + parallax.OffsetY;
-            }
 
             base.Update(state, entity);
         }
