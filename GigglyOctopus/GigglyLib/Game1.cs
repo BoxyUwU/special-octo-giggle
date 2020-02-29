@@ -36,8 +36,8 @@ namespace GigglyLib
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = Config.ScreenWidth;
+            graphics.PreferredBackBufferHeight = Config.ScreenHeight;
             IsMouseVisible = true;
             Content.RootDirectory = "Content";
         }
@@ -66,7 +66,69 @@ namespace GigglyLib
             player.Set(new CPlayer());
             player.Set(new CGridPosition());
             player.Set(new CMovable());
-            player.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/player"), Depth = 1 });
+            player.Set(new CSprite { 
+                Texture = Content.Load<Texture2D>("Sprites/player"), 
+                Transparency = 0.1f, 
+                Depth = 1  
+            });
+
+            var bgTexture1 = Content.Load<Texture2D>("Sprites/bg-stars-1");
+            var background1 = world.CreateEntity();
+            background1.Set(new CParallaxBackground { ScrollVelocity = 0.6f });
+            background1.Set(new CSprite { 
+                X = bgTexture1.Width/2,
+                Y = bgTexture1.Height/2,
+                Texture = bgTexture1,
+                Transparency = 0.3f
+            });
+            background1.Set(new CSourceRectangle { 
+                Rectangle = new Rectangle(0, 0, Config.ScreenWidth + bgTexture1.Width, Config.ScreenHeight + bgTexture1.Height) 
+            });
+
+            var bgTexture2 = Content.Load<Texture2D>("Sprites/bg-stars-2");
+            var background2 = world.CreateEntity();
+            background2.Set(new CParallaxBackground { ScrollVelocity = 0.8f });
+            background2.Set(new CSprite
+            {
+                X = bgTexture2.Width / 2,
+                Y = bgTexture2.Height / 2,
+                Texture = bgTexture2,
+                Transparency = 0.1f
+            });
+            background2.Set(new CSourceRectangle
+            {
+                Rectangle = new Rectangle(0, 0, Config.ScreenWidth + bgTexture2.Width, Config.ScreenHeight + bgTexture2.Height)
+            });
+
+            var bgTexture3 = Content.Load<Texture2D>("Sprites/bg-stars-3");
+            var background3 = world.CreateEntity();
+            background3.Set(new CParallaxBackground { ScrollVelocity = 0.2f });
+            background3.Set(new CSprite
+            {
+                X = bgTexture3.Width / 2,
+                Y = bgTexture3.Height / 2,
+                Texture = bgTexture3,
+                Transparency = 0.7f
+            });
+            background3.Set(new CSourceRectangle
+            {
+                Rectangle = new Rectangle(0, 0, Config.ScreenWidth + bgTexture3.Width, Config.ScreenHeight + bgTexture3.Height)
+            });
+
+            var bgTexture4 = Content.Load<Texture2D>("Sprites/bg-stars-4");
+            var background4 = world.CreateEntity();
+            background4.Set(new CParallaxBackground { ScrollVelocity = 0.4f });
+            background4.Set(new CSprite
+            {
+                X = bgTexture4.Width / 2,
+                Y = bgTexture4.Height / 2,
+                Texture = bgTexture4,
+                Transparency = 0.5f
+            });
+            background4.Set(new CSourceRectangle
+            {
+                Rectangle = new Rectangle(0, 0, Config.ScreenWidth + bgTexture4.Width, Config.ScreenHeight + bgTexture4.Height)
+            });
 
             var enemy = world.CreateEntity();
             enemy.Set(new CEnemy());
@@ -83,7 +145,8 @@ namespace GigglyLib
                 new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
                 new ParticleSys(world),
                 new GridTransformSys(world),
-                new InputSys(world)
+                new InputSys(world),
+                new ParallaxSys(world, player)
             );
 
             actionSys = new SequentialSystem<float>(
@@ -91,14 +154,16 @@ namespace GigglyLib
                 new ParticleSys(world),
                 new GridTransformSys(world),
                 new MoverSys(world),
-                new EndActionStateSys(world)
+                new EndActionStateSys(world),
+                new ParallaxSys(world, player)
             );
 
             AISys = new SequentialSystem<float>(
                 new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
                 new ParticleSys(world),
                 //new GridTransformSys(world),
-                new AISys(world)
+                new AISys(world),
+                new ParallaxSys(world, player)
             );
         }
 
@@ -145,7 +210,7 @@ namespace GigglyLib
         {
             GraphicsDevice.Clear(new Color(15, 15, 15));
 
-            spriteBatch.Begin(SpriteSortMode.FrontToBack);
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, null, SamplerState.LinearWrap, null, null);
             drawSys.Update(0.0f);
             spriteBatch.End();
 

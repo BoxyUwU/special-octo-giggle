@@ -29,26 +29,49 @@ namespace GigglyLib.Systems
 
             float rotation = sprite.Rotation == 0f ? (entity.Has<CGridPosition>() ? (int)entity.Get<CGridPosition>().Facing * (float)(Math.PI / 2f) : sprite.Rotation) : sprite.Rotation;
 
-            sb.Draw(
-                // Texture
-                texture,
-                // Position
-                new Vector2(sprite.X, sprite.Y),
-                // Source Rectangle (for animations)
-                null,
-                // Tint + Opacity
-                Color.White * (1 - sprite.Transparency),
-                // Rotation
-                rotation,
-                // Origin
-                new Vector2(texture.Width / 2, texture.Height / 2),
-                // Scale
-                scale,
-                // Sprite Effects
-                SpriteEffects.None,
-                // Render Depth
-                sprite.Depth
-            );
+            if (entity.Has<CSourceRectangle>())
+                sb.Draw(
+                    // Texture
+                    texture,
+                    // Position
+                    new Vector2(sprite.X, sprite.Y),
+                    // Source Rectangle (for animations and tiling)
+                    entity.Get<CSourceRectangle>().Rectangle,
+                    // Tint + Opacity
+                    Color.White * (1 - sprite.Transparency),
+                    // Rotation
+                    rotation,
+                    // Origin
+                    new Vector2(texture.Width / 2, texture.Height / 2),
+                    // Scale
+                    scale,
+                    // Sprite Effects
+                    SpriteEffects.None,
+                    // Render Depth
+                    sprite.Depth
+                );
+            else
+                sb.Draw(
+                    // Texture
+                    texture,
+                    // Position
+                    new Vector2(sprite.X, sprite.Y),
+                    // Source Rectangle (for animations and tiling)
+                    null,
+                    // Tint + Opacity
+                    Color.White * (1 - sprite.Transparency),
+                    // Rotation
+                    rotation,
+                    // Origin
+                    new Vector2(texture.Width / 2, texture.Height / 2),
+                    // Scale
+                    scale,
+                    // Sprite Effects
+                    SpriteEffects.None,
+                    // Render Depth
+                    sprite.Depth
+                );
+
             base.Update(state, entity);
         }
     }
