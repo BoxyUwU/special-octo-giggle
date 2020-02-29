@@ -22,17 +22,16 @@ namespace GigglyLib.Systems
         protected override void Update(float state, in Entity entity)
         {
             var pos = _player.Get<CGridPosition>();
+            var playerSprite = _player.Get<CSprite>();
             ref var sprite = ref entity.Get<CSprite>();
             ref var parallax = ref entity.Get<CParallaxBackground>();
 
-            if (_player.Has<CMoving>())
-            {
-                sprite.X +=
+                parallax.OffsetX +=
                     pos.Facing == Direction.WEST ? parallax.ScrollVelocity :
                     pos.Facing == Direction.EAST ? -parallax.ScrollVelocity :
                     0;
 
-                sprite.Y +=
+                parallax.OffsetY +=
                     pos.Facing == Direction.NORTH ? parallax.ScrollVelocity :
                     pos.Facing == Direction.SOUTH ? -parallax.ScrollVelocity :
                     0;
@@ -40,17 +39,17 @@ namespace GigglyLib.Systems
                 float width = sprite.Texture.Width;
                 float height = sprite.Texture.Height;
 
-                Console.WriteLine($"W:{width}, H:{height}");
+                if (parallax.OffsetX < -width/2)
+                    parallax.OffsetX += width;
+                if (parallax.OffsetX >= width/2)
+                    parallax.OffsetX -= width;
+                if (parallax.OffsetY < -height/2)
+                    parallax.OffsetY += height;
+                if (parallax.OffsetY >= height/2)
+                    parallax.OffsetY -= height;
 
-                if (sprite.X < -width/2)
-                    sprite.X += width;
-                if (sprite.X > width/2)
-                    sprite.X -= width;
-                if (sprite.Y < -height/2)
-                    sprite.Y += height;
-                if (sprite.Y > height/2)
-                    sprite.Y -= height;
-            }
+                sprite.X = playerSprite.X - Config.ScreenWidth / 2 + parallax.OffsetX;
+                sprite.Y = playerSprite.Y - Config.ScreenHeight / 2 + parallax.OffsetY;
 
             base.Update(state, entity);
         }

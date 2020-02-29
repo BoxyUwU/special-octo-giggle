@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using DefaultEcs;
@@ -76,10 +76,11 @@ namespace GigglyLib
 
             var bgTexture1 = Content.Load<Texture2D>("Sprites/bg-stars-1");
             var background1 = world.CreateEntity();
-            background1.Set(new CParallaxBackground { ScrollVelocity = 0.6f });
-            background1.Set(new CSprite { 
-                X = bgTexture1.Width/2,
-                Y = bgTexture1.Height/2,
+            background1.Set(new CParallaxBackground { ScrollVelocity = 1.2f });
+            background1.Set(new CSprite
+            {
+                X = -Config.ScreenWidth / 2,
+                Y = -Config.ScreenHeight / 2,
                 Texture = bgTexture1,
                 Transparency = 0.3f
             });
@@ -89,11 +90,11 @@ namespace GigglyLib
 
             var bgTexture2 = Content.Load<Texture2D>("Sprites/bg-stars-2");
             var background2 = world.CreateEntity();
-            background2.Set(new CParallaxBackground { ScrollVelocity = 0.8f });
+            background2.Set(new CParallaxBackground { ScrollVelocity = 1.5f });
             background2.Set(new CSprite
             {
-                X = bgTexture2.Width / 2,
-                Y = bgTexture2.Height / 2,
+                X = -Config.ScreenWidth / 2,
+                Y = -Config.ScreenHeight / 2,
                 Texture = bgTexture2,
                 Transparency = 0.1f
             });
@@ -104,11 +105,11 @@ namespace GigglyLib
 
             var bgTexture3 = Content.Load<Texture2D>("Sprites/bg-stars-3");
             var background3 = world.CreateEntity();
-            background3.Set(new CParallaxBackground { ScrollVelocity = 0.2f });
+            background3.Set(new CParallaxBackground { ScrollVelocity = 0.6f });
             background3.Set(new CSprite
             {
-                X = bgTexture3.Width / 2,
-                Y = bgTexture3.Height / 2,
+                X = -Config.ScreenWidth / 2,
+                Y = -Config.ScreenHeight / 2,
                 Texture = bgTexture3,
                 Transparency = 0.7f
             });
@@ -119,11 +120,11 @@ namespace GigglyLib
 
             var bgTexture4 = Content.Load<Texture2D>("Sprites/bg-stars-4");
             var background4 = world.CreateEntity();
-            background4.Set(new CParallaxBackground { ScrollVelocity = 0.4f });
+            background4.Set(new CParallaxBackground { ScrollVelocity = 0.9f });
             background4.Set(new CSprite
             {
-                X = bgTexture4.Width / 2,
-                Y = bgTexture4.Height / 2,
+                X = -Config.ScreenWidth / 2,
+                Y = -Config.ScreenHeight / 2,
                 Texture = bgTexture4,
                 Transparency = 0.5f
             });
@@ -147,8 +148,7 @@ namespace GigglyLib
                 new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
                 new ParticleSys(world),
                 new GridTransformSys(world),
-                new InputSys(world),
-                new ParallaxSys(world, _player)
+                new InputSys(world)
             );
 
             actionSys = new SequentialSystem<float>(
@@ -164,8 +164,7 @@ namespace GigglyLib
                 new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
                 new ParticleSys(world),
                 //new GridTransformSys(world),
-                new AISys(world),
-                new ParallaxSys(world, _player)
+                new AISys(world)
             );
         }
 
@@ -192,9 +191,13 @@ namespace GigglyLib
             {
                 case TurnState.Player:
                     playerInputSys.Update(0.0f);
+                    if (TurnState == TurnState.AI)
+                        goto case TurnState.AI;
                     break;
                 case TurnState.AI:
                     AISys.Update(0.0f);
+                    if (TurnState == TurnState.Action)
+                        goto case TurnState.Action;
                     break;
                 case TurnState.Action:
                     actionSys.Update(0.0f);
