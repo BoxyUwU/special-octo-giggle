@@ -77,9 +77,10 @@ namespace GigglyLib
             var bgTexture1 = Content.Load<Texture2D>("Sprites/bg-stars-1");
             var background1 = world.CreateEntity();
             background1.Set(new CParallaxBackground { ScrollVelocity = 0.6f });
-            background1.Set(new CSprite { 
-                X = bgTexture1.Width/2,
-                Y = bgTexture1.Height/2,
+            background1.Set(new CSprite
+            {
+                X = bgTexture1.Width / 2 - Config.ScreenWidth / 2,
+                Y = bgTexture1.Height / 2 - Config.ScreenHeight / 2,
                 Texture = bgTexture1,
                 Transparency = 0.3f
             });
@@ -92,8 +93,8 @@ namespace GigglyLib
             background2.Set(new CParallaxBackground { ScrollVelocity = 0.8f });
             background2.Set(new CSprite
             {
-                X = bgTexture2.Width / 2,
-                Y = bgTexture2.Height / 2,
+                X = bgTexture2.Width / 2 - Config.ScreenWidth / 2,
+                Y = bgTexture2.Height / 2 - Config.ScreenHeight / 2,
                 Texture = bgTexture2,
                 Transparency = 0.1f
             });
@@ -107,8 +108,8 @@ namespace GigglyLib
             background3.Set(new CParallaxBackground { ScrollVelocity = 0.2f });
             background3.Set(new CSprite
             {
-                X = bgTexture3.Width / 2,
-                Y = bgTexture3.Height / 2,
+                X = bgTexture3.Width / 2 - Config.ScreenWidth / 2,
+                Y = bgTexture3.Height / 2 - Config.ScreenHeight / 2,
                 Texture = bgTexture3,
                 Transparency = 0.7f
             });
@@ -122,8 +123,8 @@ namespace GigglyLib
             background4.Set(new CParallaxBackground { ScrollVelocity = 0.4f });
             background4.Set(new CSprite
             {
-                X = bgTexture4.Width / 2,
-                Y = bgTexture4.Height / 2,
+                X = bgTexture4.Width / 2 - Config.ScreenWidth / 2,
+                Y = bgTexture4.Height / 2 - Config.ScreenHeight / 2,
                 Texture = bgTexture4,
                 Transparency = 0.5f
             });

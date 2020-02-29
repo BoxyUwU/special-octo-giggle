@@ -27,12 +27,12 @@ namespace GigglyLib.Systems
 
             if (_player.Has<CMoving>())
             {
-                sprite.X +=
+                parallax.OffsetX +=
                     pos.Facing == Direction.WEST ? parallax.ScrollVelocity :
                     pos.Facing == Direction.EAST ? -parallax.ScrollVelocity :
                     0;
 
-                sprite.Y +=
+                parallax.OffsetY +=
                     pos.Facing == Direction.NORTH ? parallax.ScrollVelocity :
                     pos.Facing == Direction.SOUTH ? -parallax.ScrollVelocity :
                     0;
@@ -40,16 +40,19 @@ namespace GigglyLib.Systems
                 float width = sprite.Texture.Width;
                 float height = sprite.Texture.Height;
 
-                Console.WriteLine($"W:{width}, H:{height}");
+                if (parallax.OffsetX < -width/2 / Config.TileSize)
+                    parallax.OffsetX += width;
+                if (parallax.OffsetX >= width/2 / Config.TileSize)
+                    parallax.OffsetX -= width;
+                if (parallax.OffsetY < -height/2 / Config.TileSize)
+                    parallax.OffsetY += height;
+                if (parallax.OffsetY >= height/2 / Config.TileSize)
+                    parallax.OffsetY -= height;
 
-                if (sprite.X < -width/2)
-                    sprite.X += width;
-                if (sprite.X > width/2)
-                    sprite.X -= width;
-                if (sprite.Y < -height/2)
-                    sprite.Y += height;
-                if (sprite.Y > height/2)
-                    sprite.Y -= height;
+                Console.WriteLine($"X: {parallax.OffsetX}, Y: {parallax.OffsetY}");
+
+                sprite.X = pos.X - Config.ScreenWidth / 2 + parallax.OffsetX;
+                sprite.Y = pos.Y - Config.ScreenHeight / 2 + parallax.OffsetY;
             }
 
             base.Update(state, entity);
