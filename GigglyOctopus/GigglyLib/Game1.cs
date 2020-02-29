@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using DefaultEcs;
@@ -193,9 +193,13 @@ namespace GigglyLib
             {
                 case TurnState.Player:
                     playerInputSys.Update(0.0f);
+                    if (TurnState == TurnState.AI)
+                        goto case TurnState.AI;
                     break;
                 case TurnState.AI:
                     AISys.Update(0.0f);
+                    if (TurnState == TurnState.Action)
+                        goto case TurnState.Action;
                     break;
                 case TurnState.Action:
                     actionSys.Update(0.0f);
