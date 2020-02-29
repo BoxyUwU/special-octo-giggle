@@ -72,15 +72,62 @@ namespace GigglyLib
                 Depth = 1  
             });
 
+            var bgTexture1 = Content.Load<Texture2D>("Sprites/bg-stars-1");
             var background1 = world.CreateEntity();
-            background1.Set(new CParallaxBackground { ScrollVelocity = 1f });
+            background1.Set(new CParallaxBackground { ScrollVelocity = 0.6f });
             background1.Set(new CSprite { 
-                X = 225,
-                Y = 225,
-                Texture = Content.Load<Texture2D>("Sprites/bg-stars-1")
+                X = bgTexture1.Width/2,
+                Y = bgTexture1.Height/2,
+                Texture = bgTexture1,
+                Transparency = 0.3f
             });
             background1.Set(new CSourceRectangle { 
-                Rectangle = new Rectangle(0, 0, Config.ScreenWidth + 450, Config.ScreenHeight + 450) 
+                Rectangle = new Rectangle(0, 0, Config.ScreenWidth + bgTexture1.Width, Config.ScreenHeight + bgTexture1.Height) 
+            });
+
+            var bgTexture2 = Content.Load<Texture2D>("Sprites/bg-stars-2");
+            var background2 = world.CreateEntity();
+            background2.Set(new CParallaxBackground { ScrollVelocity = 0.8f });
+            background2.Set(new CSprite
+            {
+                X = bgTexture2.Width / 2,
+                Y = bgTexture2.Height / 2,
+                Texture = bgTexture2,
+                Transparency = 0.1f
+            });
+            background2.Set(new CSourceRectangle
+            {
+                Rectangle = new Rectangle(0, 0, Config.ScreenWidth + bgTexture2.Width, Config.ScreenHeight + bgTexture2.Height)
+            });
+
+            var bgTexture3 = Content.Load<Texture2D>("Sprites/bg-stars-3");
+            var background3 = world.CreateEntity();
+            background3.Set(new CParallaxBackground { ScrollVelocity = 0.2f });
+            background3.Set(new CSprite
+            {
+                X = bgTexture3.Width / 2,
+                Y = bgTexture3.Height / 2,
+                Texture = bgTexture3,
+                Transparency = 0.7f
+            });
+            background3.Set(new CSourceRectangle
+            {
+                Rectangle = new Rectangle(0, 0, Config.ScreenWidth + bgTexture3.Width, Config.ScreenHeight + bgTexture3.Height)
+            });
+
+            var bgTexture4 = Content.Load<Texture2D>("Sprites/bg-stars-4");
+            var background4 = world.CreateEntity();
+            background4.Set(new CParallaxBackground { ScrollVelocity = 0.4f });
+            background4.Set(new CSprite
+            {
+                X = bgTexture4.Width / 2,
+                Y = bgTexture4.Height / 2,
+                Texture = bgTexture4,
+                Transparency = 0.5f
+            });
+            background4.Set(new CSourceRectangle
+            {
+                Rectangle = new Rectangle(0, 0, Config.ScreenWidth + bgTexture4.Width, Config.ScreenHeight + bgTexture4.Height)
             });
 
             var enemy = world.CreateEntity();
