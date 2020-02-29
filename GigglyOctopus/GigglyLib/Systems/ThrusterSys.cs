@@ -52,11 +52,13 @@ namespace GigglyLib.Systems
             particle.Set(new CSprite {
                 Texture = _particleTexture,
                 Rotation = Config.Rand() * 2 * (float)Math.PI,
-                Transparency = (Config.Rand() * 0.2f) + 0.12f
+                Transparency = (Config.Rand() * 0.2f) + 0.12f,
+                X = x * Config.TileSize,
+                Y = y * Config.TileSize,
             });
 
             particle.Set(new CScalable { Scale = (Config.Rand() * 0.4f) + 0.3f });
-            particle.Set(new CParticle { DeltaRotation = Config.Rand() * 0.05f, Velocity = Config.Rand() * 18 });
+            particle.Set(new CParticle { DeltaRotation = Config.Rand() * 0.05f, Velocity = Config.Rand() * 0.05f });
 
             base.Update(state, entity);
         }

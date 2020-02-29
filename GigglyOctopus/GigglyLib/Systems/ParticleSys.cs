@@ -13,7 +13,7 @@ namespace GigglyLib.Systems
         private Texture2D _particleTexture;
 
         public ParticleSys(World world)
-            : base(world.GetEntities().With<CParticle>().With<CSprite>().AsSet())
+            : base(world.GetEntities().With<CParticle>().With<CGridPosition>().With<CSprite>().AsSet())
         {
             _world = world;
         }
@@ -27,12 +27,13 @@ namespace GigglyLib.Systems
                 scale.Scale *= 0.99f;
             }
 
+            ref var pos = ref entity.Get<CGridPosition>();
             ref var sprite = ref entity.Get<CSprite>();
             ref var particle = ref entity.Get<CParticle>();
             sprite.Transparency *= 1.04f;
             sprite.Rotation += particle.DeltaRotation;
-            sprite.X += (float)(Math.Cos(sprite.Rotation) * particle.Velocity);
-            sprite.Y += (float)(Math.Sin(sprite.Rotation) * particle.Velocity);
+            pos.X += (float)(Math.Cos(sprite.Rotation) * particle.Velocity);
+            pos.Y += (float)(Math.Sin(sprite.Rotation) * particle.Velocity);
 
             if (sprite.Transparency >= 1.0f)
             {

@@ -17,6 +17,7 @@ namespace GigglyLib.Systems
             var keyState = Keyboard.GetState();
             ref var pos = ref entity.Get<CGridPosition>();
 
+            bool moved = true;
             if (keyState.IsKeyDown(Keys.W))
             {
                 pos.Y--;
@@ -41,6 +42,10 @@ namespace GigglyLib.Systems
                 pos.Facing = Direction.EAST;
                 entity.Set(new CMoving { Remaining = Config.TileSize });
             }
+            else
+                moved = false;
+            if (moved)
+                Game1.TurnState = TurnState.AI;
 
             base.Update(state, entity);
         }

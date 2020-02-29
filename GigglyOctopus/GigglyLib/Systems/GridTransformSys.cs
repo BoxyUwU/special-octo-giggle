@@ -18,8 +18,6 @@ namespace GigglyLib.Systems
             ref var sprite = ref entity.Get<CSprite>();
             sprite.X = pos.X * Config.TileSize;
             sprite.Y = pos.Y * Config.TileSize;
-            if (entity.Has<CPlayer>() || entity.Has<CEnemy>())
-                sprite.Rotation = (int)pos.Facing * (float)Math.PI / 2f;
             base.Update(state, entity);
         }
     }
