@@ -22,6 +22,7 @@ namespace GigglyLib.Systems
         protected override void Update(float state, in Entity entity)
         {
             var pos = _player.Get<CGridPosition>();
+            var playerSprite = _player.Get<CSprite>();
             ref var sprite = ref entity.Get<CSprite>();
             ref var parallax = ref entity.Get<CParallaxBackground>();
 
@@ -40,19 +41,17 @@ namespace GigglyLib.Systems
                 float width = sprite.Texture.Width;
                 float height = sprite.Texture.Height;
 
-                if (parallax.OffsetX < -width/2 / Config.TileSize)
+                if (parallax.OffsetX < -width/2)
                     parallax.OffsetX += width;
-                if (parallax.OffsetX >= width/2 / Config.TileSize)
+                if (parallax.OffsetX >= width/2)
                     parallax.OffsetX -= width;
-                if (parallax.OffsetY < -height/2 / Config.TileSize)
+                if (parallax.OffsetY < -height/2)
                     parallax.OffsetY += height;
-                if (parallax.OffsetY >= height/2 / Config.TileSize)
+                if (parallax.OffsetY >= height/2)
                     parallax.OffsetY -= height;
 
-                Console.WriteLine($"X: {parallax.OffsetX}, Y: {parallax.OffsetY}");
-
-                sprite.X = pos.X - Config.ScreenWidth / 2 + parallax.OffsetX;
-                sprite.Y = pos.Y - Config.ScreenHeight / 2 + parallax.OffsetY;
+                sprite.X = playerSprite.X - Config.ScreenWidth / 2 + parallax.OffsetX;
+                sprite.Y = playerSprite.Y - Config.ScreenHeight / 2 + parallax.OffsetY;
             }
 
             base.Update(state, entity);
