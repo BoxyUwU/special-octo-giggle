@@ -59,7 +59,7 @@ namespace GigglyLib
             });
 
             var background1 = world.CreateEntity();
-            background1.Set(new CParallaxBackground { ScrollVelocity = 0.1f });
+            background1.Set(new CParallaxBackground { ScrollVelocity = 1f });
             background1.Set(new CSprite { 
                 X = 225,
                 Y = 225,
@@ -74,7 +74,8 @@ namespace GigglyLib
                 new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
                 new ParticleSys(world),
                 new GridTransformSys(world),
-                new MoverSys(world)
+                new MoverSys(world),
+                new ParallaxSys(world, player)
             );
 
             drawSys = new SequentialSystem<float>(

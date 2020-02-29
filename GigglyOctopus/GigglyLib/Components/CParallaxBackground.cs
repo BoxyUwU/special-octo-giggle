@@ -5,7 +5,5 @@ namespace GigglyLib.Components
     public struct CParallaxBackground
     {
         public float ScrollVelocity;
-        public float OffsetX;
-        public float OffsetY;
     }
 }
