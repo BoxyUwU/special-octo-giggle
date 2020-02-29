@@ -76,7 +76,7 @@ namespace GigglyLib
 
             var bgTexture1 = Content.Load<Texture2D>("Sprites/bg-stars-1");
             var background1 = world.CreateEntity();
-            background1.Set(new CParallaxBackground { ScrollVelocity = 0.6f });
+            background1.Set(new CParallaxBackground { ScrollVelocity = 1.2f });
             background1.Set(new CSprite
             {
                 X = -Config.ScreenWidth / 2,
@@ -90,7 +90,7 @@ namespace GigglyLib
 
             var bgTexture2 = Content.Load<Texture2D>("Sprites/bg-stars-2");
             var background2 = world.CreateEntity();
-            background2.Set(new CParallaxBackground { ScrollVelocity = 0.8f });
+            background2.Set(new CParallaxBackground { ScrollVelocity = 1.5f });
             background2.Set(new CSprite
             {
                 X = -Config.ScreenWidth / 2,
@@ -105,7 +105,7 @@ namespace GigglyLib
 
             var bgTexture3 = Content.Load<Texture2D>("Sprites/bg-stars-3");
             var background3 = world.CreateEntity();
-            background3.Set(new CParallaxBackground { ScrollVelocity = 0.2f });
+            background3.Set(new CParallaxBackground { ScrollVelocity = 0.6f });
             background3.Set(new CSprite
             {
                 X = -Config.ScreenWidth / 2,
@@ -120,7 +120,7 @@ namespace GigglyLib
 
             var bgTexture4 = Content.Load<Texture2D>("Sprites/bg-stars-4");
             var background4 = world.CreateEntity();
-            background4.Set(new CParallaxBackground { ScrollVelocity = 0.4f });
+            background4.Set(new CParallaxBackground { ScrollVelocity = 0.9f });
             background4.Set(new CSprite
             {
                 X = -Config.ScreenWidth / 2,
