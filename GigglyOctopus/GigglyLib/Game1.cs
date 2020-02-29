@@ -5,9 +5,17 @@ using DefaultEcs;
 using DefaultEcs.System;
 using GigglyLib.Systems;
 using GigglyLib.Components;
+using System;
 
 namespace GigglyLib
 {
+    public enum TurnState
+    {
+        Player,
+        AI,
+        Action,
+    }
+
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
@@ -16,8 +24,14 @@ namespace GigglyLib
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         World world = new World();
-        SequentialSystem<float> updateSys;
+
+        SequentialSystem<float> playerInputSys;
+        SequentialSystem<float> actionSys;
+        SequentialSystem<float> AISys;
+
         SequentialSystem<float> drawSys;
+
+        public static TurnState TurnState = TurnState.Player;
 
         public Game1()
         {
@@ -54,16 +68,37 @@ namespace GigglyLib
             player.Set(new CMovable());
             player.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/player"), Depth = 1 });
 
-            updateSys = new SequentialSystem<float>(
-                new InputSys(world),
-                new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
-                new ParticleSys(world),
-                new GridTransformSys(world),
-                new MoverSys(world)
-            );
+            var enemy = world.CreateEntity();
+            enemy.Set(new CEnemy());
+            enemy.Set(new CGridPosition { X = 10, Y = 10, Facing = Direction.WEST});
+            enemy.Set(new CMovable());
+            enemy.Set(new CMoving());
+            enemy.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 1, X = 10*Config.TileSize, Y = 10*Config.TileSize, });
 
             drawSys = new SequentialSystem<float>(
                 new RenderingSys(world, spriteBatch)
+            );
+
+            playerInputSys = new SequentialSystem<float>(
+                new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
+                new ParticleSys(world),
+                new GridTransformSys(world),
+                new InputSys(world)
+            );
+
+            actionSys = new SequentialSystem<float>(
+                new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
+                new ParticleSys(world),
+                new GridTransformSys(world),
+                new MoverSys(world),
+                new EndActionStateSys(world)
+            );
+
+            AISys = new SequentialSystem<float>(
+                new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
+                new ParticleSys(world),
+                //new GridTransformSys(world),
+                new AISys(world)
             );
         }
 
@@ -85,8 +120,19 @@ namespace GigglyLib
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            updateSys.Update(0.0f);
+                
+            switch (TurnState)
+            {
+                case TurnState.Player:
+                    playerInputSys.Update(0.0f);
+                    break;
+                case TurnState.AI:
+                    AISys.Update(0.0f);
+                    break;
+                case TurnState.Action:
+                    actionSys.Update(0.0f);
+                    break;
+            }
 
             base.Update(gameTime);
         }
@@ -98,7 +144,6 @@ namespace GigglyLib
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(new Color(15, 15, 15));
-            // TODO: Add your drawing code here
 
             spriteBatch.Begin(SpriteSortMode.FrontToBack);
             drawSys.Update(0.0f);
