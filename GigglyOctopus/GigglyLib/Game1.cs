@@ -54,6 +54,12 @@ namespace GigglyLib
             player.Set(new CMovable());
             player.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/player"), Depth = 1 });
 
+            var enemy = world.CreateEntity();
+            enemy.Set(new CEnemy());
+            enemy.Set(new CGridPosition { X = 10, Y = 10, Facing = Direction.WEST});
+            enemy.Set(new CMoving());
+            enemy.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 1 });
+
             updateSys = new SequentialSystem<float>(
                 new InputSys(world),
                 new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
