@@ -30,7 +30,7 @@ namespace GigglyLib.Systems
             ref var pos = ref entity.Get<CGridPosition>();
             ref var sprite = ref entity.Get<CSprite>();
             ref var particle = ref entity.Get<CParticle>();
-            sprite.Transparency *= 1.04f;
+            sprite.Transparency *= 1.03f;
             sprite.Rotation += particle.DeltaRotation;
             pos.X += (float)(Math.Cos(sprite.Rotation) * particle.Velocity);
             pos.Y += (float)(Math.Sin(sprite.Rotation) * particle.Velocity);

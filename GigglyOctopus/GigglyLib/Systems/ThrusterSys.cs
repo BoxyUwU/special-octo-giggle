@@ -58,7 +58,7 @@ namespace GigglyLib.Systems
             });
 
             particle.Set(new CScalable { Scale = (Config.Rand() * 0.4f) + 0.3f });
-            particle.Set(new CParticle { DeltaRotation = Config.Rand() * 0.05f, Velocity = Config.Rand() * 0.05f });
+            particle.Set(new CParticle { DeltaRotation = Config.Rand() * 0.05f, Velocity = Config.Rand() * 0.02f });
 
             base.Update(state, entity);
         }
