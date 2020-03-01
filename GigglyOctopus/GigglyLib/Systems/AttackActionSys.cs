@@ -28,7 +28,6 @@ namespace GigglyLib.Systems
             var targetSet = targetBuilder.AsSet().GetEntities();
 
             ref var cTargets = ref entity.Get<CTargets>();
-            cTargets.Entries.Clear();
             for (int i = 0; i < targetSet.Length; i++)
             {
                 var targetPos = targetSet[i].Get<CGridPosition>();
