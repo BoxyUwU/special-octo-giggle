@@ -28,7 +28,7 @@ namespace GigglyLib
         SequentialSystem<float> playerInputSys;
         SequentialSystem<float> actionSys;
         SequentialSystem<float> AISys;
-
+        SequentialSystem<float> particleSeqSys;
         SequentialSystem<float> drawSys;
 
         Entity _player;
@@ -162,27 +162,25 @@ namespace GigglyLib
                 new RenderingSys(world, spriteBatch)
             );
 
-            playerInputSys = new SequentialSystem<float>(
+            particleSeqSys = new SequentialSystem<float>(
                 new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
-                new ParticleSys(world),
-                new GridTransformSys(world),
+                new ParticleSys(world)
+            );
+
+            playerInputSys = new SequentialSystem<float>(
                 new InputSys(world)
             );
 
-            actionSys = new SequentialSystem<float>(
-                new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
-                new ParticleSys(world),
-                new GridTransformSys(world),
-                new MoverSys(world),
-                new EndActionStateSys(world),
-                new ParallaxSys(world, _player)
+            AISys = new SequentialSystem<float>(
+                new AISys(world)
             );
 
-            AISys = new SequentialSystem<float>(
-                new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
-                new ParticleSys(world),
-                //new GridTransformSys(world),
-                new AISys(world)
+            actionSys = new SequentialSystem<float>(
+                new MoverSys(world),
+                new ParallaxSys(world, _player),
+
+                // this should go last
+                new EndActionStateSys(world)
             );
         }
 
@@ -204,7 +202,8 @@ namespace GigglyLib
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-                
+
+            particleSeqSys.Update(0.0f);
             switch (TurnState)
             {
                 case TurnState.Player:
@@ -233,8 +232,8 @@ namespace GigglyLib
         {
             GraphicsDevice.Clear(new Color(15, 15, 15));
 
-            (float x, float y) = (-_player.Get<CSprite>().X, -_player.Get<CSprite>().Y);
-            var matrix = Matrix.CreateTranslation(new Vector3(x + 640, y + 360, 0));
+            (float x, float y) = (-_player.Get<CSprite>().X + 640, -_player.Get<CSprite>().Y + 360);
+            var matrix = Matrix.CreateTranslation(x, y, 0);
             spriteBatch.Begin(SpriteSortMode.FrontToBack, null, SamplerState.LinearWrap, null, null, null, matrix);
             drawSys.Update(0.0f);
             spriteBatch.End();

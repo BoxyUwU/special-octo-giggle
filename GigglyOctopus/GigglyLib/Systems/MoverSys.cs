@@ -18,24 +18,25 @@ namespace GigglyLib.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-            float speed = 6;
+            int speed = 6;
             ref var pos = ref entity.Get<CGridPosition>();
             ref var sprite = ref entity.Get<CSprite>();
             ref var move = ref entity.Get<CMoving>();
 
-            move.Remaining -= Math.Min(speed, move.Remaining);
+            int distance = Math.Min(speed, move.Remaining);
+            move.Remaining -= distance;
 
-            sprite.Y +=
-                pos.Facing == Direction.NORTH ? move.Remaining :
-                pos.Facing == Direction.SOUTH ? -move.Remaining :
+            sprite.Y -=
+                pos.Facing == Direction.NORTH ? distance :
+                pos.Facing == Direction.SOUTH ? -distance :
                 0;
 
-            sprite.X +=
-                pos.Facing == Direction.WEST ? move.Remaining :
-                pos.Facing == Direction.EAST ? -move.Remaining :
+            sprite.X -=
+                pos.Facing == Direction.WEST ? distance :
+                pos.Facing == Direction.EAST ? -distance :
                 0;
 
-            if (move.Remaining <= 0.0000001) {
+            if (move.Remaining == 0) {
                 entity.Remove<CMoving>();
             }
                 

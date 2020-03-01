@@ -3,6 +3,6 @@ namespace GigglyLib.Components
 {
     public struct CMoving
     {
-        public float Remaining;
+        public int Remaining;
     }
 }

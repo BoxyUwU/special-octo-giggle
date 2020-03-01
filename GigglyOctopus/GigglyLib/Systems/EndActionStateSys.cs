@@ -20,7 +20,18 @@ namespace GigglyLib.Systems
         {
             var movings = _world.GetEntities().With<CMoving>().AsSet();
             if (movings.Count == 0)
+            {
                 Game1.TurnState = TurnState.Player;
+
+                var set = _world.GetEntities().With<CSprite>().With<CGridPosition>().AsSet();
+                foreach (var entity in set.GetEntities())
+                {
+                    ref var sprite = ref entity.Get<CSprite>();
+                    var pos = entity.Get<CGridPosition>();
+                    sprite.X = pos.X * Config.TileSize;
+                    sprite.Y = pos.Y * Config.TileSize;
+                }
+            }
         }
     }
 }
