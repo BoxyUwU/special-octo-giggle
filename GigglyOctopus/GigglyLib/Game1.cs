@@ -133,6 +133,24 @@ namespace GigglyLib
                 Rectangle = new Rectangle(0, 0, Config.ScreenWidth + bgTexture4.Width, Config.ScreenHeight + bgTexture4.Height)
             });
 
+            var gridTexture = Content.Load<Texture2D>("Sprites/grid");
+            var grid = world.CreateEntity();
+            grid.Set(new CParallaxBackground { 
+                ScrollVelocity = 6,
+                OffsetY = gridTexture.Height / 2 - 0.5f,
+                OffsetX = 15.5f
+            });
+            grid.Set(new CSprite
+            {
+                X = 15.5f - Config.ScreenWidth / 2,
+                Y = gridTexture.Height / 2 - 0.5f - Config.ScreenHeight / 2,
+                Texture = gridTexture
+            });
+            grid.Set(new CSourceRectangle
+            {
+                Rectangle = new Rectangle(0, 0, Config.ScreenWidth + gridTexture.Width, Config.ScreenHeight + gridTexture.Height)
+            });
+
             var enemy = world.CreateEntity();
             enemy.Set(new CEnemy());
             enemy.Set(new CGridPosition { X = 10, Y = 10, Facing = Direction.WEST});
