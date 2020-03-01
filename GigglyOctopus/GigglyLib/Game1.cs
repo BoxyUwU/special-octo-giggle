@@ -211,29 +211,32 @@ namespace GigglyLib
                 Exit();
 
             particleSeqSys.Update(0.0f);
-            switch (RoundState)
+
+            if (RoundState == RoundState.Player)
             {
-                case RoundState.Player:
-                    playerInputSys.Update(0.0f);
-                    if (RoundState == RoundState.AI)
-                        goto case RoundState.AI;
-                    break;
-                case RoundState.PlayerSimulate:
-                    simulateSys.Update(0.0f);
-                    RoundState = RoundState.AI;
-                    goto case RoundState.AI;
-                case RoundState.AI:
-                    AISys.Update(0.0f);
-                    if (RoundState == RoundState.AISimulate)
-                        goto case RoundState.AISimulate;
-                    break;
-                case RoundState.AISimulate:
-                    simulateSys.Update(0.0f);
-                    RoundState = RoundState.TurnVisualiser;
-                    goto case RoundState.TurnVisualiser;
-                case RoundState.TurnVisualiser:
-                    visualiserSys.Update(0.0f);
-                    break;
+                playerInputSys.Update(0.0f);
+            }
+
+            if (RoundState == RoundState.PlayerSimulate)
+            {
+                simulateSys.Update(0.0f);
+                RoundState = RoundState.AI;
+            }
+
+            if (RoundState == RoundState.AI)
+            {
+                AISys.Update(0.0f);
+            }
+
+            if (RoundState == RoundState.AISimulate)
+            {
+                simulateSys.Update(0.0f);
+                RoundState = RoundState.TurnVisualiser;
+            }
+
+            if (RoundState == RoundState.TurnVisualiser)
+            {
+                visualiserSys.Update(0.0f);
             }
 
             base.Update(gameTime);
