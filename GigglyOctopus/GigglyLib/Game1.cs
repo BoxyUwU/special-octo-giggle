@@ -9,11 +9,13 @@ using System;
 
 namespace GigglyLib
 {
-    public enum TurnState
+    public enum RoundState
     {
         Player,
+        PlayerSimulate,
         AI,
-        Action,
+        AISimulate,
+        TurnVisualiser,
     }
 
     /// <summary>
@@ -25,15 +27,16 @@ namespace GigglyLib
         SpriteBatch spriteBatch;
         World world = new World();
 
+        SequentialSystem<float> simulateSys;
         SequentialSystem<float> playerInputSys;
-        SequentialSystem<float> actionSys;
+        SequentialSystem<float> visualiserSys;
         SequentialSystem<float> AISys;
         SequentialSystem<float> particleSeqSys;
         SequentialSystem<float> drawSys;
 
         Entity _player;
 
-        public static TurnState TurnState = TurnState.Player;
+        public static RoundState RoundState = RoundState.Player;
 
         public Game1()
         {
@@ -155,7 +158,6 @@ namespace GigglyLib
             enemy.Set(new CEnemy());
             enemy.Set(new CGridPosition { X = 10, Y = 10, Facing = Direction.WEST});
             enemy.Set(new CMovable());
-            enemy.Set(new CMoving());
             enemy.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 1, X = 10*Config.TileSize, Y = 10*Config.TileSize, });
 
             drawSys = new SequentialSystem<float>(
@@ -175,12 +177,17 @@ namespace GigglyLib
                 new AISys(world)
             );
 
-            actionSys = new SequentialSystem<float>(
+            visualiserSys = new SequentialSystem<float>(
                 new MoverSys(world),
                 new ParallaxSys(world, _player),
 
                 // this should go last
-                new EndActionStateSys(world)
+                new EndVisualiseStateSys(world)
+            );
+
+            simulateSys = new SequentialSystem<float>(
+                new MoveStateSys(world)
+                //new AttackStateSys(world)
             );
         }
 
@@ -204,20 +211,28 @@ namespace GigglyLib
                 Exit();
 
             particleSeqSys.Update(0.0f);
-            switch (TurnState)
+            switch (RoundState)
             {
-                case TurnState.Player:
+                case RoundState.Player:
                     playerInputSys.Update(0.0f);
-                    if (TurnState == TurnState.AI)
-                        goto case TurnState.AI;
+                    if (RoundState == RoundState.AI)
+                        goto case RoundState.AI;
                     break;
-                case TurnState.AI:
+                case RoundState.PlayerSimulate:
+                    simulateSys.Update(0.0f);
+                    RoundState = RoundState.AI;
+                    goto case RoundState.AI;
+                case RoundState.AI:
                     AISys.Update(0.0f);
-                    if (TurnState == TurnState.Action)
-                        goto case TurnState.Action;
+                    if (RoundState == RoundState.AISimulate)
+                        goto case RoundState.AISimulate;
                     break;
-                case TurnState.Action:
-                    actionSys.Update(0.0f);
+                case RoundState.AISimulate:
+                    simulateSys.Update(0.0f);
+                    RoundState = RoundState.TurnVisualiser;
+                    goto case RoundState.TurnVisualiser;
+                case RoundState.TurnVisualiser:
+                    visualiserSys.Update(0.0f);
                     break;
             }
 

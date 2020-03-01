@@ -9,7 +9,7 @@ namespace GigglyLib.Systems
     public class InputSys : AEntitySystem<float>
     {
         public InputSys(World world)
-            : base(world.GetEntities().With<CGridPosition>().With<CMovable>().With<CPlayer>().Without<CMoving>().AsSet())
+            : base(world.GetEntities().With<CGridPosition>().With<CMovable>().With<CPlayer>().AsSet())
         { }
 
         protected override void Update(float state, in Entity entity)
@@ -18,34 +18,26 @@ namespace GigglyLib.Systems
             ref var pos = ref entity.Get<CGridPosition>();
 
             bool moved = true;
-            if (keyState.IsKeyDown(Keys.W))
+            if (keyState.IsKeyDown(Keys.W) || keyState.IsKeyDown(Keys.Up))
             {
-                pos.Y--;
-                pos.Facing = Direction.NORTH;
-                entity.Set(new CMoving { Remaining = Config.TileSize });
+                entity.Set(new CMoveAction { DistY = -1 });
             }
-            else if (keyState.IsKeyDown(Keys.S))
+            else if (keyState.IsKeyDown(Keys.S) || keyState.IsKeyDown(Keys.Down))
             {
-                pos.Y++;
-                pos.Facing = Direction.SOUTH;
-                entity.Set(new CMoving { Remaining = Config.TileSize });
+                entity.Set(new CMoveAction { DistY = 1 });
             }
-            else if (keyState.IsKeyDown(Keys.A))
+            else if (keyState.IsKeyDown(Keys.A) || keyState.IsKeyDown(Keys.Left))
             {
-                pos.X--;
-                pos.Facing = Direction.WEST;
-                entity.Set(new CMoving { Remaining = Config.TileSize });
+                entity.Set(new CMoveAction { DistX = -1 });
             }
-            else if (keyState.IsKeyDown(Keys.D))
+            else if (keyState.IsKeyDown(Keys.D) || keyState.IsKeyDown(Keys.Right))
             {
-                pos.X++;
-                pos.Facing = Direction.EAST;
-                entity.Set(new CMoving { Remaining = Config.TileSize });
+                entity.Set(new CMoveAction { DistX = 1 });
             }
             else
                 moved = false;
             if (moved)
-                Game1.TurnState = TurnState.AI;
+                Game1.RoundState = RoundState.PlayerSimulate;
 
             base.Update(state, entity);
         }

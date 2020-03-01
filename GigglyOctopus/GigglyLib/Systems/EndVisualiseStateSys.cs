@@ -5,10 +5,10 @@ using GigglyLib.Components;
 
 namespace GigglyLib.Systems
 {
-    public class EndActionStateSys : ISystem<float>
+    public class EndVisualiseStateSys : ISystem<float>
     {
         World _world;
-        public EndActionStateSys(World world)
+        public EndVisualiseStateSys(World world)
         {
             _world = world;
         }
@@ -21,7 +21,7 @@ namespace GigglyLib.Systems
             var movings = _world.GetEntities().With<CMoving>().AsSet();
             if (movings.Count == 0)
             {
-                Game1.TurnState = TurnState.Player;
+                Game1.RoundState = RoundState.Player;
 
                 var set = _world.GetEntities().With<CSprite>().With<CGridPosition>().AsSet();
                 foreach (var entity in set.GetEntities())

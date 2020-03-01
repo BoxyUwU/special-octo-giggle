@@ -23,20 +23,19 @@ namespace GigglyLib.Systems
             ref var sprite = ref entity.Get<CSprite>();
             ref var move = ref entity.Get<CMoving>();
 
-            int distance = Math.Min(speed, move.Remaining);
-            move.Remaining -= distance;
+            int x = Math.Abs(move.DistX) < speed ?
+                move.DistX :
+                move.DistX < 0 ? -speed : speed;
+            int y = Math.Abs(move.DistY) < speed ?
+                move.DistY :
+                move.DistY < 0 ? -speed : speed;
 
-            sprite.Y -=
-                pos.Facing == Direction.NORTH ? distance :
-                pos.Facing == Direction.SOUTH ? -distance :
-                0;
+            sprite.Y += y;
+            move.DistY -= y;
+            sprite.X += x;
+            move.DistX -= x;
 
-            sprite.X -=
-                pos.Facing == Direction.WEST ? distance :
-                pos.Facing == Direction.EAST ? -distance :
-                0;
-
-            if (move.Remaining == 0) {
+            if (move.DistX == 0 && move.DistY == 0) {
                 entity.Remove<CMoving>();
             }
                 
