@@ -12,8 +12,8 @@ namespace GigglyLib.Components
 
     public struct CGridPosition
     {
-        public float X;
-        public float Y;
+        public int X;
+        public int Y;
         public Direction Facing;
     }
 }

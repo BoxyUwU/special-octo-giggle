@@ -5,9 +5,9 @@ using GigglyLib.Components;
 
 namespace GigglyLib.Systems
 {
-    public class MoveStateSys : AEntitySystem<float>
+    public class MoveActionSys : AEntitySystem<float>
     {
-        public MoveStateSys(World world)
+        public MoveActionSys(World world)
             : base(world.GetEntities().With<CMoveAction>().With<CGridPosition>().AsSet())
         { }
 
@@ -27,6 +27,7 @@ namespace GigglyLib.Systems
 
             entity.Set(new CMoving { DistX = moving.DistX * Config.TileSize, DistY = moving.DistY * Config.TileSize });
             entity.Remove<CMoveAction>();
+            entity.Set<CAttackAction>();
 
             base.Update(state, entity);
         }
