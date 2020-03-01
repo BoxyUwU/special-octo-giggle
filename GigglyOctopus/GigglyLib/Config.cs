@@ -9,7 +9,7 @@ namespace GigglyLib
     public static class Config
     {
         private static Random _random = new Random();
-        public static float TileSize = 48;
+        public static int TileSize = 48;
         public static int ScreenWidth = 1280;
         public static int ScreenHeight = 720;
 
