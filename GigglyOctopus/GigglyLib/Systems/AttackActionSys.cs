@@ -11,7 +11,7 @@ namespace GigglyLib.Systems
         World _world;
 
         public AttackActionSys(World world)
-            : base(world.GetEntities().With<CGridPosition>().With<CAttackAction>().AsSet())
+            : base(world.GetEntities().With<CGridPosition>().With<CSimTurn>().AsSet())
         {
             _world = world;
         }
@@ -39,6 +39,7 @@ namespace GigglyLib.Systems
                     target.Set(new CTarget {
                         Source = entity.Has<CPlayer>() ? "PLAYER" : "ENEMY"
                     });
+                    break;
                 }
             }
 

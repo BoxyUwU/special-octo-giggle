@@ -17,7 +17,7 @@ namespace GigglyLib.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-            if (Game1.currentRoundState != 4)
+            if (Game1.currentRoundState != 6)
                 return;
 
             ref var target = ref entity.Get<CTarget>();
@@ -25,21 +25,10 @@ namespace GigglyLib.Systems
             if (target.Delay == 0)
             {
                 entity.Set(new CDamageHere { Amount = 1 });
-                entity.Remove<CTargetAnim>();
-                entity.Set(new CTargetAnim
-                {
-                    TargetType =
-                        target.Source == "PLAYER" ? CTargetAnim.Type.PLAYER :
-                        CTargetAnim.Type.DANGER
-                });
                 entity.Remove<CTarget>();
             }
             else
             {
-                if (target.Delay == 1 && target.Source == "ENEMY")
-                {
-                    entity.Set(new CTargetAnim { TargetType = CTargetAnim.Type.WARNING });
-                }
                 target.Delay--;
             }
 

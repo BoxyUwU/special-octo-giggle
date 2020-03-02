@@ -11,6 +11,7 @@ namespace GigglyLib
 {
     public enum RoundState
     {
+        PreTurn,
         Player,
         AI,
         Simulate,
@@ -32,15 +33,18 @@ namespace GigglyLib
         SequentialSystem<float> AISys;
         SequentialSystem<float> particleSeqSys;
         SequentialSystem<float> drawSys;
+        SequentialSystem<float> preTurnSys;
 
         Entity _player;
 
-        public static int currentRoundState = 3;
+        public static int currentRoundState = 4;
         public static RoundState[] roundOrder = new RoundState[]
         {
+            RoundState.PreTurn,
             RoundState.AI,
             RoundState.Simulate,
             RoundState.TurnVisualiser,
+            RoundState.PreTurn,
             RoundState.Player,
             RoundState.Simulate,
             RoundState.TurnVisualiser,
@@ -169,6 +173,18 @@ namespace GigglyLib
             enemy.Set(new CMovable());
             enemy.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 1, X = 10*Config.TileSize, Y = 10*Config.TileSize, });
 
+            var enemy2 = world.CreateEntity();
+            enemy2.Set(new CEnemy());
+            enemy2.Set(new CGridPosition { X = 11, Y = 10, Facing = Direction.WEST });
+            enemy2.Set(new CMovable());
+            enemy2.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 1, X = 11 * Config.TileSize, Y = 10 * Config.TileSize, });
+
+            var enemy3 = world.CreateEntity();
+            enemy3.Set(new CEnemy());
+            enemy3.Set(new CGridPosition { X = 11, Y = 12, Facing = Direction.WEST });
+            enemy3.Set(new CMovable());
+            enemy3.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 1, X = 11 * Config.TileSize, Y = 12 * Config.TileSize, });
+
             drawSys = new SequentialSystem<float>(
                 new SpriteAnimSys(world),
                 new RenderingSys(world, spriteBatch)
@@ -177,6 +193,16 @@ namespace GigglyLib
             particleSeqSys = new SequentialSystem<float>(
                 new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
                 new ParticleSys(world)
+            );
+
+            preTurnSys = new SequentialSystem<float>(
+                new TurnEndSys(world),
+                new AttackActionSys(world),
+                new MarkerSpawnerSys(world, 
+                    Content.Load<Texture2D>("Sprites/target-player"),
+                    Content.Load<Texture2D>("Sprites/target-enemy-danger"),
+                    Content.Load<Texture2D>("Sprites/target-enemy-warning")
+                )
             );
 
             playerInputSys = new SequentialSystem<float>(
@@ -189,23 +215,22 @@ namespace GigglyLib
 
             visualiserSys = new SequentialSystem<float>(
                 new MoverSys(world),
+                new ParallaxSys(world, _player),
                 new TargetHighlightingSys(
                     world,
                     Content.Load<Texture2D>("Sprites/target-player"),
                     Content.Load<Texture2D>("Sprites/target-enemy-danger"),
                     Content.Load<Texture2D>("Sprites/target-enemy-warning")
                 ),
-                new ParallaxSys(world, _player),
-
                 // this should go last
                 new EndVisualiseStateSys(world)
             );
 
             simulateSys = new SequentialSystem<float>(
                 new MoveActionSys(world),
-                new AttackActionSys(world),
                 new TargetDelaySys(world),
-                new DamageHereSys(world)
+                new DamageHereSys(world),
+                new EndSimSys(world)
             );
         }
 
@@ -235,23 +260,25 @@ namespace GigglyLib
                 currentRoundState = currentRoundState % roundOrder.Length;
                 int startingState = currentRoundState;
 
-                if (roundOrder[currentRoundState] == RoundState.Player)
+                switch (roundOrder[currentRoundState])
                 {
-                    playerInputSys.Update(0.0f);
-                }
-                else if (roundOrder[currentRoundState] == RoundState.AI)
-                {
-                    AISys.Update(0.0f);
-                    currentRoundState++;
-                }
-                else if (roundOrder[currentRoundState] == RoundState.Simulate)
-                {
-                    simulateSys.Update(0.0f);
-                    currentRoundState++;
-                }
-                else if (roundOrder[currentRoundState] == RoundState.TurnVisualiser)
-                {
-                    visualiserSys.Update(0.0f);
+                    case RoundState.PreTurn:
+                        preTurnSys.Update(0.0f);
+                        currentRoundState++;
+                        break;
+                    case RoundState.Player:
+                        playerInputSys.Update(0.0f);
+                        break;
+                    case RoundState.AI:
+                        AISys.Update(0.0f);
+                        currentRoundState++;
+                        break;
+                    case RoundState.Simulate:
+                        simulateSys.Update(0.0f);
+                        break;
+                    case RoundState.TurnVisualiser:
+                        visualiserSys.Update(0.0f);
+                        break;
                 }
 
                 if (currentRoundState == startingState || startingState == roundOrder.Length - 1)

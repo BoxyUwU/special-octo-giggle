@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DefaultEcs;
 using DefaultEcs.System;
 using GigglyLib.Components;
@@ -20,12 +21,20 @@ namespace GigglyLib.Systems
             var pos = entity.Get<CGridPosition>();
 
             var ships = _world.GetEntities().With<CGridPosition>().With<CEnemy>().AsSet().GetEntities();
+            var toDispose = new List<Entity>();
+
             for (int i = 0; i < ships.Length; i++)
             {
                 var shipPos = ships[i].Get<CGridPosition>();
                 if (shipPos.X == pos.X && shipPos.Y == pos.Y)
-                    ships[i].Dispose();
+                {
+                    toDispose.Add(ships[i]);
+                }
             }
+
+            foreach (var e in toDispose)
+                e.Dispose();
+
             entity.Remove<CDamageHere>();
             base.Update(state, entity);
         }
