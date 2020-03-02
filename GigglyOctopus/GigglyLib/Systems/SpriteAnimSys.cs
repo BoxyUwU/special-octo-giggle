@@ -25,8 +25,6 @@ namespace GigglyLib.Systems
                 sourceRect.Rectangle.X = sourceRect.Rectangle.Width * anim.currentFrame;
             }
 
-            Console.WriteLine(sourceRect.Rectangle.ToString());
-
             base.Update(state, entity);
         }
     }

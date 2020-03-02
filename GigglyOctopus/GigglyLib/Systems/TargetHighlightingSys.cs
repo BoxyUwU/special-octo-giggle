@@ -11,41 +11,56 @@ namespace GigglyLib.Systems
     {
         World _world;
         Texture2D _playerTexture;
-        public TargetHighlightingSys(World world, Texture2D playerTexture)
-            : base(world.GetEntities().With<CTargets>().With<CGridPosition>().AsSet())
+        Texture2D _dangerTexture;
+        Texture2D _warningTexture;
+        public TargetHighlightingSys(World world, Texture2D playerTexture, Texture2D dangerTexture, Texture2D warningTexture)
+            : base(world.GetEntities().With<CTargetAnim>().With<CGridPosition>().AsSet())
         {
             _world = world;
             _playerTexture = playerTexture;
+            _dangerTexture = dangerTexture;
+            _warningTexture = warningTexture;
         }
 
         protected override void Update(float state, in Entity entity)
         {
-            if (entity.Has<CPlayer>())
+            ref var anim = ref entity.Get<CTargetAnim>();
+            if (!entity.Has<CSprite>())
             {
-                var targets = entity.Get<CTargets>().Entries;
-
-                foreach(var target in targets)
+                entity.Set(new CSprite
                 {
-                    var highlight = _world.CreateEntity();
-                    highlight.Set(new CTargetHighLight());
-                    highlight.Set(new CGridPosition {
-                        X = target.X,
-                        Y = target.Y
-                    });
-                    highlight.Set(new CSprite
-                    {
-                        Texture = _playerTexture,
-                        Transparency = 0.2f
-                    });
-                    highlight.Set(new CSourceRectangle
-                    {
-                        Rectangle = new Rectangle(0, 0, Config.TileSize, Config.TileSize)
-                    });
-                    highlight.Set(new CSpriteAnimation
-                    {
-                        TotalFrames = 12,
-                        SkipFrames = 5
-                    });
+                    Texture =
+                        anim.TargetType == CTargetAnim.Type.PLAYER ? _playerTexture :
+                        anim.TargetType == CTargetAnim.Type.DANGER ? _dangerTexture :
+                        _warningTexture,
+                    Transparency = 1.0f
+                });
+                entity.Set(new CSourceRectangle
+                {
+                    Rectangle = new Rectangle(0, 0, Config.TileSize, Config.TileSize)
+                });
+                entity.Set(new CSpriteAnimation
+                {
+                    TotalFrames = 12,
+                    SkipFrames = 5,
+                });
+            }
+            else if (!anim.FadingOut)
+            {
+                ref var sprite = ref entity.Get<CSprite>();
+                sprite.Transparency -= 0.15f;
+                if (sprite.Transparency <= 0.1)
+                {
+                    anim.FadingOut = true;
+                }
+            }
+            else
+            {
+                ref var sprite = ref entity.Get<CSprite>();
+                sprite.Transparency += 0.125f;
+                if (sprite.Transparency >= 1.0)
+                {
+                    entity.Remove<CTargetAnim>();
                 }
             }
             base.Update(state, entity);

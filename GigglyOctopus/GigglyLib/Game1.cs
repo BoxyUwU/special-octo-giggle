@@ -184,6 +184,12 @@ namespace GigglyLib
             visualiserSys = new SequentialSystem<float>(
                 new MoverSys(world),
                 new ParallaxSys(world, _player),
+                new TargetHighlightingSys(
+                    world,
+                    Content.Load<Texture2D>("Sprites/target-player"),
+                    Content.Load<Texture2D>("Sprites/target-enemy-danger"),
+                    Content.Load<Texture2D>("Sprites/target-enemy-warning")
+                ),
 
                 // this should go last
                 new EndVisualiseStateSys(world)
