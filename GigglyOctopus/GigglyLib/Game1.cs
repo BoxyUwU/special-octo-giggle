@@ -189,7 +189,9 @@ namespace GigglyLib
 
             simulateSys = new SequentialSystem<float>(
                 new MoveActionSys(world),
-                new AttackActionSys(world)
+                new AttackActionSys(world),
+                new TargetDelaySys(world),
+                new DamageHereSys(world)
             );
         }
 
@@ -228,6 +230,7 @@ namespace GigglyLib
             if (RoundState == RoundState.AI)
             {
                 AISys.Update(0.0f);
+                RoundState = RoundState.AISimulate;
             }
 
             if (RoundState == RoundState.AISimulate)
