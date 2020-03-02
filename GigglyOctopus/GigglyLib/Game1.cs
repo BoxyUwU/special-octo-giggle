@@ -33,18 +33,15 @@ namespace GigglyLib
         SequentialSystem<float> AISys;
         SequentialSystem<float> particleSeqSys;
         SequentialSystem<float> drawSys;
-        SequentialSystem<float> preTurnSys;
+        SequentialSystem<float> roundPrepSys;
 
         Entity _player;
 
-        public static int currentRoundState = 4;
+        public static int currentRoundState = 0;
         public static RoundState[] roundOrder = new RoundState[]
         {
             RoundState.PreTurn,
             RoundState.AI,
-            RoundState.Simulate,
-            RoundState.TurnVisualiser,
-            RoundState.PreTurn,
             RoundState.Player,
             RoundState.Simulate,
             RoundState.TurnVisualiser,
@@ -86,7 +83,7 @@ namespace GigglyLib
             _player.Set(new CSprite { 
                 Texture = Content.Load<Texture2D>("Sprites/player"), 
                 Transparency = 0.1f, 
-                Depth = 1  
+                Depth = 0.5f  
             });
 
             var bgTexture1 = Content.Load<Texture2D>("Sprites/bg-stars-1");
@@ -172,21 +169,21 @@ namespace GigglyLib
             enemy.Set(new CGridPosition { X = 10, Y = 10, Facing = Direction.WEST});
             enemy.Set(new CMovable());
             enemy.Set(new CHealth {  Max = 3 });
-            enemy.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 1, X = 10*Config.TileSize, Y = 10*Config.TileSize, });
+            enemy.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 0.25f, X = 10*Config.TileSize, Y = 10*Config.TileSize, });
 
             var enemy2 = world.CreateEntity();
             enemy2.Set(new CEnemy());
             enemy2.Set(new CGridPosition { X = 11, Y = 10, Facing = Direction.WEST });
             enemy2.Set(new CMovable());
             enemy2.Set(new CHealth { Max = 3 });
-            enemy2.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 1, X = 11 * Config.TileSize, Y = 10 * Config.TileSize, });
+            enemy2.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 0.25f, X = 11 * Config.TileSize, Y = 10 * Config.TileSize, });
 
             var enemy3 = world.CreateEntity();
             enemy3.Set(new CEnemy());
             enemy3.Set(new CGridPosition { X = 11, Y = 12, Facing = Direction.WEST });
             enemy3.Set(new CMovable());
             enemy3.Set(new CHealth { Max = 3 });
-            enemy3.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 1, X = 11 * Config.TileSize, Y = 12 * Config.TileSize, });
+            enemy3.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 0.25f, X = 11 * Config.TileSize, Y = 12 * Config.TileSize, });
 
             drawSys = new SequentialSystem<float>(
                 new SpriteAnimSys(world),
@@ -198,8 +195,8 @@ namespace GigglyLib
                 new ParticleSys(world)
             );
 
-            preTurnSys = new SequentialSystem<float>(
-                new TurnEndSys(world),
+            roundPrepSys = new SequentialSystem<float>(
+                new RoundPrepSys(world),
                 new AttackActionSys(world),
                 new MarkerSpawnerSys(world, 
                     Content.Load<Texture2D>("Sprites/target-player"),
@@ -216,6 +213,14 @@ namespace GigglyLib
                 new AISys(world)
             );
 
+            simulateSys = new SequentialSystem<float>(
+                new UpdateTargetAnimTypeSys(world),
+                new TargetDelaySys(world),
+                new DamageHereSys(world),
+                new MoveActionSys(world),
+                new EndSimSys(world)
+            );
+
             visualiserSys = new SequentialSystem<float>(
                 new MoverSys(world),
                 new ParallaxSys(world, _player),
@@ -227,13 +232,6 @@ namespace GigglyLib
                 ),
                 // this should go last
                 new EndVisualiseStateSys(world)
-            );
-
-            simulateSys = new SequentialSystem<float>(
-                new MoveActionSys(world),
-                new TargetDelaySys(world),
-                new DamageHereSys(world),
-                new EndSimSys(world)
             );
         }
 
@@ -266,7 +264,7 @@ namespace GigglyLib
                 switch (roundOrder[currentRoundState])
                 {
                     case RoundState.PreTurn:
-                        preTurnSys.Update(0.0f);
+                        roundPrepSys.Update(0.0f);
                         currentRoundState++;
                         break;
                     case RoundState.Player:

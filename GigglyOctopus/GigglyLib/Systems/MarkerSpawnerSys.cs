@@ -38,26 +38,30 @@ namespace GigglyLib.Systems
                 });
             }
 
-            ref var anim = ref entity.Get<CTargetAnim>();
-            entity.Set(new CSprite
+            if (entity.Has<CTargetAnim>())
             {
-                Texture =
-                        anim.TargetType == CTargetAnim.Type.PLAYER ? _playerTexture :
-                        anim.TargetType == CTargetAnim.Type.DANGER ? _dangerTexture :
-                        _warningTexture,
-                Transparency = 0.0f,
-                X = pos.X * Config.TileSize,
-                Y = pos.Y * Config.TileSize,
-            });
-            entity.Set(new CSourceRectangle
-            {
-                Rectangle = new Rectangle(0, 0, Config.TileSize, Config.TileSize)
-            });
-            entity.Set(new CSpriteAnimation
-            {
-                TotalFrames = 24,
-                SkipFrames = 1,
-            });
+                ref var anim = ref entity.Get<CTargetAnim>();
+                entity.Set(new CSprite
+                {
+                    Texture =
+                            anim.TargetType == CTargetAnim.Type.PLAYER ? _playerTexture :
+                            anim.TargetType == CTargetAnim.Type.DANGER ? _dangerTexture :
+                            _warningTexture,
+                    Transparency = 0.0f,
+                    X = pos.X * Config.TileSize,
+                    Y = pos.Y * Config.TileSize,
+                    Depth = 1,
+                });
+                entity.Set(new CSourceRectangle
+                {
+                    Rectangle = new Rectangle(0, 0, Config.TileSize, Config.TileSize)
+                });
+                entity.Set(new CSpriteAnimation
+                {
+                    TotalFrames = 24,
+                    SkipFrames = 1,
+                });
+            }
 
             base.Update(state, entity);
         }

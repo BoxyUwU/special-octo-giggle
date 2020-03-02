@@ -17,9 +17,6 @@ namespace GigglyLib.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-            if (Game1.currentRoundState != 6)
-                return;
-
             ref var target = ref entity.Get<CTarget>();
 
             if (target.Delay == 0)

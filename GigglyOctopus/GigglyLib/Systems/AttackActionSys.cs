@@ -37,7 +37,7 @@ namespace GigglyLib.Systems
                     var target = _world.CreateEntity();
                     target.Set(new CGridPosition { X = targetPos.X, Y = targetPos.Y });
                     target.Set(new CTarget {
-                        Source = entity.Has<CPlayer>() ? "PLAYER" : "ENEMY"
+                        Source = entity.Has<CPlayer>() ? "PLAYER" : "ENEMY", Delay = 0
                     });
                     break;
                 }

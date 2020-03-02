@@ -5,16 +5,31 @@ using GigglyLib.Components;
 
 namespace GigglyLib.Systems
 {
-    public class MoveActionSys : AEntitySystem<float>
+    public class MoveActionSys : ISystem<float>
     {
+        World _world;
         public MoveActionSys(World world)
-            : base(world.GetEntities().With<CMoveAction>().With<CGridPosition>().AsSet())
-        { }
+        { _world = world; }
 
-        protected override void Update(float state, in Entity entity)
+        public bool IsEnabled { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public void Dispose() { }
+
+        public void Update(float state)
         {
-            ref var pos = ref entity.Get<CGridPosition>();
-            var moving = entity.Get<CMoveAction>();
+            var enemies = _world.GetEntities().With<CGridPosition>().With<CMoveAction>().With<CEnemy>().AsSet().GetEntities();
+            var players = _world.GetEntities().With<CGridPosition>().With<CMoveAction>().With<CPlayer>().AsSet().GetEntities();
+
+            foreach (var e in enemies)
+                MoveEntity(e);
+            foreach (var e in players)
+                MoveEntity(e);
+        }
+
+        private void MoveEntity(Entity e)
+        {
+            ref var pos = ref e.Get<CGridPosition>();
+            var moving = e.Get<CMoveAction>();
 
             pos.Facing =
                 moving.DistX > 0 ? Direction.EAST :
@@ -25,11 +40,9 @@ namespace GigglyLib.Systems
             pos.X += moving.DistX;
             pos.Y += moving.DistY;
 
-            entity.Set(new CMoving { DistX = moving.DistX * Config.TileSize, DistY = moving.DistY * Config.TileSize });
-            entity.Remove<CMoveAction>();
-            entity.Set<CAttackAction>();
-
-            base.Update(state, entity);
+            e.Set(new CMoving { DistX = moving.DistX * Config.TileSize, DistY = moving.DistY * Config.TileSize });
+            e.Remove<CMoveAction>();
+            e.Set<CAttackAction>();
         }
     }
 }

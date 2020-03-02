@@ -25,24 +25,19 @@ namespace GigglyLib.Systems
         protected override void Update(float state, in Entity entity)
         {
             ref var anim = ref entity.Get<CTargetAnim>();
-            //if (!anim.FadingOut)
-            //{
-            //    ref var sprite = ref entity.Get<CSprite>();
-            //    sprite.Transparency -= 0.15f;
-            //    if (sprite.Transparency <= 0.1)
-            //    {
-            //        anim.FadingOut = true;
-            //    }
-            //}
-            //else
-            //{
-                ref var sprite = ref entity.Get<CSprite>();
-                sprite.Transparency += 0.15f;
-                if (sprite.Transparency >= 1.0)
-                {
-                    entity.Remove<CTargetAnim>();
-                }
-            //}
+            ref var sprite = ref entity.Get<CSprite>();
+
+            sprite.Texture =
+                    anim.TargetType == CTargetAnim.Type.PLAYER ? _playerTexture :
+                    anim.TargetType == CTargetAnim.Type.DANGER ? _dangerTexture :
+                    _warningTexture;
+                
+            sprite.Transparency += 0.15f;
+            if (sprite.Transparency >= 1.0)
+            {
+                entity.Remove<CTargetAnim>();
+            }
+
             base.Update(state, entity);
         }
     }

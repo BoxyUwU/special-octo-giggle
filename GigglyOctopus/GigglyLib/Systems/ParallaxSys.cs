@@ -21,9 +21,6 @@ namespace GigglyLib.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-            if (Game1.currentRoundState != 7)
-                return;
-
             var pos = _player.Get<CGridPosition>();
             var playerSprite = _player.Get<CSprite>();
             ref var sprite = ref entity.Get<CSprite>();
