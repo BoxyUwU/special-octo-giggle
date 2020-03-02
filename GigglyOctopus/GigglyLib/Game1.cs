@@ -171,18 +171,21 @@ namespace GigglyLib
             enemy.Set(new CEnemy());
             enemy.Set(new CGridPosition { X = 10, Y = 10, Facing = Direction.WEST});
             enemy.Set(new CMovable());
+            enemy.Set(new CHealth {  Max = 3 });
             enemy.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 1, X = 10*Config.TileSize, Y = 10*Config.TileSize, });
 
             var enemy2 = world.CreateEntity();
             enemy2.Set(new CEnemy());
             enemy2.Set(new CGridPosition { X = 11, Y = 10, Facing = Direction.WEST });
             enemy2.Set(new CMovable());
+            enemy2.Set(new CHealth { Max = 3 });
             enemy2.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 1, X = 11 * Config.TileSize, Y = 10 * Config.TileSize, });
 
             var enemy3 = world.CreateEntity();
             enemy3.Set(new CEnemy());
             enemy3.Set(new CGridPosition { X = 11, Y = 12, Facing = Direction.WEST });
             enemy3.Set(new CMovable());
+            enemy3.Set(new CHealth { Max = 3 });
             enemy3.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 1, X = 11 * Config.TileSize, Y = 12 * Config.TileSize, });
 
             drawSys = new SequentialSystem<float>(

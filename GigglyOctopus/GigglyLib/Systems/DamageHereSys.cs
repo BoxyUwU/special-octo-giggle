@@ -20,15 +20,18 @@ namespace GigglyLib.Systems
         {
             var pos = entity.Get<CGridPosition>();
 
-            var ships = _world.GetEntities().With<CGridPosition>().With<CEnemy>().AsSet().GetEntities();
+            var ships = _world.GetEntities().With<CGridPosition>().With<CEnemy>().With<CHealth>().AsSet().GetEntities();
             var toDispose = new List<Entity>();
 
             for (int i = 0; i < ships.Length; i++)
             {
                 var shipPos = ships[i].Get<CGridPosition>();
+                ref var shipHP = ref ships[i].Get<CHealth>();
                 if (shipPos.X == pos.X && shipPos.Y == pos.Y)
                 {
-                    toDispose.Add(ships[i]);
+                    shipHP.Damage += entity.Get<CDamageHere>().Amount;
+                    if (shipHP.Damage >= shipHP.Max)
+                        toDispose.Add(ships[i]);
                 }
             }
 
