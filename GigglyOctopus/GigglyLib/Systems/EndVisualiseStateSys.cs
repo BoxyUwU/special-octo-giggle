@@ -21,7 +21,7 @@ namespace GigglyLib.Systems
             var movings = _world.GetEntities().With<CMoving>().AsSet();
             if (movings.Count == 0)
             {
-                Game1.RoundState = RoundState.Player;
+                Game1.currentRoundState++;
 
                 var set = _world.GetEntities().With<CSprite>().With<CGridPosition>().AsSet();
                 foreach (var entity in set.GetEntities())

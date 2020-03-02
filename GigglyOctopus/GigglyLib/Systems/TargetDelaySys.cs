@@ -17,7 +17,7 @@ namespace GigglyLib.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-            if (Game1.RoundState != RoundState.PlayerSimulate)
+            if (Game1.currentRoundState != 4)
                 return;
 
             ref var targets = ref entity.Get<CTargets>();

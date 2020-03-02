@@ -36,8 +36,9 @@ namespace GigglyLib.Systems
             }
             else
                 moved = false;
+
             if (moved)
-                Game1.RoundState = RoundState.PlayerSimulate;
+                Game1.currentRoundState++;
 
             base.Update(state, entity);
         }

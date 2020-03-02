@@ -12,9 +12,8 @@ namespace GigglyLib
     public enum RoundState
     {
         Player,
-        PlayerSimulate,
         AI,
-        AISimulate,
+        Simulate,
         TurnVisualiser,
     }
 
@@ -36,7 +35,16 @@ namespace GigglyLib
 
         Entity _player;
 
-        public static RoundState RoundState = RoundState.Player;
+        public static int currentRoundState = 3;
+        public static RoundState[] roundOrder = new RoundState[]
+        {
+            RoundState.AI,
+            RoundState.Simulate,
+            RoundState.TurnVisualiser,
+            RoundState.Player,
+            RoundState.Simulate,
+            RoundState.TurnVisualiser,
+        };
 
         public Game1()
         {
@@ -183,13 +191,13 @@ namespace GigglyLib
 
             visualiserSys = new SequentialSystem<float>(
                 new MoverSys(world),
-                new ParallaxSys(world, _player),
                 new TargetHighlightingSys(
                     world,
                     Content.Load<Texture2D>("Sprites/target-player"),
                     Content.Load<Texture2D>("Sprites/target-enemy-danger"),
                     Content.Load<Texture2D>("Sprites/target-enemy-warning")
                 ),
+                new ParallaxSys(world, _player),
 
                 // this should go last
                 new EndVisualiseStateSys(world)
@@ -224,32 +232,32 @@ namespace GigglyLib
 
             particleSeqSys.Update(0.0f);
 
-            if (RoundState == RoundState.Player)
+            while (true)
             {
-                playerInputSys.Update(0.0f);
-            }
+                currentRoundState = currentRoundState % roundOrder.Length;
+                int startingState = currentRoundState;
 
-            if (RoundState == RoundState.PlayerSimulate)
-            {
-                simulateSys.Update(0.0f);
-                RoundState = RoundState.AI;
-            }
+                if (roundOrder[currentRoundState] == RoundState.Player)
+                {
+                    playerInputSys.Update(0.0f);
+                }
+                else if (roundOrder[currentRoundState] == RoundState.AI)
+                {
+                    AISys.Update(0.0f);
+                    currentRoundState++;
+                }
+                else if (roundOrder[currentRoundState] == RoundState.Simulate)
+                {
+                    simulateSys.Update(0.0f);
+                    currentRoundState++;
+                }
+                else if (roundOrder[currentRoundState] == RoundState.TurnVisualiser)
+                {
+                    visualiserSys.Update(0.0f);
+                }
 
-            if (RoundState == RoundState.AI)
-            {
-                AISys.Update(0.0f);
-                RoundState = RoundState.AISimulate;
-            }
-
-            if (RoundState == RoundState.AISimulate)
-            {
-                simulateSys.Update(0.0f);
-                RoundState = RoundState.TurnVisualiser;
-            }
-
-            if (RoundState == RoundState.TurnVisualiser)
-            {
-                visualiserSys.Update(0.0f);
+                if (currentRoundState == startingState || startingState == roundOrder.Length - 1)
+                    break;
             }
 
             base.Update(gameTime);
