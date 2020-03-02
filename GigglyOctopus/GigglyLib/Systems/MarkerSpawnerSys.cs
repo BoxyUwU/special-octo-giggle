@@ -50,7 +50,7 @@ namespace GigglyLib.Systems
                     Transparency = 0.0f,
                     X = pos.X * Config.TileSize,
                     Y = pos.Y * Config.TileSize,
-                    Depth = 1,
+                    Depth = 0.2f,
                 });
                 entity.Set(new CSourceRectangle
                 {

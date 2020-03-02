@@ -21,7 +21,7 @@ namespace GigglyLib.Systems
 
             if (target.Delay == 0)
             {
-                entity.Set(new CDamageHere { Amount = 1 });
+                entity.Set(new CDamageHere { Amount = target.Damage });
                 entity.Remove<CTarget>();
             }
             else
