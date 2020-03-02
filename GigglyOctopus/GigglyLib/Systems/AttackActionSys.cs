@@ -11,7 +11,7 @@ namespace GigglyLib.Systems
         World _world;
 
         public AttackActionSys(World world)
-            : base(world.GetEntities().With<CGridPosition>().With<CTargets>().With<CAttackAction>().AsSet())
+            : base(world.GetEntities().With<CGridPosition>().With<CAttackAction>().AsSet())
         {
             _world = world;
         }
@@ -21,20 +21,24 @@ namespace GigglyLib.Systems
             ref var pos = ref entity.Get<CGridPosition>();
 
             var targetBuilder = _world.GetEntities().With<CGridPosition>();
+
             if (entity.Has<CEnemy>())
                 targetBuilder.With<CPlayer>();
             if (entity.Has<CPlayer>())
                 targetBuilder.With<CEnemy>();
             var targetSet = targetBuilder.AsSet().GetEntities();
 
-            ref var cTargets = ref entity.Get<CTargets>();
             for (int i = 0; i < targetSet.Length; i++)
             {
                 var targetPos = targetSet[i].Get<CGridPosition>();
                 int distance = Math.Abs(pos.X - targetPos.X) + Math.Abs(pos.Y - targetPos.Y);
                 if (distance < 5)
                 {
-                    cTargets.Entries.Add((X: targetPos.X, Y: targetPos.Y, Delay: 0));
+                    var target = _world.CreateEntity();
+                    target.Set(new CGridPosition { X = targetPos.X, Y = targetPos.Y });
+                    target.Set(new CTarget {
+                        Source = entity.Has<CPlayer>() ? "PLAYER" : "ENEMY"
+                    });
                 }
             }
 

@@ -79,7 +79,6 @@ namespace GigglyLib
             _player.Set(new CPlayer());
             _player.Set(new CGridPosition());
             _player.Set(new CMovable());
-            _player.Set(new CTargets());
             _player.Set(new CSprite { 
                 Texture = Content.Load<Texture2D>("Sprites/player"), 
                 Transparency = 0.1f, 
@@ -168,7 +167,6 @@ namespace GigglyLib
             enemy.Set(new CEnemy());
             enemy.Set(new CGridPosition { X = 10, Y = 10, Facing = Direction.WEST});
             enemy.Set(new CMovable());
-            enemy.Set(new CTargets());
             enemy.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 1, X = 10*Config.TileSize, Y = 10*Config.TileSize, });
 
             drawSys = new SequentialSystem<float>(

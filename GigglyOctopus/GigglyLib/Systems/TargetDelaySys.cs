@@ -10,7 +10,7 @@ namespace GigglyLib.Systems
         World _world;
 
         public TargetDelaySys(World world)
-            : base(world.GetEntities().With<CTargets>().AsSet())
+            : base(world.GetEntities().With<CTarget>().AsSet())
         { 
             _world = world; 
         }
@@ -20,30 +20,27 @@ namespace GigglyLib.Systems
             if (Game1.currentRoundState != 4)
                 return;
 
-            ref var targets = ref entity.Get<CTargets>();
-            for (int i = 0; i < targets.Entries.Count; i++)
+            ref var target = ref entity.Get<CTarget>();
+
+            if (target.Delay == 0)
             {
-                var (X, Y, Delay) = targets.Entries[i];
-                targets.Entries[i] = (X, Y, Delay - 1);
-                if (Delay == 1)
+                entity.Set(new CDamageHere { Amount = 1 });
+                entity.Remove<CTargetAnim>();
+                entity.Set(new CTargetAnim
                 {
-                    var e = _world.CreateEntity();
-                    e.Set(new CGridPosition { X = X, Y = Y });
-                    e.Set(new CTargetAnim { TargetType = CTargetAnim.Type.WARNING });
-                }
-                if (Delay == 0)
+                    TargetType =
+                        target.Source == "PLAYER" ? CTargetAnim.Type.PLAYER :
+                        CTargetAnim.Type.DANGER
+                });
+                entity.Remove<CTarget>();
+            }
+            else
+            {
+                if (target.Delay == 1 && target.Source == "ENEMY")
                 {
-                    var e = _world.CreateEntity();
-                    e.Set(new CGridPosition { X = X, Y = Y });
-                    e.Set(new CDamageHere { Amount = 1 });
-                    e.Set(new CTargetAnim { 
-                        TargetType = 
-                            entity.Has<CPlayer>() ? CTargetAnim.Type.PLAYER : 
-                            CTargetAnim.Type.DANGER 
-                    });
-                    targets.Entries.RemoveAt(i);
-                    i--;
+                    entity.Set(new CTargetAnim { TargetType = CTargetAnim.Type.WARNING });
                 }
+                target.Delay--;
             }
 
             base.Update(state, entity);
