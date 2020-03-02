@@ -13,7 +13,6 @@ namespace GigglyLib.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-            Game1.RoundState = RoundState.AISimulate;
             entity.Set(new CMoveAction { DistX = -1 });
 
             base.Update(state, entity);
