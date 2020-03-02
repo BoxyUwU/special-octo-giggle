@@ -25,7 +25,7 @@ namespace GigglyLib.Systems
             if (target.Delay == 0)
             {
                 entity.Set(new CDamageHere { Amount = 1 });
-                entity.Remove<CTargetAnim>();
+                entity.Remove<CSprite>();
                 entity.Set(new CTargetAnim
                 {
                     TargetType =
