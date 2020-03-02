@@ -100,34 +100,24 @@ namespace GigglyLib.Systems
                 for (int i = 0; i < Math.Min(validTargets.Count, weapon.AdditionalTargets + 1); i++)
                 {
 
-                    char origin = 'S';
+                    bool targeted = true;
+
                     int attackLength = weapon.AttackPattern[0].Length;
                     int attackWidth = weapon.AttackPattern.Count;
-                    int offsetLength = 0;
-                    int offsetWidth = 0;
+                    int offsetLength = attackLength / 2;
+                    int offsetWidth = attackWidth / 2;
 
                     for (int j = 0; j < weapon.AttackPattern.Count; j++)
                     {
                         if (weapon.AttackPattern[j].Contains("S"))
                         {
-                            origin = 'S';
+                            targeted = false;
                             offsetWidth = j;
                             offsetLength = weapon.AttackPattern[j].IndexOf('S');
                         }
-                        if (weapon.AttackPattern[j].Contains("T"))
-                        {
-                            origin = 'T';
-                            offsetWidth = j;
-                            offsetLength = weapon.AttackPattern[j].IndexOf('T');
-                        }
                     }
 
-                    var targetPos =
-                        origin == 'S' ? pos :
-                        origin == 'T' ? targetSet[i].Get<CGridPosition>() :
-                        pos;
-
-                    Console.WriteLine(pos.X + ", " + pos.Y);
+                    var targetPos = targeted ?  targetSet[i].Get<CGridPosition>() : pos;
 
                     for (int y = 0; y < attackWidth; y++)
                     {
