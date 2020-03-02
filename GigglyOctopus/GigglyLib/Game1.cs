@@ -155,6 +155,7 @@ namespace GigglyLib
                 Rectangle = new Rectangle(0, 0, Config.ScreenWidth + gridTexture.Width, Config.ScreenHeight + gridTexture.Height)
             });
 
+
             var enemy = world.CreateEntity();
             enemy.Set(new CEnemy());
             enemy.Set(new CGridPosition { X = 10, Y = 10, Facing = Direction.WEST});
@@ -163,6 +164,7 @@ namespace GigglyLib
             enemy.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 1, X = 10*Config.TileSize, Y = 10*Config.TileSize, });
 
             drawSys = new SequentialSystem<float>(
+                new SpriteAnimSys(world),
                 new RenderingSys(world, spriteBatch)
             );
 
@@ -182,6 +184,12 @@ namespace GigglyLib
             visualiserSys = new SequentialSystem<float>(
                 new MoverSys(world),
                 new ParallaxSys(world, _player),
+                new TargetHighlightingSys(
+                    world,
+                    Content.Load<Texture2D>("Sprites/target-player"),
+                    Content.Load<Texture2D>("Sprites/target-enemy-danger"),
+                    Content.Load<Texture2D>("Sprites/target-enemy-warning")
+                ),
 
                 // this should go last
                 new EndVisualiseStateSys(world)

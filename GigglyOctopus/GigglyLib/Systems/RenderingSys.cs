@@ -29,20 +29,22 @@ namespace GigglyLib.Systems
 
             float rotation = sprite.Rotation == 0f ? (entity.Has<CGridPosition>() ? (int)entity.Get<CGridPosition>().Facing * (float)(Math.PI / 2f) : sprite.Rotation) : sprite.Rotation;
 
-            if (entity.Has<CSourceRectangle>())
+            if (entity.Has<CSourceRectangle>()) {
+                Rectangle rect = entity.Get<CSourceRectangle>().Rectangle;
+                bool anim = entity.Has<CSpriteAnimation>();
                 sb.Draw(
                     // Texture
                     texture,
                     // Position
                     new Vector2(sprite.X, sprite.Y),
                     // Source Rectangle (for animations and tiling)
-                    entity.Get<CSourceRectangle>().Rectangle,
+                    rect,
                     // Tint + Opacity
                     Color.White * (1 - sprite.Transparency),
                     // Rotation
                     rotation,
                     // Origin
-                    new Vector2(texture.Width / 2, texture.Height / 2),
+                    new Vector2(anim ? rect.Width / 2 : texture.Width / 2, anim ? rect.Height / 2 : texture.Height / 2),
                     // Scale
                     scale,
                     // Sprite Effects
@@ -50,7 +52,8 @@ namespace GigglyLib.Systems
                     // Render Depth
                     sprite.Depth
                 );
-            else
+            }
+            else {
                 sb.Draw(
                     // Texture
                     texture,
@@ -71,7 +74,7 @@ namespace GigglyLib.Systems
                     // Render Depth
                     sprite.Depth
                 );
-
+            }
             base.Update(state, entity);
         }
     }

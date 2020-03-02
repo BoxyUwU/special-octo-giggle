@@ -26,8 +26,7 @@ namespace GigglyLib.Systems
                 if (shipPos.X == pos.X && shipPos.Y == pos.Y)
                     ships[i].Dispose();
             }
-
-            entity.Dispose();
+            entity.Remove<CDamageHere>();
             base.Update(state, entity);
         }
     }

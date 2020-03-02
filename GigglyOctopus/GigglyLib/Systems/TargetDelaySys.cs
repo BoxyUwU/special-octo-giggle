@@ -25,11 +25,22 @@ namespace GigglyLib.Systems
             {
                 var (X, Y, Delay) = targets.Entries[i];
                 targets.Entries[i] = (X, Y, Delay - 1);
+                if (Delay == 1)
+                {
+                    var e = _world.CreateEntity();
+                    e.Set(new CGridPosition { X = X, Y = Y });
+                    e.Set(new CTargetAnim { TargetType = CTargetAnim.Type.WARNING });
+                }
                 if (Delay == 0)
                 {
                     var e = _world.CreateEntity();
                     e.Set(new CGridPosition { X = X, Y = Y });
                     e.Set(new CDamageHere { Amount = 1 });
+                    e.Set(new CTargetAnim { 
+                        TargetType = 
+                            entity.Has<CPlayer>() ? CTargetAnim.Type.PLAYER : 
+                            CTargetAnim.Type.DANGER 
+                    });
                     targets.Entries.RemoveAt(i);
                     i--;
                 }
