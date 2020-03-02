@@ -41,8 +41,8 @@ namespace GigglyLib.Systems
                 });
                 entity.Set(new CSpriteAnimation
                 {
-                    TotalFrames = 12,
-                    SkipFrames = 5,
+                    TotalFrames = 24,
+                    SkipFrames = 1,
                 });
             }
             else if (!anim.FadingOut)
