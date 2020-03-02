@@ -85,18 +85,86 @@ namespace GigglyLib.Systems
             // Prioritize Later
             // validTargets.Sort();
 
+
+            ///////////
+            //TESTING//
+            ///////////
+            ///
+
+            ///////////////
+            //END TESTING//
+            ///////////////
+
             if (validTargets.Count != 0)
             {
                 for (int i = 0; i < Math.Min(validTargets.Count, weapon.AdditionalTargets + 1); i++)
                 {
-                    var targetPos = targetSet[i].Get<CGridPosition>();
-                    var target = _world.CreateEntity();
-                    target.Set(new CGridPosition { X = targetPos.X, Y = targetPos.Y });
-                    target.Set(new CTarget
+
+                    char origin = 'S';
+                    int attackLength = weapon.AttackPattern[0].Length;
+                    int attackWidth = weapon.AttackPattern.Count;
+                    int offsetLength = 0;
+                    int offsetWidth = 0;
+
+                    for (int j = 0; j < weapon.AttackPattern.Count; j++)
                     {
-                        Source = entity.Has<CPlayer>() ? "PLAYER" : "ENEMY",
-                        Damage = weapon.Damage
-                    });
+                        if (weapon.AttackPattern[j].Contains("S"))
+                        {
+                            origin = 'S';
+                            offsetWidth = j;
+                            offsetLength = weapon.AttackPattern[j].IndexOf('S');
+                        }
+                        if (weapon.AttackPattern[j].Contains("T"))
+                        {
+                            origin = 'T';
+                            offsetWidth = j;
+                            offsetLength = weapon.AttackPattern[j].IndexOf('T');
+                        }
+                    }
+
+                    var targetPos =
+                        origin == 'S' ? pos :
+                        origin == 'T' ? targetSet[i].Get<CGridPosition>() :
+                        pos;
+
+                    Console.WriteLine(pos.X + ", " + pos.Y);
+
+                    for (int y = 0; y < attackWidth; y++)
+                    {
+                        for (int x = 0; x < attackLength; x++)
+                        {
+                            if(char.IsDigit(weapon.AttackPattern[y][x]))
+                            {
+                                var target = _world.CreateEntity();
+
+                                int X =
+                                    pos.Facing == Direction.EAST ? targetPos.X + (x - offsetLength) :
+                                    pos.Facing == Direction.SOUTH ? targetPos.X + (y - offsetWidth) :
+                                    pos.Facing == Direction.WEST ? targetPos.X - (x - offsetLength) :
+                                    pos.Facing == Direction.NORTH ? targetPos.X - (y - offsetWidth) :
+                                    targetPos.X + (x - offsetLength);
+
+                                int Y =
+                                    pos.Facing == Direction.EAST ? targetPos.Y + (y - offsetWidth) :
+                                    pos.Facing == Direction.SOUTH ? targetPos.Y + (x - offsetLength) :
+                                    pos.Facing == Direction.WEST ? targetPos.Y - (y - offsetWidth) :
+                                    pos.Facing == Direction.NORTH ? targetPos.Y - (x - offsetLength) :
+                                    targetPos.Y + (y - offsetWidth);
+
+                                target.Set(new CGridPosition { 
+                                    X = X, Y = Y
+                                });
+
+                                target.Set(new CTarget
+                                {
+                                    Source = entity.Has<CPlayer>() ? "PLAYER" : "ENEMY",
+                                    Damage = weapon.Damage,
+                                    Delay = (int) char.GetNumericValue(weapon.AttackPattern[y][x])
+                                });
+
+                            }
+                        }
+                    }
                 }
                 weapon.Cooldown = 0;
             }

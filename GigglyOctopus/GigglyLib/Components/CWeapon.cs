@@ -20,5 +20,7 @@ namespace GigglyLib.Components
 
         public int Damage;
 
+        public List<string> AttackPattern;
+
     }
 }

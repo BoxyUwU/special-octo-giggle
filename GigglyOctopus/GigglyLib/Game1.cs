@@ -6,6 +6,7 @@ using DefaultEcs.System;
 using GigglyLib.Systems;
 using GigglyLib.Components;
 using System;
+using System.Collections.Generic;
 
 namespace GigglyLib
 {
@@ -85,7 +86,30 @@ namespace GigglyLib
                 Transparency = 0.1f, 
                 Depth = 0.5f  
             });
-            _player.Set(new CWeapon { Damage = 1, CooldownMax = 1, RangeFront = 4, RangeLeft = 1, RangeRight = 1 });
+            _player.Set(new CWeapon { 
+                Damage = 1, 
+                CooldownMax = 5, 
+                RangeFront = 4, 
+                RangeLeft = 4, 
+                RangeRight = 4,
+                RangeBack = 4,
+                AttackPattern = new List<string>
+                    {
+                        "5555555555555",
+                        "5444444444445",
+                        "5433333333345",
+                        "5432222222345",
+                        "5432111112345",
+                        "5432100012345",
+                        "543210S012345",
+                        "5432100012345",
+                        "5432111112345",
+                        "5432222222345",
+                        "5433333333345",
+                        "5444444444445",
+                        "5555555555555"
+                    }
+        });
 
             var bgTexture1 = Content.Load<Texture2D>("Sprites/bg-stars-1");
             var background1 = world.CreateEntity();
@@ -171,18 +195,18 @@ namespace GigglyLib
 
             var enemy = world.CreateEntity();
             enemy.Set(new CEnemy());
-            enemy.Set(new CGridPosition { X = 10, Y = 10, Facing = Direction.WEST});
+            enemy.Set(new CGridPosition { X = 10, Y = 10, Facing = Direction.WEST });
             enemy.Set(new CMovable());
-            enemy.Set(new CHealth {  Max = 3 });
-            enemy.Set(new CWeapon { Damage = 1, RangeFront = 4, RangeLeft = 1, RangeRight = 1 });
-            enemy.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 0.25f, X = 10*Config.TileSize, Y = 10*Config.TileSize, });
+            enemy.Set(new CHealth { Max = 3 });
+            //enemy.Set(new CWeapon { Damage = 1, RangeFront = 4, RangeLeft = 1, RangeRight = 1 });
+            enemy.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 0.25f, X = 10 * Config.TileSize, Y = 10 * Config.TileSize, });
 
             var enemy2 = world.CreateEntity();
             enemy2.Set(new CEnemy());
             enemy2.Set(new CGridPosition { X = 11, Y = 10, Facing = Direction.WEST });
             enemy2.Set(new CMovable());
             enemy2.Set(new CHealth { Max = 3 });
-            enemy2.Set(new CWeapon { Damage = 1, RangeFront = 4, RangeLeft = 1, RangeRight = 1 });
+            //enemy2.Set(new CWeapon { Damage = 1, RangeFront = 4, RangeLeft = 1, RangeRight = 1 });
             enemy2.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 0.25f, X = 11 * Config.TileSize, Y = 10 * Config.TileSize, });
 
             var enemy3 = world.CreateEntity();
@@ -190,7 +214,7 @@ namespace GigglyLib
             enemy3.Set(new CGridPosition { X = 11, Y = 12, Facing = Direction.WEST });
             enemy3.Set(new CMovable());
             enemy3.Set(new CHealth { Max = 3 });
-            enemy3.Set(new CWeapon { Damage = 1, RangeFront = 4, RangeLeft = 1, RangeRight = 1 });
+            //enemy3.Set(new CWeapon { Damage = 1, RangeFront = 4, RangeLeft = 1, RangeRight = 1 });
             enemy3.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 0.25f, X = 11 * Config.TileSize, Y = 12 * Config.TileSize, });
 
             drawSys = new SequentialSystem<float>(
