@@ -245,13 +245,14 @@ namespace GigglyLib
 
             particleSeqSys = new SequentialSystem<float>(
                 new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
-                new ParticleSys(world)
+                new ParticleSys(world),
+                new MarkerFadeSys(world)
             );
 
             roundPrepSys = new SequentialSystem<float>(
                 new RoundPrepSys(world),
                 new AttackActionSys(world),
-                new MarkerSpawnerSys(world,
+                new MarkerUpdateSys(world,
                     Content.Load<Texture2D>("Sprites/target-player"),
                     Content.Load<Texture2D>("Sprites/target-enemy-danger"),
                     Content.Load<Texture2D>("Sprites/target-enemy-warning")

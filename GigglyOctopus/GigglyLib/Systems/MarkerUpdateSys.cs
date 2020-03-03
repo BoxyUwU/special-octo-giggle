@@ -7,12 +7,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GigglyLib.Systems
 {
-    public class MarkerSpawnerSys : AEntitySystem<float>
+    public class MarkerUpdateSys : AEntitySystem<float>
     {
         Texture2D _playerTexture;
         Texture2D _dangerTexture;
         Texture2D _warningTexture;
-        public MarkerSpawnerSys(World world, Texture2D playerTexture, Texture2D dangerTexture, Texture2D warningTexture)
+        public MarkerUpdateSys(World world, Texture2D playerTexture, Texture2D dangerTexture, Texture2D warningTexture)
             : base(world.GetEntities().With<CGridPosition>().With<CTarget>().AsSet())
         {
             _playerTexture = playerTexture;
