@@ -38,7 +38,9 @@ namespace GigglyLib.Systems
             foreach (var e in toDispose)
                 e.Dispose();
 
-            _world.CreateEntity().Set(new CExplosionAnim()).Set(new CParticleSpawner());
+            var anim = _world.CreateEntity();
+            anim.Set(new CExplosionAnim());
+            anim.Set(new CParticleSpawner());
 
             entity.Remove<CDamageHere>();
             base.Update(state, entity);
