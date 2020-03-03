@@ -27,6 +27,7 @@ namespace GigglyLib.Systems
 
             if (target.Delay == 0)
             {
+                entity.Remove<CSprite>();
                 entity.Set(new CTargetAnim { 
                     TargetType = target.Source == "PLAYER" ? CTargetAnim.Type.PLAYER : CTargetAnim.Type.DANGER
                 });
@@ -35,31 +36,6 @@ namespace GigglyLib.Systems
             {
                 entity.Set(new CTargetAnim {
                     TargetType = CTargetAnim.Type.WARNING
-                });
-            }
-
-            if (entity.Has<CTargetAnim>())
-            {
-                ref var anim = ref entity.Get<CTargetAnim>();
-                entity.Set(new CSprite
-                {
-                    Texture =
-                            anim.TargetType == CTargetAnim.Type.PLAYER ? _playerTexture :
-                            anim.TargetType == CTargetAnim.Type.DANGER ? _dangerTexture :
-                            _warningTexture,
-                    Transparency = 0.0f,
-                    X = pos.X * Config.TileSize,
-                    Y = pos.Y * Config.TileSize,
-                    Depth = 0.2f,
-                });
-                entity.Set(new CSourceRectangle
-                {
-                    Rectangle = new Rectangle(0, 0, Config.TileSize, Config.TileSize)
-                });
-                entity.Set(new CSpriteAnimation
-                {
-                    TotalFrames = 24,
-                    SkipFrames = 1,
                 });
             }
 

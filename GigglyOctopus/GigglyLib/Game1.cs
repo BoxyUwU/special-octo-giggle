@@ -12,10 +12,10 @@ namespace GigglyLib
 {
     public enum RoundState
     {
-        PreTurn,
         Player,
         AI,
         Simulate,
+        PostTurn,
         TurnVisualiser,
     }
 
@@ -41,10 +41,10 @@ namespace GigglyLib
         public static int currentRoundState = 0;
         public static RoundState[] roundOrder = new RoundState[]
         {
-            RoundState.PreTurn,
             RoundState.AI,
             RoundState.Player,
             RoundState.Simulate,
+            RoundState.PostTurn,
             RoundState.TurnVisualiser,
         };
 
@@ -86,17 +86,18 @@ namespace GigglyLib
                 Transparency = 0.1f, 
                 Depth = 0.5f  
             });
-            _player.Set(new CWeapon { 
-                Damage = 5, 
-                RangeFront = 5, 
-                RangeLeft = 1, 
+            _player.Set(new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 5,
+                RangeLeft = 1,
                 RangeRight = 1,
                 RangeBack = 0,
                 AttackPattern = new List<string>
                     {
                         "0"
                     }
-                });
+            });
 
             var bgTexture1 = Content.Load<Texture2D>("Sprites/bg-stars-1");
             var background1 = world.CreateEntity();
@@ -250,7 +251,7 @@ namespace GigglyLib
             roundPrepSys = new SequentialSystem<float>(
                 new RoundPrepSys(world),
                 new AttackActionSys(world),
-                new MarkerSpawnerSys(world, 
+                new MarkerSpawnerSys(world,
                     Content.Load<Texture2D>("Sprites/target-player"),
                     Content.Load<Texture2D>("Sprites/target-enemy-danger"),
                     Content.Load<Texture2D>("Sprites/target-enemy-warning")
@@ -266,7 +267,6 @@ namespace GigglyLib
             );
 
             simulateSys = new SequentialSystem<float>(
-                new UpdateTargetAnimTypeSys(world),
                 new TargetDelaySys(world),
                 new DamageHereSys(world),
                 new MoveActionSys(world),
@@ -315,7 +315,7 @@ namespace GigglyLib
 
                 switch (roundOrder[currentRoundState])
                 {
-                    case RoundState.PreTurn:
+                    case RoundState.PostTurn:
                         roundPrepSys.Update(0.0f);
                         currentRoundState++;
                         break;
