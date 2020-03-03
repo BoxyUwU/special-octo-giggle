@@ -21,12 +21,13 @@ namespace GigglyLib.Systems
         {
             var sprite = entity.Get<CSprite>();
             var particle = _world.CreateEntity();
+            float impact = entity.Get<CParticleSpawner>().Impact;
 
             float x = sprite.X;
             float y = sprite.Y;
 
-            x += (Config.Rand() - 0.5f) * 0.2f * Config.TileSize;
-            y += (Config.Rand() - 0.5f) * 0.2f * Config.TileSize;
+            x += (Config.Rand() - 0.5f) * 0.2f * Config.TileSize * impact;
+            y += (Config.Rand() - 0.5f) * 0.2f * Config.TileSize * impact;
 
             particle.Set(new CSprite {
                 Texture = entity.Get<CParticleSpawner>().Texture,
@@ -37,7 +38,7 @@ namespace GigglyLib.Systems
             });
 
             particle.Set(new CScalable { Scale = (Config.Rand() * 0.4f) + 0.3f });
-            particle.Set(new CParticle { DeltaRotation = Config.Rand() * 0.05f, Velocity = Config.Rand() * 0.02f });
+            particle.Set(new CParticle { DeltaRotation = Config.Rand() * 0.05f, Velocity = Config.Rand() * 0.02f * impact });
 
             base.Update(state, entity);
         }

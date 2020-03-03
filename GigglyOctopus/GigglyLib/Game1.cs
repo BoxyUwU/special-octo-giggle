@@ -7,6 +7,7 @@ using GigglyLib.Systems;
 using GigglyLib.Components;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Content;
 
 namespace GigglyLib
 {
@@ -37,7 +38,6 @@ namespace GigglyLib
         SequentialSystem<float> roundPrepSys;
 
         Entity _player;
-
         public static int currentRoundState = 0;
         public static RoundState[] roundOrder = new RoundState[]
         {
@@ -88,17 +88,61 @@ namespace GigglyLib
             });
             _player.Set(new CParticleSpawner
             {
-                Texture = Content.Load<Texture2D>("Sprites/particles-star")
+                Texture = Content.Load<Texture2D>("Sprites/particles-pink"),
+                Impact = 1.0f
             });
             _player.Set(new CWeapon { 
                 Damage = 5, 
-                RangeFront = 6, 
-                RangeLeft = 2, 
-                RangeRight = 2,
-                RangeBack = 1,
+                RangeFront = 4, 
+                RangeLeft = 4, 
+                RangeRight = 4,
+                RangeBack = 4,
+                CooldownMax = 5,
                 AttackPattern = new List<string>
                     {
-                        "0"
+                        "5555555555555",
+                        "5444444444445",
+                        "5433333333345",
+                        "5432222222345",
+                        "5432111112345",
+                        "5432100012345",
+                        "543210S012345",
+                        "5432100012345",
+                        "5432111112345",
+                        "5432222222345",
+                        "5433333333345",
+                        "5444444444445",
+                        "5555555555555",
+                    }
+            });
+            _player.Set(new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 9,
+                RangeLeft = 0,
+                RangeRight = 0,
+                RangeBack = 0,
+                CooldownMax = 3,
+                AttackPattern = new List<string>
+                    {
+                        "S000111222333444555"
+                    }
+            });
+            _player.Set(new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 6,
+                RangeLeft = 2,
+                RangeRight = 2,
+                RangeBack = 1,
+                CooldownMax = 3,
+                AttackPattern = new List<string>
+                    {
+                        "  2  ",
+                        "2 1 2",
+                        " 101 ",
+                        "2 1 2",
+                        "  2  "
                     }
             });
 
@@ -189,10 +233,14 @@ namespace GigglyLib
             );
 
             particleSeqSys = new SequentialSystem<float>(
+                new ExplosionAnimSys(world, 
+                    Content.Load<Texture2D>("Sprites/particles-explosion"),
+                    Content.Load<Texture2D>("Sprites/particles-orange")
+                ),
                 new ParticleSpawnerSys(world),
                 new ParticleSys(world),
                 new MarkerFadeSys(world)
-            );
+            ); ;
 
             roundPrepSys = new SequentialSystem<float>(
                 new RoundPrepSys(world),

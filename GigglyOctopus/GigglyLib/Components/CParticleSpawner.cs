@@ -10,5 +10,6 @@ namespace GigglyLib.Components
     struct CParticleSpawner
     {
         public Texture2D Texture;
+        public float Impact;
     }
 }

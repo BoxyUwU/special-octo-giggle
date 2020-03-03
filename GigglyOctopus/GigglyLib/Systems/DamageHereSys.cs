@@ -39,8 +39,8 @@ namespace GigglyLib.Systems
                 e.Dispose();
 
             var anim = _world.CreateEntity();
+            anim.Set(pos);
             anim.Set(new CExplosionAnim());
-            anim.Set(new CParticleSpawner());
 
             entity.Remove<CDamageHere>();
             base.Update(state, entity);
