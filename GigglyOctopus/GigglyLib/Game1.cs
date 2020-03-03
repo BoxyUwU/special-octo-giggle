@@ -86,13 +86,12 @@ namespace GigglyLib
                 Transparency = 0.1f, 
                 Depth = 0.5f  
             });
-            _player.Set(new CWeapon
-            {
-                Damage = 5,
-                RangeFront = 5,
-                RangeLeft = 1,
-                RangeRight = 1,
-                RangeBack = 0,
+            _player.Set(new CWeapon { 
+                Damage = 5, 
+                RangeFront = 6, 
+                RangeLeft = 2, 
+                RangeRight = 2,
+                RangeBack = 1,
                 AttackPattern = new List<string>
                     {
                         "0"

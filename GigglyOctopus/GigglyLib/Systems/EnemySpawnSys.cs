@@ -61,14 +61,14 @@ namespace GigglyLib.Systems
                     enemy.Set(new CWeapon
                     {
                         Damage = 5,
-                        RangeFront = 5,
-                        RangeLeft = 1,
-                        RangeRight = 1,
-                        RangeBack = 0,
+                        RangeFront = 6,
+                        RangeLeft = 2,
+                        RangeRight = 2,
+                        RangeBack = 1,
                         AttackPattern = new List<string>
-                        {
-                            "0"
-                        }
+                    {
+                        "0"
+                    }
                     });
                     enemy.Set(new CSprite { Texture = _enemyTexture, Depth = 0.25f, X = x * Config.TileSize, Y = y * Config.TileSize, });
                 }
