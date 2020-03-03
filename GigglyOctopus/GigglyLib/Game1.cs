@@ -87,17 +87,14 @@ namespace GigglyLib
                 Depth = 0.5f  
             });
             _player.Set(new CWeapon { 
-                Damage = 1, 
-                CooldownMax = 2, 
+                Damage = 5, 
                 RangeFront = 5, 
                 RangeLeft = 1, 
                 RangeRight = 1,
                 RangeBack = 0,
                 AttackPattern = new List<string>
                     {
-                        " 1 ",
-                        "111",
-                        " 1 " 
+                        "0"
                     }
                 });
 
@@ -187,20 +184,17 @@ namespace GigglyLib
             enemy.Set(new CEnemy());
             enemy.Set(new CGridPosition { X = 10, Y = 10, Facing = Direction.WEST });
             enemy.Set(new CMovable());
-            enemy.Set(new CHealth { Max = 3 });
+            enemy.Set(new CHealth { Max = 15 });
             enemy.Set(new CWeapon
             {
-                Damage = 1,
-                CooldownMax = 2,
+                Damage = 5,
                 RangeFront = 5,
                 RangeLeft = 1,
                 RangeRight = 1,
                 RangeBack = 0,
                 AttackPattern = new List<string>
                     {
-                        " 1 ",
-                        "111",
-                        " 1 "
+                        "0"
                     }
             });
             enemy.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 0.25f, X = 10 * Config.TileSize, Y = 10 * Config.TileSize, });
@@ -209,42 +203,36 @@ namespace GigglyLib
             enemy2.Set(new CEnemy());
             enemy2.Set(new CGridPosition { X = 11, Y = 10, Facing = Direction.WEST });
             enemy2.Set(new CMovable());
-            enemy2.Set(new CHealth { Max = 3 });
+            enemy2.Set(new CHealth { Max = 15 });
             enemy2.Set(new CWeapon
             {
-                Damage = 1,
-                CooldownMax = 2,
+                Damage = 5,
                 RangeFront = 5,
                 RangeLeft = 1,
                 RangeRight = 1,
                 RangeBack = 0,
                 AttackPattern = new List<string>
                     {
-                        " 1 ",
-                        "111",
-                        " 1 "
+                        "0"
                     }
             });
+
             enemy2.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 0.25f, X = 11 * Config.TileSize, Y = 10 * Config.TileSize, });
 
             var enemy3 = world.CreateEntity();
             enemy3.Set(new CEnemy());
             enemy3.Set(new CGridPosition { X = 11, Y = 12, Facing = Direction.WEST });
             enemy3.Set(new CMovable());
-            enemy3.Set(new CHealth { Max = 3 });
-            enemy3.Set(new CWeapon
-            {
-                Damage = 1,
-                CooldownMax = 2,
-                RangeFront = 5,
-                RangeLeft = 1,
+            enemy3.Set(new CHealth { Max = 15 });
+            enemy3.Set(new CWeapon { 
+                Damage = 5, 
+                RangeFront = 5, 
+                RangeLeft = 1, 
                 RangeRight = 1,
                 RangeBack = 0,
                 AttackPattern = new List<string>
                     {
-                        " 1 ",
-                        "111",
-                        " 1 "
+                        "0"
                     }
             });
             enemy3.Set(new CSprite { Texture = Content.Load<Texture2D>("Sprites/enemy"), Depth = 0.25f, X = 11 * Config.TileSize, Y = 12 * Config.TileSize, });
