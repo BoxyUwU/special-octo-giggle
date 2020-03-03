@@ -86,6 +86,10 @@ namespace GigglyLib
                 Transparency = 0.1f, 
                 Depth = 0.5f  
             });
+            _player.Set(new CParticleSpawner
+            {
+                Texture = Content.Load<Texture2D>("Sprites/particles-star")
+            });
             _player.Set(new CWeapon { 
                 Damage = 5, 
                 RangeFront = 6, 
@@ -185,7 +189,7 @@ namespace GigglyLib
             );
 
             particleSeqSys = new SequentialSystem<float>(
-                new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
+                new ParticleSpawnerSys(world),
                 new ParticleSys(world),
                 new MarkerFadeSys(world)
             );
