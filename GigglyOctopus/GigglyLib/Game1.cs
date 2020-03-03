@@ -7,15 +7,16 @@ using GigglyLib.Systems;
 using GigglyLib.Components;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Content;
 
 namespace GigglyLib
 {
     public enum RoundState
     {
-        PreTurn,
         Player,
         AI,
         Simulate,
+        PostTurn,
         TurnVisualiser,
     }
 
@@ -37,14 +38,13 @@ namespace GigglyLib
         SequentialSystem<float> roundPrepSys;
 
         Entity _player;
-
         public static int currentRoundState = 0;
         public static RoundState[] roundOrder = new RoundState[]
         {
-            RoundState.PreTurn,
             RoundState.AI,
             RoundState.Player,
             RoundState.Simulate,
+            RoundState.PostTurn,
             RoundState.TurnVisualiser,
         };
 
@@ -86,15 +86,76 @@ namespace GigglyLib
                 Transparency = 0.1f, 
                 Depth = 0.5f  
             });
+            _player.Set(new CParticleSpawner
+            {
+                Texture = Content.Load<Texture2D>("Sprites/particles-pink"),
+                Impact = 1.0f
+            });
             _player.Set(new CWeapon { 
                 Damage = 5, 
-                RangeFront = 6, 
-                RangeLeft = 2, 
-                RangeRight = 2,
-                RangeBack = 1,
+                RangeFront = 4, 
+                RangeLeft = 4, 
+                RangeRight = 4,
+                RangeBack = 4,
+                CooldownMax = 5,
                 AttackPattern = new List<string>
                     {
-                        "0"
+                        "5555555555555",
+                        "5444444444445",
+                        "5433333333345",
+                        "5432222222345",
+                        "5432111112345",
+                        "5432100012345",
+                        "543210S012345",
+                        "5432100012345",
+                        "5432111112345",
+                        "5432222222345",
+                        "5433333333345",
+                        "5444444444445",
+                        "5555555555555",
+                    }
+            });
+            _player.Set(new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 9,
+                RangeLeft = 0,
+                RangeRight = 0,
+                RangeBack = 0,
+                CooldownMax = 3,
+                AttackPattern = new List<string>
+                    {
+                        "S000111222333444555"
+                    }
+            });
+            _player.Set(new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 5,
+                RangeLeft = 1,
+                RangeRight = 1,
+                RangeBack = 0,
+                CooldownMax = 3,
+                AttackPattern = new List<string>
+                    {
+                        "  2  ",
+                        "2 1 2",
+                        " 101 ",
+                        "2 1 2",
+                        "  2  "
+                    }
+            });
+            _player.Set(new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 6,
+                RangeLeft = 2,
+                RangeRight = 2,
+                RangeBack = 1,
+                CooldownMax = 0,
+                AttackPattern = new List<string>
+                    {
+                       "0"
                     }
             });
 
@@ -185,14 +246,19 @@ namespace GigglyLib
             );
 
             particleSeqSys = new SequentialSystem<float>(
-                new ThrusterSys(world, Content.Load<Texture2D>("Sprites/particles-star")),
-                new ParticleSys(world)
-            );
+                new ExplosionAnimSys(world, 
+                    Content.Load<Texture2D>("Sprites/particles-explosion"),
+                    Content.Load<Texture2D>("Sprites/particles-orange")
+                ),
+                new ParticleSpawnerSys(world),
+                new ParticleSys(world),
+                new MarkerFadeSys(world)
+            ); ;
 
             roundPrepSys = new SequentialSystem<float>(
                 new RoundPrepSys(world),
                 new AttackActionSys(world),
-                new MarkerSpawnerSys(world, 
+                new MarkerUpdateSys(world,
                     Content.Load<Texture2D>("Sprites/target-player"),
                     Content.Load<Texture2D>("Sprites/target-enemy-danger"),
                     Content.Load<Texture2D>("Sprites/target-enemy-warning")
@@ -208,7 +274,6 @@ namespace GigglyLib
             );
 
             simulateSys = new SequentialSystem<float>(
-                new UpdateTargetAnimTypeSys(world),
                 new TargetDelaySys(world),
                 new DamageHereSys(world),
                 new MoveActionSys(world),
@@ -258,7 +323,7 @@ namespace GigglyLib
 
                 switch (roundOrder[currentRoundState])
                 {
-                    case RoundState.PreTurn:
+                    case RoundState.PostTurn:
                         roundPrepSys.Update(0.0f);
                         currentRoundState++;
                         break;

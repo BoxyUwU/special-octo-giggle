@@ -38,6 +38,10 @@ namespace GigglyLib.Systems
             foreach (var e in toDispose)
                 e.Dispose();
 
+            var anim = _world.CreateEntity();
+            anim.Set(pos);
+            anim.Set(new CExplosionAnim());
+
             entity.Remove<CDamageHere>();
             base.Update(state, entity);
         }
