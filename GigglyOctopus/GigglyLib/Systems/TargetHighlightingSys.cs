@@ -32,7 +32,7 @@ namespace GigglyLib.Systems
                     anim.TargetType == CTargetAnim.Type.DANGER ? _dangerTexture :
                     _warningTexture;
                 
-            sprite.Transparency += 0.11f;
+            sprite.Transparency += 0.12f;
             if (sprite.Transparency >= 1.0)
             {
                 entity.Remove<CTargetAnim>();

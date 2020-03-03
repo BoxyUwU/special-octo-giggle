@@ -88,10 +88,10 @@ namespace GigglyLib
             });
             _player.Set(new CWeapon { 
                 Damage = 5, 
-                RangeFront = 5, 
-                RangeLeft = 1, 
-                RangeRight = 1,
-                RangeBack = 0,
+                RangeFront = 6, 
+                RangeLeft = 2, 
+                RangeRight = 2,
+                RangeBack = 1,
                 AttackPattern = new List<string>
                     {
                         "0"

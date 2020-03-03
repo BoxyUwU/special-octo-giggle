@@ -81,19 +81,42 @@ namespace GigglyLib.Systems
                     validTargets.Add(targetSet[i]);
                 }
             }
-
+            Direction dir = pos.Facing;
+            float posX = pos.X;
+            float posY = pos.Y;
             // Prioritize Later
-            // validTargets.Sort();
+            validTargets.Sort((a, b) => {
+                var aPos = a.Get<CGridPosition>();
+                var bPos = b.Get<CGridPosition>();
+                // Priority 1: Front > Behind
 
+                if (dir == Direction.NORTH)
+                {
+                    if (aPos.Y <= posY && bPos.Y > posY)
+                        return -1;
+                }
 
-            ///////////
-            //TESTING//
-            ///////////
-            ///
+                if (dir == Direction.EAST)
+                {
+                    if (aPos.X >= posX && bPos.X < posX)
+                        return -1;
+                }
 
-            ///////////////
-            //END TESTING//
-            ///////////////
+                if (dir == Direction.SOUTH)
+                {
+                    if (aPos.Y >= posY && bPos.Y < posY)
+                        return -1;
+                }
+
+                if (dir == Direction.WEST)
+                {
+                    if (aPos.X <= posX && bPos.X > posX)
+                        return -1;
+                }
+
+                // Else Distance
+                return (int) (Math.Abs(posX - aPos.X) + Math.Abs(posY - aPos.Y) - Math.Abs(posX - bPos.X) - Math.Abs(posY - bPos.Y));
+            });
 
             if (validTargets.Count != 0)
             {
