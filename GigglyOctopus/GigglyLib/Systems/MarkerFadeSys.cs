@@ -17,17 +17,20 @@ namespace GigglyLib.Systems
             ref var anim = ref entity.Get<CTargetAnim>();
             ref var sprite = ref entity.Get<CSprite>();
 
-            if (anim.FadingOut)
+            if (anim.FadingOut && anim.GoneVisible)
             {
-                sprite.Transparency += 0.05f;
+                sprite.Transparency += 0.1f;
                 if (sprite.Transparency >= 1f)
                     entity.Remove<CTargetAnim>();
             }
             else
             {
-                sprite.Transparency -= 0.05f;
+                sprite.Transparency -= 0.1f;
                 if (sprite.Transparency <= 0f)
+                {
                     sprite.Transparency = 0f;
+                    anim.GoneVisible = true;
+                }
             }
 
             base.Update(state, entity);
