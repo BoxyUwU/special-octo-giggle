@@ -12,5 +12,6 @@ namespace GigglyLib.Components
         }
         public Type TargetType;
         public bool FadingOut;
+        public bool GoneVisible;
     }
 }
