@@ -49,24 +49,8 @@ namespace GigglyLib.Systems
                     SkipFrames = 1,
                 });
             }
-            else if (!anim.FadingOut)
-            {
-                ref var sprite = ref entity.Get<CSprite>();
-                sprite.Transparency -= 0.142f;
-                if (sprite.Transparency <= 0.1)
-                {
-                    anim.FadingOut = true;
-                }
-            }
-            else
-            {
-                ref var sprite = ref entity.Get<CSprite>();
-                sprite.Transparency += 0.12f;
-                if (sprite.Transparency >= 1.0)
-                {
-                    entity.Remove<CTargetAnim>();
-                }
-            }
+            if (!entity.Has<CTarget>())
+                anim.FadingOut = true;
 
             base.Update(state, entity);
         }
