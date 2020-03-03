@@ -64,7 +64,7 @@ namespace GigglyLib.Systems
                 pos.Facing == Direction.WEST ? pos.Y + weapon.RangeLeft :
                 0;
 
-            List<Entity> validTargets = new List<Entity>();
+            List<Entity> validTargets = new List<Entity>(); 
 
             for (int i = 0; i < targetSet.Length; i++)
             {
@@ -117,7 +117,7 @@ namespace GigglyLib.Systems
                         }
                     }
 
-                    var targetPos = targeted ?  targetSet[i].Get<CGridPosition>() : pos;
+                    var targetPos = targeted ? validTargets[i].Get<CGridPosition>() : pos;
 
                     for (int y = 0; y < attackWidth; y++)
                     {
