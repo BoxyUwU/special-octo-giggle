@@ -27,7 +27,7 @@ namespace GigglyLib.Systems
             {
                 var shipPos = ships[i].Get<CGridPosition>();
                 ref var shipHP = ref ships[i].Get<CHealth>();
-                if (shipPos.X == pos.X && shipPos.Y == pos.Y)
+                if (shipPos.X == pos.X && shipPos.Y == pos.Y && entity.Get<CDamageHere>().Source == "PLAYER")
                 {
                     shipHP.Damage += entity.Get<CDamageHere>().Amount;
                     if (shipHP.Damage >= shipHP.Max)
