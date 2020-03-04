@@ -22,7 +22,6 @@ namespace GigglyLib.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-            var pos = entity.Get<CGridPosition>();
             var target = entity.Get<CTarget>();
 
             if (target.Delay == 0)

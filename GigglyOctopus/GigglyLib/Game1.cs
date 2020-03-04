@@ -270,7 +270,7 @@ namespace GigglyLib
             );
 
             AISys = new SequentialSystem<float>(
-                new AISys(world)
+                new AISys(world, _player)
             );
 
             simulateSys = new SequentialSystem<float>(
