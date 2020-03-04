@@ -21,6 +21,7 @@ namespace GigglyLib.ProcGen
         public Vector2 P;
         public float R;
         public float SpawnDir;
+        public int Depth;
     }
 
     public class MetaballGenerator
@@ -29,19 +30,26 @@ namespace GigglyLib.ProcGen
         float _rStart;
         float _rDecrease;
         Random _rand;
+        int _maxDepth;
+        int _minDepth;
+        float _angleVariance;
+        float _angleVarianceDeadzone;
 
-        public MetaballGenerator(float startingR, float rDecrease, int seed)
+        public MetaballGenerator(float startingR, float rDecrease, int seed, int minDepth, int maxDepth, float angleVariance, float angleVarianceDeadzone)
         {
             _rStart = startingR;
             _rDecrease = rDecrease;
             _rand = new Random(seed);
+            _maxDepth = maxDepth;
+            _minDepth = minDepth;
+            _angleVariance = angleVariance;
+            _angleVarianceDeadzone = angleVarianceDeadzone;
         }
 
         public List<(int x, int y)> Generate()
         {
             Console.WriteLine("Metaball generator Generate() method was called");
             _circles = new List<Circle> {
-                new Circle(0, 0, _rStart, 0f),
                 new Circle(0, 0, _rStart, 0f),
                 new Circle(0, 0, _rStart, 0f)
             };
@@ -60,7 +68,7 @@ namespace GigglyLib.ProcGen
                 _circles.Add(circle);
 
                 open.RemoveAt(0);
-                if (_rand.NextDouble() <= 0.95f)
+                if ((_rand.NextDouble() <= 0.8f || circle.Depth < _minDepth) && circle.Depth < _maxDepth)
                     open.Add(circle);
             }
         }
@@ -72,14 +80,11 @@ namespace GigglyLib.ProcGen
             if (parent.SpawnDir == 0f)
                 angle = (float)_rand.NextDouble() * 6.282f;
             else
-            {
-                angle = parent.SpawnDir + (float)_rand.NextDouble() * 3.141f/4f;
-                if (_rand.NextDouble() <= 0.5f)
-                    angle *= -1;
-            }
-            Vector2 spawnDir = new Vector2(radius, 0f).RotateBy(angle);
-            Console.WriteLine(radius);
-            return new Circle(parent.P + spawnDir, radius, angle);
+                angle = parent.SpawnDir + (float)_rand.Range(-_angleVariance, _angleVariance, _angleVarianceDeadzone);
+
+            Vector2 offset = new Vector2(radius, 0f).RotateBy(angle);
+
+            return new Circle(parent.P + offset, radius, angle) { Depth = parent.Depth + 1};
         }
 
         private List<(int x, int y)> GetOverlappingTiles()

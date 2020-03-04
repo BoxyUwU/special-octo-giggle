@@ -26,6 +26,7 @@ namespace GigglyLib
     /// </summary>
     public class Game1 : Game
     {
+        int _seed;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         World world = new World();
@@ -298,7 +299,9 @@ namespace GigglyLib
                 new EndVisualiseStateSys(world)
             );
 
-            new MapGenerator(world).Generate();
+            _seed = new Random().Next();
+            Console.WriteLine($"seed: {_seed}");
+            new MapGenerator(world, _seed).Generate();
         }
 
         /// <summary>

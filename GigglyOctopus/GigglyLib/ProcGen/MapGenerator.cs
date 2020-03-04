@@ -9,18 +9,15 @@ namespace GigglyLib.ProcGen
     public class MapGenerator
     {
         World _world;
-        int seed;
-        MetaballGenerator metaballGen;
+        int _seed;
+        MetaballGenerator _metaballGen;
 
-        public MapGenerator(World world) { _world = world; }
+        public MapGenerator(World world, int seed) { _world = world; _seed = seed; }
 
         public void Generate()
         {
-            seed = new Random().Next();
-            Console.WriteLine($"seed: {seed}");
-
-            metaballGen = new MetaballGenerator(20f, 0.90f, seed);
-            var tiles = metaballGen.Generate();
+            _metaballGen = new MetaballGenerator(20f, 0.95f, _seed, 2, 4, angleVariance: 3.141f / 2f, angleVarianceDeadzone: 1f);
+            var tiles = _metaballGen.Generate();
             DebugOutput(tiles, 10);
             foreach (var tile in tiles)
             {
@@ -68,7 +65,7 @@ namespace GigglyLib.ProcGen
             {
                 List<(int x, int y)> tilelist;
                 if (iteration > 0 || tiles == null)
-                    tilelist = metaballGen.Generate();
+                    tilelist = _metaballGen.Generate();
                 else
                 {
                     tilelist = new List<(int x, int y)>(tiles);
