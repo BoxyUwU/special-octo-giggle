@@ -51,6 +51,7 @@ namespace GigglyLib.ProcGen
             Console.WriteLine("Metaball generator Generate() method was called");
             _circles = new List<Circle> {
                 new Circle(0, 0, _rStart, 0f),
+                new Circle(0, 0, _rStart, 0f),
                 new Circle(0, 0, _rStart, 0f)
             };
 

@@ -18,7 +18,7 @@ namespace GigglyLib.ProcGen
         {
             _metaballGen = new MetaballGenerator(20f, 0.95f, _seed, 2, 4, angleVariance: 3.141f / 2f, angleVarianceDeadzone: 1f);
             var tiles = _metaballGen.Generate();
-            DebugOutput(tiles, 10);
+            DebugOutput(tiles, 1);
             foreach (var tile in tiles)
             {
                 var blah = _world.CreateEntity();
