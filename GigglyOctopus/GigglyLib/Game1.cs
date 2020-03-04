@@ -79,6 +79,7 @@ namespace GigglyLib
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             Config.Textures.Add("enemy", Content.Load<Texture2D>("Sprites/enemy"));
+            Config.Textures.Add("asteroid", Content.Load<Texture2D>("Sprites/asteroid-tile"));
 
             _player = world.CreateEntity();
             _player.Set(new CPlayer());
