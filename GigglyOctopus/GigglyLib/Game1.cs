@@ -94,60 +94,6 @@ namespace GigglyLib
                 Texture = Content.Load<Texture2D>("Sprites/particles-pink"),
                 Impact = 1.0f
             });
-            _player.Set(new CWeapon { 
-                Damage = 5, 
-                RangeFront = 4, 
-                RangeLeft = 4, 
-                RangeRight = 4,
-                RangeBack = 4,
-                CooldownMax = 5,
-                AttackPattern = new List<string>
-                    {
-                        "5555555555555",
-                        "5444444444445",
-                        "5433333333345",
-                        "5432222222345",
-                        "5432111112345",
-                        "5432100012345",
-                        "543210S012345",
-                        "5432100012345",
-                        "5432111112345",
-                        "5432222222345",
-                        "5433333333345",
-                        "5444444444445",
-                        "5555555555555",
-                    }
-            });
-            _player.Set(new CWeapon
-            {
-                Damage = 5,
-                RangeFront = 9,
-                RangeLeft = 0,
-                RangeRight = 0,
-                RangeBack = 0,
-                CooldownMax = 3,
-                AttackPattern = new List<string>
-                    {
-                        "S000111222333444555"
-                    }
-            });
-            _player.Set(new CWeapon
-            {
-                Damage = 5,
-                RangeFront = 5,
-                RangeLeft = 1,
-                RangeRight = 1,
-                RangeBack = 0,
-                CooldownMax = 3,
-                AttackPattern = new List<string>
-                    {
-                        "  2  ",
-                        "2 1 2",
-                        " 101 ",
-                        "2 1 2",
-                        "  2  "
-                    }
-            });
             _player.Set(new CWeapon
             {
                 Damage = 5,
@@ -161,6 +107,7 @@ namespace GigglyLib
                        "0"
                     }
             });
+            //_player.Set(Config.Weapons["Snowflake"]);
 
             var bgTexture1 = Content.Load<Texture2D>("Sprites/bg-stars-1");
             var background1 = world.CreateEntity();

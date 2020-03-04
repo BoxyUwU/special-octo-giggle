@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DefaultEcs;
 using DefaultEcs.System;
 using GigglyLib.Components;
@@ -16,12 +17,13 @@ namespace GigglyLib.Systems
         {
             ref var anim = ref entity.Get<CTargetAnim>();
             ref var sprite = ref entity.Get<CSprite>();
+            var toDispose = new List<Entity>();
 
             if (anim.FadingOut && anim.GoneVisible)
             {
                 sprite.Transparency += 0.1f;
                 if (sprite.Transparency >= 1f)
-                    entity.Remove<CTargetAnim>();
+                    toDispose.Add(entity);
             }
             else
             {
@@ -32,6 +34,9 @@ namespace GigglyLib.Systems
                     anim.GoneVisible = true;
                 }
             }
+
+            foreach (var e in toDispose)
+                e.Dispose();
 
             base.Update(state, entity);
         }

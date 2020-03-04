@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DefaultEcs;
 using DefaultEcs.System;
 using GigglyLib.Components;
@@ -24,6 +25,7 @@ namespace GigglyLib.Systems
         protected override void Update(float state, in Entity entity)
         {
             var pos = entity.Get<CGridPosition>();
+            var toDispose = new List<Entity>();
             if (!entity.Has<CSprite>())
             {
                 entity.Set(new CParticleSpawner {
@@ -51,10 +53,12 @@ namespace GigglyLib.Systems
                 scale.Scale *= 2f;
                 if (sprite.Transparency > 1.0f)
                 {
-                    entity.Remove<CSprite>();
-                    entity.Remove<CExplosionAnim>();
+                    toDispose.Add(entity);
                 }
             }
+
+            foreach (var e in toDispose)
+                e.Dispose();
 
             base.Update(state, entity);
         }

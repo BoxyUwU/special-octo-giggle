@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DefaultEcs;
 using DefaultEcs.System;
 using GigglyLib.Components;
@@ -27,6 +28,7 @@ namespace GigglyLib.Systems
 
             ref var sprite = ref entity.Get<CSprite>();
             ref var particle = ref entity.Get<CParticle>();
+            var toDispose = new List<Entity>();
             sprite.Transparency *= 1.03f;
             sprite.Rotation += particle.DeltaRotation;
             sprite.X += (float)(Math.Cos(sprite.Rotation) * particle.Velocity) * Config.TileSize;
@@ -34,8 +36,11 @@ namespace GigglyLib.Systems
 
             if (sprite.Transparency >= 1.0f)
             {
-                entity.Remove<CSprite>();
+                toDispose.Add(entity);
             }
+
+            foreach (var e in toDispose)
+                e.Dispose();
 
             base.Update(state, entity);
         }

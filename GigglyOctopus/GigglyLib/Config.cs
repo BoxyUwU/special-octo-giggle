@@ -123,6 +123,54 @@ namespace GigglyLib
                     "          88888888         ",
                 },
                 CooldownMax = 50,
+            },
+            ["Thunderclap"] = new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 5,
+                RangeBack = 5,
+                RangeLeft = 5,
+                RangeRight = 5,
+                AttackPattern = new List<string>
+                {
+                    "     66666     ",
+                    "   665555566   ",
+                    "  65544444556  ",
+                    " 65 4333334 56 ",
+                    " 6543 222 3456 ",
+                    "6543 21112 3456",
+                    "654321000123456",
+                    "6543210S0123456",
+                    "654321000123456",
+                    "6543 21112 3456",
+                    " 6543 222 3456 ",
+                    " 65 4333334 56 ",
+                    "  65544444556  ",
+                    "   665555566   ",
+                    "     66666     ",
+                },
+                CooldownMax = 10,
+            },
+            ["Snowflake"] = new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 8,
+                RangeLeft = 3,
+                RangeRight = 3,
+                RangeBack = 0,
+                CooldownMax = 6,
+                AttackPattern = new List<string>
+                    {
+                        "   3 3   ",
+                        " 3  3  3 ",
+                        "3 3 2 3 3",
+                        " 32 1 23 ",
+                        "3  212  3",
+                        " 32 1 23 ",
+                        "3 3 2 3 3",
+                        " 3  3  3 ",
+                        "   3 3   ",
+                    }
             }
         };
 
