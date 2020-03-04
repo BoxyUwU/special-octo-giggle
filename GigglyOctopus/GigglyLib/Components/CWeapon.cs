@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GigglyLib.Components
 {
-    struct CWeapon
+    public struct CWeapon
     {
         public int RangeLeft;
         public int RangeRight;
