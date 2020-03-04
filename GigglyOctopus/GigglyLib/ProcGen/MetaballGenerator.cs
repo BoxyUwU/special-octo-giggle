@@ -46,7 +46,7 @@ namespace GigglyLib.ProcGen
             _angleVarianceDeadzone = angleVarianceDeadzone;
         }
 
-        public List<(int x, int y)> Generate()
+        public bool[,] Generate()
         {
             Console.WriteLine("Metaball generator Generate() method was called");
             _circles = new List<Circle> {
@@ -56,7 +56,7 @@ namespace GigglyLib.ProcGen
             };
 
             AddCircles(_circles);
-            return GetOverlappingTiles();
+            return ConvertToGrid(GetOverlappingTiles());
         }
 
         private void AddCircles(List<Circle> roots)
@@ -110,6 +110,34 @@ namespace GigglyLib.ProcGen
             }
 
             return tiles;
+        }
+
+        private bool[,] ConvertToGrid(List<(int x, int y)> tilelist)
+        {
+            int minX = int.MaxValue;
+            int minY = int.MaxValue;
+            int maxX = int.MinValue;
+            int maxY = int.MinValue;
+            for (int i = 0; i < tilelist.Count; i++)
+            {
+                var (x, y) = tilelist[i];
+                if (x > maxX)
+                    maxX = x;
+                if (y > maxY)
+                    maxY = y;
+                if (x < minX)
+                    minX = x;
+                if (y < minY)
+                    minY = y;
+            }
+
+            int width = Math.Abs(minX) + maxX + 1;
+            int height = Math.Abs(minY) + maxY + 1;
+            bool[,] tileGrid = new bool[width, height];
+
+            for (int i = 0; i < tilelist.Count; i++)
+                tileGrid[tilelist[i].x + Math.Abs(minX), tilelist[i].y + Math.Abs(minY)] = true;
+            return tileGrid;
         }
     }
 }
