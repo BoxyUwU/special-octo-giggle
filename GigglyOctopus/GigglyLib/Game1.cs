@@ -201,6 +201,7 @@ namespace GigglyLib
                     Content.Load<Texture2D>("Sprites/particles-orange")
                 ),
                 new ParticleSpawnerSys(world),
+                new ParticleBeamSys(world, Content.Load<Texture2D>("Sprites/particles-orange")),
                 new ParticleSys(world),
                 new MarkerFadeSys(world)
             ); ;
