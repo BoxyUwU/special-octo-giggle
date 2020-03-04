@@ -91,7 +91,7 @@ namespace GigglyLib
             });
             _player.Set(new CParticleSpawner
             {
-                Texture = Content.Load<Texture2D>("Sprites/particles-pink"),
+                Texture = Content.Load<Texture2D>("Sprites/particles-rainbow"),
                 Impact = 1.0f
             });
             _player.Set(new CWeapon
