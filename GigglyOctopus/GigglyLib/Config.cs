@@ -70,5 +70,9 @@ namespace GigglyLib
         {
             return (float)_random.NextDouble();
         }
+        public static int RandInt(int max)
+        {
+            return _random.Next(max);
+        }
     }
 }
