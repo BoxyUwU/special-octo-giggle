@@ -142,6 +142,17 @@ namespace GigglyLib.Systems
 
                     var targetPos = targeted ? validTargets[i].Get<CGridPosition>() : pos;
 
+                    if (targeted)
+                    {
+                        var beamAnim = _world.CreateEntity();
+                        beamAnim.Set(new CParticleBeam { 
+                            SourceX = pos.X,
+                            SourceY = pos.Y,
+                            DestX = targetPos.X,
+                            DestY = targetPos.Y
+                        });
+                    }
+
                     for (int y = 0; y < attackWidth; y++)
                     {
                         for (int x = 0; x < attackLength; x++)
