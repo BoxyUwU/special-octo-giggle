@@ -32,14 +32,14 @@ namespace GigglyLib.Systems
             /////////////////////////
             while (true)
             {
-                int patrolWidth = 1+Config.RandInt(20);
-                int patrolHeight = 1+Config.RandInt(20);
+                int patrolWidth = 5+Config.RandInt(20);
+                int patrolHeight = 5+Config.RandInt(20);
                 int patrolDir = Config.RandInt(1) == 0 ? 1 : -1;
                 int patrol = (int)enemy.Get<CGridPosition>().Facing;
 
                 // We needa use the function to recalculate every time since this is a generator
-                while (Math.Abs(player.Get<CGridPosition>().X - enemy.Get<CGridPosition>().X) > 6
-                   || Math.Abs(player.Get<CGridPosition>().Y - enemy.Get<CGridPosition>().Y) > 6)
+                while (Math.Abs(player.Get<CGridPosition>().X - enemy.Get<CGridPosition>().X) > 7
+                   || Math.Abs(player.Get<CGridPosition>().Y - enemy.Get<CGridPosition>().Y) > 7)
                 {
                     switch (patrol)
                     {
@@ -67,7 +67,7 @@ namespace GigglyLib.Systems
                         0;
                 }
 
-                int aggroTimer = 10;
+                int aggroTimer = 5;
 
                 while (aggroTimer --> 0)
                 {
@@ -91,7 +91,7 @@ namespace GigglyLib.Systems
 
                 }
 
-                int escapeTimer = 10;
+                int escapeTimer = 1 + Config.RandInt(5);
 
                 while (escapeTimer --> 0)
                 {
