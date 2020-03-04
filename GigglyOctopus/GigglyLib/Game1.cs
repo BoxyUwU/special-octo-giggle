@@ -8,6 +8,7 @@ using GigglyLib.Components;
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
+using GigglyLib.ProcGen;
 
 namespace GigglyLib
 {
@@ -76,6 +77,8 @@ namespace GigglyLib
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Config.Textures.Add("enemy", Content.Load<Texture2D>("Sprites/enemy"));
 
             _player = world.CreateEntity();
             _player.Set(new CPlayer());
@@ -277,7 +280,7 @@ namespace GigglyLib
                 new TargetDelaySys(world),
                 new DamageHereSys(world),
                 new MoveActionSys(world),
-                new EnemySpawnSys(world, _player, Content.Load<Texture2D>("Sprites/enemy")),
+                //new EnemySpawnSys(world, _player, Content.Load<Texture2D>("Sprites/enemy")),
                 new EndSimSys(world)
             );
 
@@ -293,6 +296,8 @@ namespace GigglyLib
                 // this should go last
                 new EndVisualiseStateSys(world)
             );
+
+            new MapGenerator(world).Generate();
         }
 
         /// <summary>
