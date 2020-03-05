@@ -5,24 +5,62 @@ namespace GigglyLib.ProcGen
 {
     public class BSPSplit
     {
+        public bool IsLeaf = false;
         public int X1;
         public int Y1;
         public int X2;
         public int Y2;
-        public bool[,] Reg1;
-        public bool[,] Reg2;
+        public BSPSplit Child1;
+        public BSPSplit Child2;
+        public bool[,] Region;
+        public bool verticalSplit;
     }
 
     public class BSPGenerator
     {
-        public void Generate(bool[,] tiles)
+        public (BSPSplit root, List<BSPSplit> leafs) Generate(bool[,] tiles, int splitThreshold)
         {
             bool[,] sanitizedTiles = GetLargestRegion(tiles);
-            BSPSplit split = SplitRegion(sanitizedTiles, false);
+
+            var root = new BSPSplit { Region = sanitizedTiles };
+            var leafs = new List<BSPSplit>();
+            var openSet = new List<BSPSplit> { root };
+            var closedSet = new List<BSPSplit>();
+            while (openSet.Count > 0)
+            {
+                SplitRegion(openSet[0]);
+                closedSet.Add(openSet[0]);
+                openSet.RemoveAt(0);
+
+                if (openSet.Count == 0)
+                    while(closedSet.Count > 0)
+                    {
+                        if (GetTileCount(closedSet[0].Child1.Region) >= splitThreshold)
+                            openSet.Add(closedSet[0].Child1);
+                        else
+                        {
+                            closedSet[0].Child1.IsLeaf = true;
+                            leafs.Add(closedSet[0].Child1);
+                        }
+
+                        if (GetTileCount(closedSet[0].Child2.Region) >= splitThreshold)
+                            openSet.Add(closedSet[0].Child2);
+                        else
+                        {
+                            closedSet[0].Child2.IsLeaf = true;
+                            leafs.Add(closedSet[0].Child2);
+                        }
+
+                        closedSet.RemoveAt(0);
+                    }
+            }
+            return (root, leafs);
         }
     
-        public BSPSplit SplitRegion(bool[,] region, bool verticalSplit)
+        public void SplitRegion(BSPSplit split)
         {
+            bool verticalSplit = split.verticalSplit;
+            bool[,] region = split.Region;
             bool[,] clonedRegion = (bool[,])region.Clone();
 
             BSPSplit output = null;
@@ -36,6 +74,9 @@ namespace GigglyLib.ProcGen
             {
                 BSPSplit thisSplit = null;
                 bool startedSplit = false;
+
+                // Travel in the split direction until reaching an air tile then stop
+                // Replaces wall tiles with air tiles along the way
                 for (int splitLength = 0; splitLength < splitLengthMax; splitLength++)
                 {
                     int x = verticalSplit == true ? spltIndex : splitLength;
@@ -43,7 +84,11 @@ namespace GigglyLib.ProcGen
 
                     if (clonedRegion[x, y] && !startedSplit)
                     {
-                        thisSplit = new BSPSplit();
+                        thisSplit = new BSPSplit()
+                        {
+                            X1 = x,
+                            Y1 = y,
+                        };
                         startedSplit = true;
                         thisSplit.X1 = x;
                         thisSplit.Y1 = y;
@@ -58,9 +103,10 @@ namespace GigglyLib.ProcGen
                     clonedRegion[x, y] = false;
                 }
 
+                // Compare split quality to last split
                 if (GetRegionCount(clonedRegion) == 2)
                 {
-                    var (first, firstRegion, second, secondRegion) = GetTileCount(clonedRegion);
+                    var (first, firstRegion, second, secondRegion) = GetTwoTileCount(clonedRegion);
                     if (first != int.MinValue && second != int.MinValue)
                     {
                         var diff = first - second;
@@ -68,14 +114,19 @@ namespace GigglyLib.ProcGen
                         {
                             best = diff;
                             output = thisSplit;
-                            thisSplit.Reg1 = firstRegion;
-                            thisSplit.Reg2 = secondRegion;
+                            thisSplit.Child1 = new BSPSplit { Region = firstRegion, verticalSplit = !verticalSplit };
+                            thisSplit.Child2 = new BSPSplit { Region = secondRegion, verticalSplit = !verticalSplit };
                         }
                     }
                 }
                 clonedRegion = (bool[,])region.Clone();
             }
-            return output;
+            split.Child1 = output.Child1;
+            split.Child2 = output.Child2;
+            split.X1 = output.X1;
+            split.X2 = output.X2;
+            split.Y1 = output.Y1;
+            split.Y2 = output.Y2;
         }
 
         private int GetRegionCount(bool[,] map)
@@ -96,7 +147,22 @@ namespace GigglyLib.ProcGen
             return count;
         }
 
-        private (int first, bool[,] firstRegion, int second, bool[,] secondRegion) GetTileCount(bool[,] regions)
+        private int GetTileCount(bool[,] region)
+        {
+            for (int x = 0; x < region.GetLength(0); x++)
+            {
+                for (int y = 0; y < region.GetLength(1); y++)
+                {
+                    if (region[x, y])
+                    {
+                        return FloodFill((bool[,])region.Clone(), x, y).count;
+                    }
+                }
+            }
+            return 0;
+        }
+
+        private (int first, bool[,] firstRegion, int second, bool[,] secondRegion) GetTwoTileCount(bool[,] regions)
         {
             (int first, bool[,] firstRegion, int second, bool[,] secondRegion) output = (int.MinValue, null, int.MinValue, null);
 

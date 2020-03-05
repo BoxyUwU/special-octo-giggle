@@ -34,16 +34,19 @@ namespace GigglyLib.ProcGen
             {
                 tiles = _metaballGen.Generate();
                 tiles = _CAGen.DoSimulationStep(tiles, 5);
-                _BSPGen.Generate(tiles);
+                var (root, leafs) = _BSPGen.Generate(tiles, 200);
 
-                debugOutput += DebugOutput(tiles);
+                debugOutput += DebugOutput(tiles, leafs);
             }
 
-            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
-            string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/" + "myMap" + ".txt";
-            StreamWriter streamWriter = new StreamWriter(filePath);
-            streamWriter.Write(debugOutput);
-            streamWriter.Close();
+            if (true)
+            {
+                Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
+                string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/" + "myMap" + ".txt";
+                StreamWriter streamWriter = new StreamWriter(filePath);
+                streamWriter.Write(debugOutput);
+                streamWriter.Close();
+            }
 
             CreateSprites(tiles);
             SpawnEnemy(3, -20, Direction.SOUTH);
@@ -116,14 +119,24 @@ namespace GigglyLib.ProcGen
             return e;
         }
 
-        private string DebugOutput(bool[,] tileGrid)
+        private string DebugOutput(bool[,] tileGrid, List<BSPSplit> BSPLeafs)
         {
             string output = "";
             for (int y = 0; y < tileGrid.GetLength(1); y++)
             {
                 for (int x = 0; x < tileGrid.GetLength(0); x++)
                 {
-                    if (tileGrid[x, y])
+                    string leaf = "";
+                    for (int i = 0; i < BSPLeafs.Count; i++)
+                        if (BSPLeafs[i].Region[x, y])
+                        {
+                            leaf = i.ToString();
+                            if (leaf.Length == 1)
+                                leaf = "0" + leaf;
+                        }
+                    if (leaf != "")
+                        output += leaf;
+                    else if (tileGrid[x, y])
                         output += "##";
                     else
                         output += "  ";
