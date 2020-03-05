@@ -39,11 +39,11 @@ namespace GigglyLib.ProcGen
                 debugOutput += DebugOutput(tiles);
             }
 
-            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
+            /*Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
             string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/" + "myMap" + ".txt";
             StreamWriter streamWriter = new StreamWriter(filePath);
             streamWriter.Write(debugOutput);
-            streamWriter.Close();
+            streamWriter.Close();*/
 
             CreateSprites(tiles);
             SpawnEnemy(3, -20, Direction.SOUTH);
