@@ -36,17 +36,14 @@ namespace GigglyLib.ProcGen
                 tiles = _CAGen.DoSimulationStep(tiles, 5);
                 var (root, leafs) = _BSPGen.Generate(tiles, 200);
 
-                debugOutput += DebugOutput(tiles, leafs);
+                //debugOutput += DebugOutput(tiles, leafs);
             }
 
-            if (true)
-            {
-                Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
-                string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/" + "myMap" + ".txt";
-                StreamWriter streamWriter = new StreamWriter(filePath);
-                streamWriter.Write(debugOutput);
-                streamWriter.Close();
-            }
+            //Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
+            //string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/" + "myMap" + ".txt";
+            //StreamWriter streamWriter = new StreamWriter(filePath);
+            //streamWriter.Write(debugOutput);
+            //streamWriter.Close();
 
             CreateSprites(tiles);
             SpawnEnemy(3, -20, Direction.SOUTH);
