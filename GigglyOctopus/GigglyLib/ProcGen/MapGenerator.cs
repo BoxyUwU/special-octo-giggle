@@ -24,7 +24,7 @@ namespace GigglyLib.ProcGen
         {
             _metaballGen = new MetaballGenerator(20f, 0.95f, _seed, 2, 4, angleVariance: 3.141f / 2f, angleVarianceDeadzone: 1f);
             _CAGen = new CAGenerator(_seed);
-            _BSPGen = new BSPGenerator();
+            _BSPGen = new BSPGenerator(_seed);
 
             string debugOutput = "";
             bool[,] tiles = null;

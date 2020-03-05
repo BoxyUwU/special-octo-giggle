@@ -16,7 +16,6 @@ namespace GigglyLib.ProcGen
             int mapHeight = map.GetLength(1);
             for (int i = 0; i < iterations; i++)
             {
-                Console.WriteLine("Simulating CA");
                 bool[,] newMap = new bool[mapWidth, mapHeight];
                 for (int y = 0, x = 0; x < mapWidth; x++)
                 {
@@ -27,6 +26,7 @@ namespace GigglyLib.ProcGen
                 }
                 map = newMap;
             }
+            Console.WriteLine($"CA finished running after {iterations} cycles");
             return map;
         }
 

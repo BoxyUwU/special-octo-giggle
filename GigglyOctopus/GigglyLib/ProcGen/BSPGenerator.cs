@@ -18,6 +18,12 @@ namespace GigglyLib.ProcGen
 
     public class BSPGenerator
     {
+        Random _rand;
+        public BSPGenerator(int seed)
+        {
+            _rand = new Random(seed);
+        }
+
         public (BSPSplit root, List<BSPSplit> leafs) Generate(bool[,] tiles, int splitThreshold)
         {
             bool[,] sanitizedTiles = GetLargestRegion(tiles);
@@ -26,12 +32,13 @@ namespace GigglyLib.ProcGen
             var leafs = new List<BSPSplit>();
             var openSet = new List<BSPSplit> { root };
             var closedSet = new List<BSPSplit>();
+            int totalSplits=0;
             while (openSet.Count > 0)
             {
                 SplitRegion(openSet[0]);
                 closedSet.Add(openSet[0]);
                 openSet.RemoveAt(0);
-
+                totalSplits++;
                 if (openSet.Count == 0)
                     while(closedSet.Count > 0)
                     {
@@ -54,6 +61,7 @@ namespace GigglyLib.ProcGen
                         closedSet.RemoveAt(0);
                     }
             }
+            Console.WriteLine($"BSP finished with {totalSplits} total splits, {leafs.Count} leafs");
             return (root, leafs);
         }
     
