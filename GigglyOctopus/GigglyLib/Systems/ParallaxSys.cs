@@ -9,20 +9,15 @@ namespace GigglyLib.Systems
 {
     public class ParallaxSys : AEntitySystem<float>
     {
-        private World _world;
-        private Entity _player;
-
-        public ParallaxSys(World world, Entity player)
-            : base(world.GetEntities().With<CParallaxBackground>().With<CSprite>().AsSet())
+        public ParallaxSys()
+            : base(Game1.world.GetEntities().With<CParallaxBackground>().With<CSprite>().AsSet())
         {
-            _world = world;
-            _player = player;
         }
 
         protected override void Update(float state, in Entity entity)
         {
-            var pos = _player.Get<CGridPosition>();
-            var playerSprite = _player.Get<CSprite>();
+            var pos = Game1._player.Get<CGridPosition>();
+            var playerSprite = Game1._player.Get<CSprite>();
             ref var sprite = ref entity.Get<CSprite>();
             ref var parallax = ref entity.Get<CParallaxBackground>();
 

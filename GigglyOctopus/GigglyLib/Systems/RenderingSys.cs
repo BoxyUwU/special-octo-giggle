@@ -11,8 +11,8 @@ namespace GigglyLib.Systems
     {
         SpriteBatch sb;
 
-        public RenderingSys(World world, SpriteBatch spriteBatch)
-            : base(world.GetEntities().With<CSprite>().AsSet())
+        public RenderingSys(SpriteBatch spriteBatch)
+            : base(Game1.world.GetEntities().With<CSprite>().AsSet())
         {
             sb = spriteBatch;
         }

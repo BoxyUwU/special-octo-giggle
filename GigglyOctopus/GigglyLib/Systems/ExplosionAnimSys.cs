@@ -11,13 +11,11 @@ namespace GigglyLib.Systems
 {
     public class ExplosionAnimSys : AEntitySystem<float>
     {
-        private World _world;
         private Texture2D _explosionTexture;
 
         public ExplosionAnimSys(World world, Texture2D explosionTexture)
             : base(world.GetEntities().With<CExplosionAnim>().With<CParticleColour>().With<CGridPosition>().AsSet())
         {
-            _world = world;
             _explosionTexture = explosionTexture;
         }
 

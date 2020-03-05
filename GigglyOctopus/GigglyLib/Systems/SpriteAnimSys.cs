@@ -8,8 +8,8 @@ namespace GigglyLib.Systems
 {
     public class SpriteAnimSys : AEntitySystem<float>
     {
-        public SpriteAnimSys(World world)
-            : base(world.GetEntities().With<CSprite>().With<CSourceRectangle>().With<CSpriteAnimation>().AsSet())
+        public SpriteAnimSys()
+            : base(Game1.world.GetEntities().With<CSprite>().With<CSourceRectangle>().With<CSpriteAnimation>().AsSet())
         { }
 
         protected override void Update(float state, in Entity entity)

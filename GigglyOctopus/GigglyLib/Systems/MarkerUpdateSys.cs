@@ -12,8 +12,8 @@ namespace GigglyLib.Systems
         Texture2D _playerTexture;
         Texture2D _dangerTexture;
         Texture2D _warningTexture;
-        public MarkerUpdateSys(World world, Texture2D playerTexture, Texture2D dangerTexture, Texture2D warningTexture)
-            : base(world.GetEntities().With<CGridPosition>().With<CTarget>().AsSet())
+        public MarkerUpdateSys(Texture2D playerTexture, Texture2D dangerTexture, Texture2D warningTexture)
+            : base(Game1.world.GetEntities().With<CGridPosition>().With<CTarget>().AsSet())
         {
             _playerTexture = playerTexture;
             _dangerTexture = dangerTexture;

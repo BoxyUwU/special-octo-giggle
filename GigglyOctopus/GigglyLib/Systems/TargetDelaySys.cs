@@ -7,12 +7,9 @@ namespace GigglyLib.Systems
 {
     public class TargetDelaySys : AEntitySystem<float>
     {
-        World _world;
-
-        public TargetDelaySys(World world)
-            : base(world.GetEntities().With<CTarget>().AsSet())
-        { 
-            _world = world; 
+        public TargetDelaySys()
+            : base(Game1.world.GetEntities().With<CTarget>().AsSet())
+        {  
         }
 
         protected override void Update(float state, in Entity entity)

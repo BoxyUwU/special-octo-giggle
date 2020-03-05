@@ -9,12 +9,9 @@ namespace GigglyLib.Systems
 {
     public class AttackActionSys : AEntitySystem<float>
     {
-        World _world;
-
-        public AttackActionSys(World world)
-            : base(world.GetEntities().With<CWeapon>().With<CGridPosition>().With<CSimTurn>().AsSet())
+        public AttackActionSys()
+            : base(Game1.world.GetEntities().With<CWeapon>().With<CGridPosition>().With<CSimTurn>().AsSet())
         {
-            _world = world;
         }
 
         protected override void Update(float state, in Entity entity)
@@ -28,7 +25,7 @@ namespace GigglyLib.Systems
                 return;
             }
 
-            var targetBuilder = _world.GetEntities().With<CGridPosition>();
+            var targetBuilder = Game1.world.GetEntities().With<CGridPosition>();
 
             if (entity.Has<CEnemy>())
                 targetBuilder.With<CPlayer>();
@@ -162,7 +159,7 @@ namespace GigglyLib.Systems
                         {
                             if(char.IsDigit(weapon.AttackPattern[y][x]))
                             {
-                                var target = _world.CreateEntity();
+                                var target = Game1.world.CreateEntity();
 
                                 int X =
                                     pos.Facing == Direction.EAST ? targetPos.X + (x - offsetLength) :

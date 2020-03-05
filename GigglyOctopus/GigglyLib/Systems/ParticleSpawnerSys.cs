@@ -9,18 +9,15 @@ namespace GigglyLib.Systems
 {
     public class ParticleSpawnerSys : AEntitySystem<float>
     {
-        private World _world;
-
-        public ParticleSpawnerSys(World world)
-            : base(world.GetEntities().With<CParticleSpawner>().With<CSprite>().AsSet())
+        public ParticleSpawnerSys()
+            : base(Game1.world.GetEntities().With<CParticleSpawner>().With<CSprite>().AsSet())
         {
-            _world = world;
         }
 
         protected override void Update(float state, in Entity entity)
         {
             var sprite = entity.Get<CSprite>();
-            var particle = _world.CreateEntity();
+            var particle = Game1.world.CreateEntity();
             float impact = entity.Get<CParticleSpawner>().Impact;
 
             float x = sprite.X;

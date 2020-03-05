@@ -7,8 +7,8 @@ namespace GigglyLib.Systems
 {
     public class RoundPrepSys : AEntitySystem<float>
     {
-        public RoundPrepSys(World world)
-            : base(world.GetEntities().WithEither<CPlayer>().Or<CEnemy>().AsSet())
+        public RoundPrepSys()
+            : base(Game1.world.GetEntities().WithEither<CPlayer>().Or<CEnemy>().AsSet())
         { }
 
         protected override void Update(float state, in Entity entity)

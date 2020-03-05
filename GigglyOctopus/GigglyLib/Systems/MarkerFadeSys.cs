@@ -8,8 +8,8 @@ namespace GigglyLib.Systems
 {
     public class MarkerFadeSys : AEntitySystem<float>
     {
-        public MarkerFadeSys(World world)
-            : base (world.GetEntities().With<CTargetAnim>().With<CGridPosition>().AsSet())
+        public MarkerFadeSys()
+            : base (Game1.world.GetEntities().With<CTargetAnim>().With<CGridPosition>().AsSet())
         {
         }
 

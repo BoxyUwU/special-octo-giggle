@@ -7,9 +7,8 @@ namespace GigglyLib.Systems
 {
     public class MoveActionSys : ISystem<float>
     {
-        World _world;
-        public MoveActionSys(World world)
-        { _world = world; }
+        public MoveActionSys()
+        {}
 
         public bool IsEnabled { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -17,8 +16,8 @@ namespace GigglyLib.Systems
 
         public void Update(float state)
         {
-            var enemies = _world.GetEntities().With<CGridPosition>().With<CMoveAction>().With<CEnemy>().AsSet().GetEntities();
-            var players = _world.GetEntities().With<CGridPosition>().With<CMoveAction>().With<CPlayer>().AsSet().GetEntities();
+            var enemies = Game1.world.GetEntities().With<CGridPosition>().With<CMoveAction>().With<CEnemy>().AsSet().GetEntities();
+            var players = Game1.world.GetEntities().With<CGridPosition>().With<CMoveAction>().With<CPlayer>().AsSet().GetEntities();
 
             foreach (var e in enemies)
                 MoveEntity(e);
