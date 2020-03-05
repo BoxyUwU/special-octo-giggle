@@ -12,6 +12,7 @@ namespace GigglyLib.ProcGen
         int _seed;
         MetaballGenerator _metaballGen;
         CAGenerator _CAGen;
+        BSPGenerator _BSPGen;
 
         public MapGenerator(World world, int seed) { _world = world; _seed = seed; }
 
@@ -19,6 +20,7 @@ namespace GigglyLib.ProcGen
         {
             _metaballGen = new MetaballGenerator(20f, 0.95f, _seed, 2, 4, angleVariance: 3.141f / 2f, angleVarianceDeadzone: 1f);
             _CAGen = new CAGenerator(_seed);
+            _BSPGen = new BSPGenerator();
 
             string debugOutput = "";
             bool[,] tiles = null;
@@ -28,6 +30,7 @@ namespace GigglyLib.ProcGen
             {
                 tiles = _metaballGen.Generate();
                 tiles = _CAGen.DoSimulationStep(tiles, 5);
+                _BSPGen.Generate(tiles);
 
                 debugOutput += DebugOutput(tiles);
             }
