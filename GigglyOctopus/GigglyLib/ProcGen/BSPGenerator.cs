@@ -32,7 +32,8 @@ namespace GigglyLib.ProcGen
             var leafs = new List<BSPSplit>();
             var openSet = new List<BSPSplit> { root };
             var closedSet = new List<BSPSplit>();
-            int totalSplits=0;
+            int totalSplits = 0;
+            int closedSetIndex = 0;
             while (openSet.Count > 0)
             {
                 SplitRegion(openSet[0]);
@@ -40,25 +41,25 @@ namespace GigglyLib.ProcGen
                 openSet.RemoveAt(0);
                 totalSplits++;
                 if (openSet.Count == 0)
-                    while(closedSet.Count > 0)
+                    for (int i = closedSetIndex; i < closedSet.Count; i++)
                     {
-                        if (GetTileCount(closedSet[0].Child1.Region) >= splitThreshold)
-                            openSet.Add(closedSet[0].Child1);
+                        if (GetTileCount(closedSet[i].Child1.Region) >= splitThreshold)
+                            openSet.Add(closedSet[i].Child1);
                         else
                         {
-                            closedSet[0].Child1.IsLeaf = true;
-                            leafs.Add(closedSet[0].Child1);
+                            closedSet[i].Child1.IsLeaf = true;
+                            leafs.Add(closedSet[i].Child1);
                         }
 
-                        if (GetTileCount(closedSet[0].Child2.Region) >= splitThreshold)
-                            openSet.Add(closedSet[0].Child2);
+                        if (GetTileCount(closedSet[i].Child2.Region) >= splitThreshold)
+                            openSet.Add(closedSet[i].Child2);
                         else
                         {
-                            closedSet[0].Child2.IsLeaf = true;
-                            leafs.Add(closedSet[0].Child2);
+                            closedSet[i].Child2.IsLeaf = true;
+                            leafs.Add(closedSet[i].Child2);
                         }
 
-                        closedSet.RemoveAt(0);
+                        closedSetIndex++;
                     }
             }
             Console.WriteLine($"BSP finished with {totalSplits} total splits, {leafs.Count} leafs");
@@ -112,9 +113,9 @@ namespace GigglyLib.ProcGen
                 }
 
                 // Compare split quality to last split
-                if (GetRegionCount(clonedRegion) == 2)
+                var (first, firstRegion, second, secondRegion, total) = GetTwoTileCount(clonedRegion);
+                if (total == 2)
                 {
-                    var (first, firstRegion, second, secondRegion) = GetTwoTileCount(clonedRegion);
                     if (first != int.MinValue && second != int.MinValue)
                     {
                         var diff = first - second;
@@ -170,17 +171,19 @@ namespace GigglyLib.ProcGen
             return 0;
         }
 
-        private (int first, bool[,] firstRegion, int second, bool[,] secondRegion) GetTwoTileCount(bool[,] regions)
+        private (int first, bool[,] firstRegion, int second, bool[,] secondRegion, int total) GetTwoTileCount(bool[,] regions)
         {
-            (int first, bool[,] firstRegion, int second, bool[,] secondRegion) output = (int.MinValue, null, int.MinValue, null);
+            (int first, bool[,] firstRegion, int second, bool[,] secondRegion, int total) output = (int.MinValue, null, int.MinValue, null, 0);
 
+            int height = regions.GetLength(1);
             for (int x = 0; x < regions.GetLength(0); x++)
             {
-                for (int y = 0; y < regions.GetLength(1); y++) 
+                for (int y = 0; y < height; y++) 
                 {
                     if (regions[x, y])
                     {
                         (int tiles, bool[,] filledRegion) = FloodFill(regions, x, y);
+                        output.total++;
                         if (tiles > output.first)
                         {
                             output.second = output.first;
