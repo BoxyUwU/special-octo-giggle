@@ -7,8 +7,13 @@ namespace GigglyLib.Systems
 {
     public class MoveActionSys : ISystem<float>
     {
+        EntitySet enemySet;
+        EntitySet playerSet;
         public MoveActionSys()
-        {}
+        {
+            enemySet = Game1.world.GetEntities().With<CGridPosition>().With<CMoveAction>().With<CEnemy>().AsSet();
+            playerSet = Game1.world.GetEntities().With<CGridPosition>().With<CMoveAction>().With<CPlayer>().AsSet();
+        }
 
         public bool IsEnabled { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -16,8 +21,8 @@ namespace GigglyLib.Systems
 
         public void Update(float state)
         {
-            var enemies = Game1.world.GetEntities().With<CGridPosition>().With<CMoveAction>().With<CEnemy>().AsSet().GetEntities();
-            var players = Game1.world.GetEntities().With<CGridPosition>().With<CMoveAction>().With<CPlayer>().AsSet().GetEntities();
+            var enemies = enemySet.GetEntities();
+            var players = playerSet.GetEntities();
 
             foreach (var e in enemies)
                 MoveEntity(e);
