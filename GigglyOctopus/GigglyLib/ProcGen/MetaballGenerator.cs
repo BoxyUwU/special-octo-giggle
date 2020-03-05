@@ -4,19 +4,21 @@ using Microsoft.Xna.Framework;
 
 namespace GigglyLib.ProcGen
 {
-    internal class Circle
+    internal struct Circle
     {
         public Circle(Vector2 pos, float radius, float spawnDir)
         {
             P = pos;
             R = radius;
             SpawnDir = spawnDir;
+            Depth = 0;
         }
         public Circle(float x, float y, float radius, float spawnDir)
         {
             P = new Vector2(x, y);
             R = radius;
             SpawnDir = spawnDir;
+            Depth = 0;
         }
         public Vector2 P;
         public float R;
