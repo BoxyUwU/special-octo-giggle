@@ -15,8 +15,8 @@ namespace GigglyLib.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-            var pos = entity.Get<CGridPosition>();
-            var playerPos = Game1._player.Get<CGridPosition>();
+            ref var pos = ref entity.Get<CGridPosition>();
+            ref var playerPos = ref Game1._player.Get<CGridPosition>();
             var toDispose = new List<Entity>();
             if (pos.X == playerPos.X && pos.Y == playerPos.Y)
             {

@@ -38,7 +38,7 @@ namespace GigglyLib.Systems
                             {
                                 ref var sprite = ref ships[i].Get<CSprite>();
                                 shipPos.Facing = Direction.NORTH;
-                                sprite.Texture = Config.Textures["power-up"];
+                                sprite.Texture = "power-up";
                                 ships[i].Set<CPowerUp>();
                                 ships[i].Remove<CEnemy>();
                             }

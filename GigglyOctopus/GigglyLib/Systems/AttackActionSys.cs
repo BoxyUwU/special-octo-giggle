@@ -88,8 +88,8 @@ namespace GigglyLib.Systems
                 float posY = pos.Y;
                 // Prioritize Later
                 validTargets.Sort((a, b) => {
-                    var aPos = a.Get<CGridPosition>();
-                    var bPos = b.Get<CGridPosition>();
+                    ref var aPos = ref a.Get<CGridPosition>();
+                    ref var bPos = ref b.Get<CGridPosition>();
                     // Priority 1: Front > Behind
 
                     if (dir == Direction.NORTH)

@@ -19,8 +19,8 @@ namespace GigglyLib.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-            CSprite sprite = entity.Get<CSprite>();
-            Texture2D texture = entity.Get<CSprite>().Texture;
+            ref CSprite sprite = ref entity.Get<CSprite>();
+            var texture = Config.Textures[sprite.Texture];
             float scale = 1;
             if (entity.Has<CScalable>())
             {

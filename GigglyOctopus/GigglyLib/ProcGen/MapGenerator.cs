@@ -16,9 +16,8 @@ namespace GigglyLib.ProcGen
         MetaballGenerator _metaballGen;
         CAGenerator _CAGen;
         BSPGenerator _BSPGen;
-        Texture2D _particleRainbowTexture;
 
-        public MapGenerator(int seed, Texture2D particleRainbowTexture) {_seed = seed; _particleRainbowTexture = particleRainbowTexture; }
+        public MapGenerator(int seed) {_seed = seed;}
 
         public void Generate()
         {
@@ -46,11 +45,11 @@ namespace GigglyLib.ProcGen
             streamWriter.Close();*/
 
             CreateSprites(tiles);
-            SpawnEnemy(3, -20, Direction.SOUTH);
-            SpawnEnemy(-4, -16, Direction.SOUTH);
-            SpawnEnemy(5, 5);
-            SpawnEnemy(10, 7);
-            SpawnEnemy(-7, 2, Direction.EAST);
+            //SpawnEnemy(3, -20, Direction.SOUTH);
+            //SpawnEnemy(-4, -16, Direction.SOUTH);
+            //SpawnEnemy(5, 5);
+            //SpawnEnemy(10, 7);
+            //SpawnEnemy(-7, 2, Direction.EAST);
             CreatePlayer();
         }
 
@@ -67,13 +66,13 @@ namespace GigglyLib.ProcGen
             });
             _player.Set(new CSprite
             {
-                Texture = Config.Textures["player"],
+                Texture = "player",
                 Transparency = 0.1f,
                 Depth = 0.5f
             });
             _player.Set(new CParticleSpawner
             {
-                Texture = _particleRainbowTexture,
+                Texture = "particles-rainbow",
                 Impact = 1.0f
             });
             var weapons = new CWeaponsArray
@@ -117,7 +116,7 @@ namespace GigglyLib.ProcGen
                     if (!tiles[x, y])
                         continue;
                     var tileEntity = Game1.world.CreateEntity();
-                    tileEntity.Set(new CSprite { Texture = Config.Textures["asteroid"], Depth = 0.49f, X = x * Config.TileSize, Y = y * Config.TileSize });
+                    tileEntity.Set(new CSprite { Texture = "asteroid", Depth = 0.49f, X = x * Config.TileSize, Y = y * Config.TileSize });
                     tileEntity.Set(new CGridPosition { X = x, Y = y });
                 }
         }
@@ -145,7 +144,7 @@ namespace GigglyLib.ProcGen
                     Impact = 1.0f
                 });
             }
-            e.Set(new CSprite { Texture = Config.Textures["enemy"], Depth = 0.25f, X = gX * Config.TileSize, Y = gY * Config.TileSize, });
+            e.Set(new CSprite { Texture = "enemy", Depth = 0.25f, X = gX * Config.TileSize, Y = gY * Config.TileSize, });
             return e;
         }
 

@@ -28,7 +28,7 @@ namespace GigglyLib.Systems
         private void MoveEntity(Entity e)
         {
             ref var pos = ref e.Get<CGridPosition>();
-            var moving = e.Get<CMoveAction>();
+            ref var moving = ref e.Get<CMoveAction>();
 
             pos.Facing =
                 moving.DistX > 0 ? Direction.EAST :

@@ -9,20 +9,13 @@ namespace GigglyLib.Systems
 {
     public class TargetHighlightingSys : AEntitySystem<float>
     {
-        Texture2D _playerTexture;
-        Texture2D _dangerTexture;
-        Texture2D _warningTexture;
-        public TargetHighlightingSys(Texture2D playerTexture, Texture2D dangerTexture, Texture2D warningTexture)
+        public TargetHighlightingSys()
             : base(Game1.world.GetEntities().With<CTargetAnim>().With<CGridPosition>().AsSet())
-        {
-            _playerTexture = playerTexture;
-            _dangerTexture = dangerTexture;
-            _warningTexture = warningTexture;
-        }
+        { }
 
         protected override void Update(float state, in Entity entity)
         {
-            var pos = entity.Get<CGridPosition>();
+            ref var pos = ref entity.Get<CGridPosition>();
             ref var anim = ref entity.Get<CTargetAnim>();
             if (!entity.Has<CSprite>())
             {
@@ -31,9 +24,9 @@ namespace GigglyLib.Systems
                     X = pos.X * Config.TileSize,
                     Y = pos.Y * Config.TileSize,
                     Texture =
-                        anim.TargetType == CTargetAnim.Type.PLAYER ? _playerTexture :
-                        anim.TargetType == CTargetAnim.Type.DANGER ? _dangerTexture :
-                        _warningTexture,
+                        anim.TargetType == CTargetAnim.Type.PLAYER ? "target-player" :
+                        anim.TargetType == CTargetAnim.Type.DANGER ? "target-enemy-danger" :
+                        "target-enemy-warning",
                     Transparency = 1.0f,
                     Depth = 0.2f
                 });

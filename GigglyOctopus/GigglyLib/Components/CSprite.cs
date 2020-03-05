@@ -8,7 +8,7 @@ namespace GigglyLib.Components
     {
         public float X;
         public float Y;
-        public Texture2D Texture;
+        public string Texture;
         public float Rotation;
         public float Transparency;
         public float Depth;

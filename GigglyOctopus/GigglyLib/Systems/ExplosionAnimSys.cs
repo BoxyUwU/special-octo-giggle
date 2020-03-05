@@ -11,17 +11,14 @@ namespace GigglyLib.Systems
 {
     public class ExplosionAnimSys : AEntitySystem<float>
     {
-        private Texture2D _explosionTexture;
 
-        public ExplosionAnimSys(Texture2D explosionTexture)
+        public ExplosionAnimSys()
             : base(world.GetEntities().With<CExplosionAnim>().With<CParticleColour>().With<CGridPosition>().AsSet())
-        {
-            _explosionTexture = explosionTexture;
-        }
+        { }
 
         protected override void Update(float state, in Entity entity)
         {
-            var pos = entity.Get<CGridPosition>();
+            ref var pos = ref entity.Get<CGridPosition>();
             var toDispose = new List<Entity>();
             if (!entity.Has<CSprite>())
             {
@@ -35,7 +32,7 @@ namespace GigglyLib.Systems
                 {
                     X = pos.X * Config.TileSize,
                     Y = pos.Y * Config.TileSize,
-                    Texture = _explosionTexture,
+                    Texture = "particles-explosion",
                     Rotation = Config.Rand() * (float) Math.PI * 2,
                     Depth = 0.7f
                 });

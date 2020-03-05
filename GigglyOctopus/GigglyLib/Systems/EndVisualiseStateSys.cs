@@ -25,7 +25,7 @@ namespace GigglyLib.Systems
                 foreach (var entity in set.GetEntities())
                 {
                     ref var sprite = ref entity.Get<CSprite>();
-                    var pos = entity.Get<CGridPosition>();
+                    ref var pos = ref entity.Get<CGridPosition>();
                     sprite.X = pos.X * Config.TileSize;
                     sprite.Y = pos.Y * Config.TileSize;
                 }

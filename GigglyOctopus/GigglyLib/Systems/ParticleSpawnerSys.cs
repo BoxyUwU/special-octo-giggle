@@ -16,7 +16,7 @@ namespace GigglyLib.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-            var sprite = entity.Get<CSprite>();
+            ref var sprite = ref entity.Get<CSprite>();
             var particle = Game1.world.CreateEntity();
             float impact = entity.Get<CParticleSpawner>().Impact;
 
@@ -26,7 +26,7 @@ namespace GigglyLib.Systems
             x += (Config.Rand() - 0.5f) * 0.2f * Config.TileSize * impact;
             y += (Config.Rand() - 0.5f) * 0.2f * Config.TileSize * impact;
 
-            var spawner = entity.Get<CParticleSpawner>();
+            ref var spawner = ref entity.Get<CParticleSpawner>();
             var texture = spawner.Texture;
             float depth = 0;
 
@@ -46,7 +46,7 @@ namespace GigglyLib.Systems
                             texture = Game1.PARTICLES[2];
                             break;
                         default:
-                            texture = Config.Textures["particles-smoke"];
+                            texture = "particles-smoke";
                             depth = 0.1f;
                             break;
                     }

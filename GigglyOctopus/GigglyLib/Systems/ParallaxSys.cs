@@ -16,8 +16,8 @@ namespace GigglyLib.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-            var pos = Game1._player.Get<CGridPosition>();
-            var playerSprite = Game1._player.Get<CSprite>();
+            ref var pos = ref Game1._player.Get<CGridPosition>();
+            ref var playerSprite = ref Game1._player.Get<CSprite>();
             ref var sprite = ref entity.Get<CSprite>();
             ref var parallax = ref entity.Get<CParallaxBackground>();
 
@@ -31,8 +31,8 @@ namespace GigglyLib.Systems
                 pos.Facing == Direction.SOUTH ? -parallax.ScrollVelocity :
                 0;
 
-            float width = sprite.Texture.Width;
-            float height = sprite.Texture.Height;
+            float width = Config.Textures[sprite.Texture].Width;
+            float height = Config.Textures[sprite.Texture].Height;
 
             if (parallax.OffsetX < -width/2)
                 parallax.OffsetX += width;
