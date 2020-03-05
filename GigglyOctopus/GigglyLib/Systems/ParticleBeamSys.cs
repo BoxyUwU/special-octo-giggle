@@ -5,6 +5,7 @@ using DefaultEcs.System;
 using GigglyLib.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using static GigglyLib.Game1;
 
 namespace GigglyLib.Systems
 {
@@ -38,7 +39,7 @@ namespace GigglyLib.Systems
 
                     particle.Set(new CSprite
                     {
-                        Texture = Game1.PARTICLES[(int) beam.Colour],
+                        Texture = PARTICLES[beam.RandomColours ? Config.RandInt(18) : (int) beam.Colour],
                         Rotation = Config.Rand() * 2 * (float)Math.PI,
                         Transparency = (Config.Rand() * 0.2f) + 0.12f,
                         X = beam.SourceX * Config.TileSize + beam.X,

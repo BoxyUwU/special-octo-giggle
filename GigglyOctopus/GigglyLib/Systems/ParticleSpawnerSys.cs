@@ -29,8 +29,10 @@ namespace GigglyLib.Systems
             x += (Config.Rand() - 0.5f) * 0.2f * Config.TileSize * impact;
             y += (Config.Rand() - 0.5f) * 0.2f * Config.TileSize * impact;
 
+            var spawner = entity.Get<CParticleSpawner>();
+
             particle.Set(new CSprite {
-                Texture = entity.Get<CParticleSpawner>().Texture,
+                Texture = spawner.RandomColours ? Game1.PARTICLES[Config.RandInt(18)] : spawner.Texture,
                 Rotation = Config.Rand() * 2 * (float)Math.PI,
                 Transparency = (Config.Rand() * 0.2f) + 0.12f,
                 X = x,

@@ -151,7 +151,8 @@ namespace GigglyLib.Systems
                             SourceY = pos.Y,
                             DestX = targetPos.X,
                             DestY = targetPos.Y,
-                            Colour = weapon.Colour
+                            Colour = weapon.Colour,
+                            RandomColours = weapon.RandomColours
                         });
                     }
 
@@ -185,19 +186,19 @@ namespace GigglyLib.Systems
                                 {
                                     Source = entity.Has<CPlayer>() ? "PLAYER" : "ENEMY",
                                     Damage = weapon.Damage,
-                                    Delay = (int) char.GetNumericValue(weapon.AttackPattern[y][x]),
-                                    Colour = weapon.Colour
+                                    Delay = (int) char.GetNumericValue(weapon.AttackPattern[y][x])
                                 });
 
+                                target.Set(new CParticleColour
+                                {
+                                    Colour = weapon.Colour,
+                                    RandomColours = weapon.RandomColours
+                                });
                             }
                         }
                     }
                 }
                 weapon.Cooldown = 0;
-                if (weapon.RandomColours)
-                {
-                    weapon.Colour = (Colour) Config.RandInt(18);
-                }
             }
 
             entity.Remove<CAttackAction>();

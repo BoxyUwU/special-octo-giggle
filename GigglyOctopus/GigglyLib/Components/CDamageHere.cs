@@ -7,6 +7,5 @@ namespace GigglyLib.Components
     {
         public int Amount;
         public string Source;
-        public Colour Colour;
     }
 }

@@ -18,5 +18,6 @@ namespace GigglyLib.Components
         public float Y;
         public int Frame;
         public Colour Colour;
+        public bool RandomColours;
     }
 }

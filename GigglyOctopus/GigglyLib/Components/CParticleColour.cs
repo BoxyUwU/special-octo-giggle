@@ -1,16 +1,15 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static GigglyLib.Game1;
 
 namespace GigglyLib.Components
 {
-    struct CParticleSpawner
+    struct CParticleColour
     {
-        public Texture2D Texture;
-        public float Impact;
+        public Colour Colour;
         public bool RandomColours;
     }
 }

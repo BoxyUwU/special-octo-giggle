@@ -9,6 +9,5 @@ namespace GigglyLib.Components
 {
     struct CExplosionAnim
     {
-        public Colour Colour;
     }
 }

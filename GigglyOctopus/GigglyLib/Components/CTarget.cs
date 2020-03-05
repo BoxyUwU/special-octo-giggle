@@ -9,6 +9,5 @@ namespace GigglyLib.Components
         public int Delay;
         public string Source;
         public int Damage;
-        public Colour Colour;
     }
 }

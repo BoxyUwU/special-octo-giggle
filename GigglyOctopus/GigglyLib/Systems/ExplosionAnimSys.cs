@@ -5,6 +5,7 @@ using DefaultEcs.System;
 using GigglyLib.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using static GigglyLib.Game1;
 
 namespace GigglyLib.Systems
 {
@@ -14,7 +15,7 @@ namespace GigglyLib.Systems
         private Texture2D _explosionTexture;
 
         public ExplosionAnimSys(World world, Texture2D explosionTexture)
-            : base(world.GetEntities().With<CExplosionAnim>().With<CGridPosition>().AsSet())
+            : base(world.GetEntities().With<CExplosionAnim>().With<CParticleColour>().With<CGridPosition>().AsSet())
         {
             _world = world;
             _explosionTexture = explosionTexture;
@@ -26,9 +27,11 @@ namespace GigglyLib.Systems
             var toDispose = new List<Entity>();
             if (!entity.Has<CSprite>())
             {
+                CParticleColour colour = entity.Get<CParticleColour>();
                 entity.Set(new CParticleSpawner {
-                    Texture = Game1.PARTICLES[(int)entity.Get<CExplosionAnim>().Colour],
-                    Impact = 3
+                    Texture = PARTICLES[(int) colour.Colour],
+                    Impact = 3,
+                    RandomColours = colour.RandomColours
                 });
                 entity.Set(new CSprite
                 {
