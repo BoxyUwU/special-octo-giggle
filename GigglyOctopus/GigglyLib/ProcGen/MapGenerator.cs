@@ -76,7 +76,11 @@ namespace GigglyLib.ProcGen
                 Texture = _particleRainbowTexture,
                 Impact = 1.0f
             });
-            _player.Set(new CWeapon
+            var weapons = new CWeaponsArray
+            {
+                Weapons = new List<CWeapon>()
+            };
+            weapons.Weapons.Add(new CWeapon
             {
                 Damage = 5,
                 RangeFront = 6,
@@ -91,6 +95,7 @@ namespace GigglyLib.ProcGen
                 Colour = (Colour)Config.RandInt(18),
                 RandomColours = true
             });
+            _player.Set(weapons);
         }
 
         private void CreateSprites(bool[,] tiles)
@@ -115,7 +120,9 @@ namespace GigglyLib.ProcGen
             e.Set(new CHealth { Max = 15 });
             var weapon = Config.Weapons[new List<string>(Config.Weapons.Keys)[Config.RandInt(Config.Weapons.Count)]];
             weapon.Colour = (Colour)Config.RandInt(18);
-            e.Set(weapon);
+            var weapons = new List<CWeapon>();
+            weapons.Add(weapon);
+            e.Set(new CWeaponsArray { Weapons = weapons });
             e.Set(new CSprite { Texture = Config.Textures["enemy"], Depth = 0.25f, X = gX * Config.TileSize, Y = gY * Config.TileSize, });
             return e;
         }
