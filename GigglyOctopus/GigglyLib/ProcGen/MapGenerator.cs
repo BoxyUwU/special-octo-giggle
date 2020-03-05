@@ -95,6 +95,17 @@ namespace GigglyLib.ProcGen
                 Colour = (Colour)Config.RandInt(18),
                 RandomColours = true
             });
+
+            //////////////////////////////////////////////////
+            //                  GODMODE +w+                 //
+            //////////////////////////////////////////////////
+            //foreach (var w in Config.Weapons.Values)      //
+            //{                                             //
+            //    var _w = w;                               //
+            //    _w.Colour = (Colour)Config.RandInt(18);   //
+            //    weapons.Weapons.Add(_w);                  //
+            //}                                             //
+            //////////////////////////////////////////////////
             _player.Set(weapons);
         }
 
