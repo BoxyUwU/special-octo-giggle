@@ -138,6 +138,7 @@ namespace GigglyLib
             Config.Textures.Add("bg-stars-3", Content.Load<Texture2D>("Sprites/bg-stars-3"));
             Config.Textures.Add("bg-stars-4", Content.Load<Texture2D>("Sprites/bg-stars-4"));
             Config.Textures.Add("particles-smoke", Content.Load<Texture2D>("Sprites/particles-smoke"));
+            Config.Textures.Add("power-up", Content.Load<Texture2D>("Sprites/power-up"));
         }
 
         private void CreateSystems()
@@ -179,6 +180,7 @@ namespace GigglyLib
                 new TargetDelaySys(),
                 new DamageHereSys(),
                 new MoveActionSys(),
+                new PowerUpSys(),
                 new EndSimSys()
             );
 

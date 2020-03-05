@@ -125,7 +125,10 @@ namespace GigglyLib.ProcGen
         public Entity SpawnEnemy(int gX, int gY, Direction dir = Direction.WEST)
         {
             var e = Game1.world.CreateEntity();
-            e.Set<CEnemy>();
+            bool hasPowerUp = Config.Rand() < 0.2;
+            e.Set(new CEnemy { 
+                HasPowerUp = hasPowerUp
+            });
             e.Set(new CGridPosition { X = gX, Y = gY, Facing = dir });
             e.Set<CMovable>();
             e.Set(new CHealth { Max = 15 });
@@ -134,6 +137,14 @@ namespace GigglyLib.ProcGen
             var weapons = new List<CWeapon>();
             weapons.Add(weapon);
             e.Set(new CWeaponsArray { Weapons = weapons });
+            if (hasPowerUp)
+            {
+                e.Set(new CParticleSpawner
+                {
+                    Texture = PARTICLES[(int)weapons[0].Colour],
+                    Impact = 1.0f
+                });
+            }
             e.Set(new CSprite { Texture = Config.Textures["enemy"], Depth = 0.25f, X = gX * Config.TileSize, Y = gY * Config.TileSize, });
             return e;
         }
