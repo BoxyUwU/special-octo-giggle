@@ -86,7 +86,7 @@ namespace GigglyLib
             },
             ["Nuke"] = new CWeapon
             {
-                Damage = 20,
+                Damage = 5,
                 RangeFront = 12,
                 RangeBack = 0,
                 RangeLeft = 6,

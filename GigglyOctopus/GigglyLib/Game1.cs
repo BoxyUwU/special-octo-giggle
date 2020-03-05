@@ -137,6 +137,7 @@ namespace GigglyLib
             Config.Textures.Add("bg-stars-2", Content.Load<Texture2D>("Sprites/bg-stars-2"));
             Config.Textures.Add("bg-stars-3", Content.Load<Texture2D>("Sprites/bg-stars-3"));
             Config.Textures.Add("bg-stars-4", Content.Load<Texture2D>("Sprites/bg-stars-4"));
+            Config.Textures.Add("particles-smoke", Content.Load<Texture2D>("Sprites/particles-smoke"));
         }
 
         private void CreateSystems()

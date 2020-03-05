@@ -61,6 +61,10 @@ namespace GigglyLib.ProcGen
             _player.Set(new CPlayer());
             _player.Set(new CGridPosition());
             _player.Set(new CMovable());
+            _player.Set(new CHealth
+            {
+                Max = 30
+            });
             _player.Set(new CSprite
             {
                 Texture = Config.Textures["player"],

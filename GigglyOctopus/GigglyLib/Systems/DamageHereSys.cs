@@ -16,19 +16,28 @@ namespace GigglyLib.Systems
         protected override void Update(float state, in Entity entity)
         {
             var pos = entity.Get<CGridPosition>();
-
-            var ships = Game1.world.GetEntities().With<CGridPosition>().With<CEnemy>().With<CHealth>().AsSet().GetEntities();
+            var damage = entity.Get<CDamageHere>();
+            var ships = Game1.world.GetEntities().With<CGridPosition>().With<CHealth>().AsSet().GetEntities();
             var toDispose = new List<Entity>();
 
             for (int i = 0; i < ships.Length; i++)
             {
                 var shipPos = ships[i].Get<CGridPosition>();
                 ref var shipHP = ref ships[i].Get<CHealth>();
-                if (shipPos.X == pos.X && shipPos.Y == pos.Y && entity.Get<CDamageHere>().Source == "PLAYER")
+                if (shipPos.X == pos.X && shipPos.Y == pos.Y)
                 {
-                    shipHP.Damage += entity.Get<CDamageHere>().Amount;
-                    if (shipHP.Damage >= shipHP.Max)
-                        toDispose.Add(ships[i]);
+                    if (ships[i].Has<CEnemy>() && damage.Source == "PLAYER" ||
+                        ships[i].Has<CPlayer>() && damage.Source == "ENEMY")
+                    {
+                        shipHP.Damage += damage.Amount;
+                        if (shipHP.Damage > shipHP.Max)
+                        {
+                            if (damage.Source == "ENEMY")
+                                Game1.GameState = GameState.Starting;
+                            else
+                                toDispose.Add(ships[i]);
+                        }
+                    }
                 }
             }
 
