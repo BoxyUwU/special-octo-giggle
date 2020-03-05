@@ -12,8 +12,8 @@ namespace GigglyLib.Systems
         Texture2D _playerTexture;
         Texture2D _dangerTexture;
         Texture2D _warningTexture;
-        public TargetHighlightingSys(World world, Texture2D playerTexture, Texture2D dangerTexture, Texture2D warningTexture)
-            : base(world.GetEntities().With<CTargetAnim>().With<CGridPosition>().AsSet())
+        public TargetHighlightingSys(Texture2D playerTexture, Texture2D dangerTexture, Texture2D warningTexture)
+            : base(Game1.world.GetEntities().With<CTargetAnim>().With<CGridPosition>().AsSet())
         {
             _playerTexture = playerTexture;
             _dangerTexture = dangerTexture;

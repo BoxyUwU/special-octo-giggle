@@ -9,12 +9,9 @@ namespace GigglyLib.Systems
 {
     public class ParticleSys : AEntitySystem<float>
     {
-        private World _world;
-
-        public ParticleSys(World world)
-            : base(world.GetEntities().With<CParticle>().With<CSprite>().AsSet())
+        public ParticleSys()
+            : base(Game1.world.GetEntities().With<CParticle>().With<CSprite>().AsSet())
         {
-            _world = world;
         }
 
         protected override void Update(float state, in Entity entity)

@@ -12,6 +12,12 @@ using GigglyLib.ProcGen;
 
 namespace GigglyLib
 {
+    public enum GameState 
+    {
+        Starting,
+        Playing,
+    }
+
     public enum RoundState
     {
         Player,
@@ -29,7 +35,7 @@ namespace GigglyLib
         int _seed;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        World world = new World();
+        public static World world = new World();
 
         SequentialSystem<float> simulateSys;
         SequentialSystem<float> playerInputSys;
@@ -39,7 +45,8 @@ namespace GigglyLib
         SequentialSystem<float> drawSys;
         SequentialSystem<float> roundPrepSys;
 
-        Entity _player;
+        public static Entity _player;
+        public static GameState GameState = GameState.Starting;
         public static int currentRoundState = 0;
         public static RoundState[] roundOrder = new RoundState[]
         {
@@ -81,91 +88,73 @@ namespace GigglyLib
 
             Config.Textures.Add("enemy", Content.Load<Texture2D>("Sprites/enemy"));
             Config.Textures.Add("asteroid", Content.Load<Texture2D>("Sprites/asteroid-tile"));
+            Config.Textures.Add("player", Content.Load<Texture2D>("Sprites/player"));
+            Config.Textures.Add("grid", Content.Load<Texture2D>("Sprites/grid"));
+            Config.Textures.Add("bg-stars-1", Content.Load<Texture2D>("Sprites/bg-stars-1"));
+            Config.Textures.Add("bg-stars-2", Content.Load<Texture2D>("Sprites/bg-stars-2"));
+            Config.Textures.Add("bg-stars-3", Content.Load<Texture2D>("Sprites/bg-stars-3"));
+            Config.Textures.Add("bg-stars-4", Content.Load<Texture2D>("Sprites/bg-stars-4"));
+        }
 
-            _player = world.CreateEntity();
-            _player.Set(new CPlayer());
-            _player.Set(new CGridPosition());
-            _player.Set(new CMovable());
-            _player.Set(new CSprite { 
-                Texture = Content.Load<Texture2D>("Sprites/player"), 
-                Transparency = 0.1f, 
-                Depth = 0.5f  
-            });
-            _player.Set(new CParticleSpawner
-            {
-                Texture = Content.Load<Texture2D>("Sprites/particles-pink"),
-                Impact = 1.0f
-            });
-            _player.Set(new CWeapon { 
-                Damage = 5, 
-                RangeFront = 4, 
-                RangeLeft = 4, 
-                RangeRight = 4,
-                RangeBack = 4,
-                CooldownMax = 5,
-                AttackPattern = new List<string>
-                    {
-                        "5555555555555",
-                        "5444444444445",
-                        "5433333333345",
-                        "5432222222345",
-                        "5432111112345",
-                        "5432100012345",
-                        "543210S012345",
-                        "5432100012345",
-                        "5432111112345",
-                        "5432222222345",
-                        "5433333333345",
-                        "5444444444445",
-                        "5555555555555",
-                    }
-            });
-            _player.Set(new CWeapon
-            {
-                Damage = 5,
-                RangeFront = 9,
-                RangeLeft = 0,
-                RangeRight = 0,
-                RangeBack = 0,
-                CooldownMax = 3,
-                AttackPattern = new List<string>
-                    {
-                        "S000111222333444555"
-                    }
-            });
-            _player.Set(new CWeapon
-            {
-                Damage = 5,
-                RangeFront = 5,
-                RangeLeft = 1,
-                RangeRight = 1,
-                RangeBack = 0,
-                CooldownMax = 3,
-                AttackPattern = new List<string>
-                    {
-                        "  2  ",
-                        "2 1 2",
-                        " 101 ",
-                        "2 1 2",
-                        "  2  "
-                    }
-            });
-            _player.Set(new CWeapon
-            {
-                Damage = 5,
-                RangeFront = 6,
-                RangeLeft = 2,
-                RangeRight = 2,
-                RangeBack = 1,
-                CooldownMax = 0,
-                AttackPattern = new List<string>
-                    {
-                       "0"
-                    }
-            });
+        private void CreateSystems()
+        {
+            drawSys = new SequentialSystem<float>(
+                new SpriteAnimSys(),
+                new RenderingSys(spriteBatch)
+            );
 
-            var bgTexture1 = Content.Load<Texture2D>("Sprites/bg-stars-1");
-            var background1 = world.CreateEntity();
+            particleSeqSys = new SequentialSystem<float>(
+                new ExplosionAnimSys(
+                    Content.Load<Texture2D>("Sprites/particles-explosion"),
+                    Content.Load<Texture2D>("Sprites/particles-orange")
+                ),
+                new ParticleSpawnerSys(),
+                new ParticleSys(),
+                new MarkerFadeSys()
+            ); ;
+
+            roundPrepSys = new SequentialSystem<float>(
+                new RoundPrepSys(),
+                new AttackActionSys(),
+                new MarkerUpdateSys(
+                    Content.Load<Texture2D>("Sprites/target-player"),
+                    Content.Load<Texture2D>("Sprites/target-enemy-danger"),
+                    Content.Load<Texture2D>("Sprites/target-enemy-warning")
+                )
+            );
+
+            playerInputSys = new SequentialSystem<float>(
+                new InputSys()
+            );
+
+            AISys = new SequentialSystem<float>(
+                new AISys()
+            );
+
+            simulateSys = new SequentialSystem<float>(
+                new TargetDelaySys(),
+                new DamageHereSys(),
+                new MoveActionSys(),
+                new EndSimSys()
+            );
+
+            visualiserSys = new SequentialSystem<float>(
+                new MoverSys(),
+                new ParallaxSys(),
+                new TargetHighlightingSys(
+                    Content.Load<Texture2D>("Sprites/target-player"),
+                    Content.Load<Texture2D>("Sprites/target-enemy-danger"),
+                    Content.Load<Texture2D>("Sprites/target-enemy-warning")
+                ),
+                // this should go last
+                new EndVisualiseStateSys()
+            );
+        }
+
+        private void CreateParallax()
+        {
+            var bgTexture1 = Config.Textures["bg-stars-1"];
+            var background1 = Game1.world.CreateEntity();
             background1.Set(new CParallaxBackground { ScrollVelocity = 1.2f });
             background1.Set(new CSprite
             {
@@ -175,12 +164,13 @@ namespace GigglyLib
                 Transparency = 0.3f,
                 Depth = 0.0003f
             });
-            background1.Set(new CSourceRectangle { 
-                Rectangle = new Rectangle(0, 0, Config.ScreenWidth + bgTexture1.Width, Config.ScreenHeight + bgTexture1.Height) 
+            background1.Set(new CSourceRectangle
+            {
+                Rectangle = new Rectangle(0, 0, Config.ScreenWidth + bgTexture1.Width, Config.ScreenHeight + bgTexture1.Height)
             });
 
-            var bgTexture2 = Content.Load<Texture2D>("Sprites/bg-stars-2");
-            var background2 = world.CreateEntity();
+            var bgTexture2 = Config.Textures["bg-stars-2"];
+            var background2 = Game1.world.CreateEntity();
             background2.Set(new CParallaxBackground { ScrollVelocity = 1.5f });
             background2.Set(new CSprite
             {
@@ -195,8 +185,8 @@ namespace GigglyLib
                 Rectangle = new Rectangle(0, 0, Config.ScreenWidth + bgTexture2.Width, Config.ScreenHeight + bgTexture2.Height)
             });
 
-            var bgTexture3 = Content.Load<Texture2D>("Sprites/bg-stars-3");
-            var background3 = world.CreateEntity();
+            var bgTexture3 = Config.Textures["bg-stars-3"];
+            var background3 = Game1.world.CreateEntity();
             background3.Set(new CParallaxBackground { ScrollVelocity = 0.6f });
             background3.Set(new CSprite
             {
@@ -211,8 +201,8 @@ namespace GigglyLib
                 Rectangle = new Rectangle(0, 0, Config.ScreenWidth + bgTexture3.Width, Config.ScreenHeight + bgTexture3.Height)
             });
 
-            var bgTexture4 = Content.Load<Texture2D>("Sprites/bg-stars-4");
-            var background4 = world.CreateEntity();
+            var bgTexture4 = Config.Textures["bg-stars-4"];
+            var background4 = Game1.world.CreateEntity();
             background4.Set(new CParallaxBackground { ScrollVelocity = 0.9f });
             background4.Set(new CSprite
             {
@@ -227,9 +217,10 @@ namespace GigglyLib
                 Rectangle = new Rectangle(0, 0, Config.ScreenWidth + bgTexture4.Width, Config.ScreenHeight + bgTexture4.Height)
             });
 
-            var gridTexture = Content.Load<Texture2D>("Sprites/grid");
-            var grid = world.CreateEntity();
-            grid.Set(new CParallaxBackground { 
+            var gridTexture = Config.Textures["grid"];
+            var grid = Game1.world.CreateEntity();
+            grid.Set(new CParallaxBackground
+            {
                 ScrollVelocity = 6,
                 OffsetY = gridTexture.Height / 2 - 0.5f,
                 OffsetX = 15.5f
@@ -244,64 +235,6 @@ namespace GigglyLib
             {
                 Rectangle = new Rectangle(0, 0, Config.ScreenWidth + gridTexture.Width, Config.ScreenHeight + gridTexture.Height)
             });
-
-            drawSys = new SequentialSystem<float>(
-                new SpriteAnimSys(world),
-                new RenderingSys(world, spriteBatch)
-            );
-
-            particleSeqSys = new SequentialSystem<float>(
-                new ExplosionAnimSys(world, 
-                    Content.Load<Texture2D>("Sprites/particles-explosion"),
-                    Content.Load<Texture2D>("Sprites/particles-orange")
-                ),
-                new ParticleSpawnerSys(world),
-                new ParticleSys(world),
-                new MarkerFadeSys(world)
-            ); ;
-
-            roundPrepSys = new SequentialSystem<float>(
-                new RoundPrepSys(world),
-                new AttackActionSys(world),
-                new MarkerUpdateSys(world,
-                    Content.Load<Texture2D>("Sprites/target-player"),
-                    Content.Load<Texture2D>("Sprites/target-enemy-danger"),
-                    Content.Load<Texture2D>("Sprites/target-enemy-warning")
-                )
-            );
-
-            playerInputSys = new SequentialSystem<float>(
-                new InputSys(world)
-            );
-
-            AISys = new SequentialSystem<float>(
-                new AISys(world, _player)
-            );
-
-            simulateSys = new SequentialSystem<float>(
-                new TargetDelaySys(world),
-                new DamageHereSys(world),
-                new MoveActionSys(world),
-                //new EnemySpawnSys(world, _player, Content.Load<Texture2D>("Sprites/enemy")),
-                new EndSimSys(world)
-            );
-
-            visualiserSys = new SequentialSystem<float>(
-                new MoverSys(world),
-                new ParallaxSys(world, _player),
-                new TargetHighlightingSys(
-                    world,
-                    Content.Load<Texture2D>("Sprites/target-player"),
-                    Content.Load<Texture2D>("Sprites/target-enemy-danger"),
-                    Content.Load<Texture2D>("Sprites/target-enemy-warning")
-                ),
-                // this should go last
-                new EndVisualiseStateSys(world)
-            );
-
-            _seed = new Random().Next();
-            Console.WriteLine($"seed: {_seed}");
-            new MapGenerator(world, _seed).Generate();
         }
 
         /// <summary>
@@ -323,36 +256,55 @@ namespace GigglyLib
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            particleSeqSys.Update(0.0f);
+            if (Keyboard.GetState().IsKeyDown(Keys.J))
+               GameState = GameState.Starting;
 
-            while (true)
+            if (GameState == GameState.Starting)
             {
-                currentRoundState = currentRoundState % roundOrder.Length;
-                int startingState = currentRoundState;
+                world.Dispose();
+                world = new World();
 
-                switch (roundOrder[currentRoundState])
+                _seed = new Random().Next();
+                Console.WriteLine($"seed: {_seed}");
+
+                CreateSystems();
+                CreateParallax();
+                new MapGenerator(_seed).Generate();
+
+                GameState = GameState.Playing;
+            }
+            else if (GameState == GameState.Playing)
+            {
+                particleSeqSys.Update(0.0f);
+                while (true)
                 {
-                    case RoundState.PostTurn:
-                        roundPrepSys.Update(0.0f);
-                        currentRoundState++;
-                        break;
-                    case RoundState.Player:
-                        playerInputSys.Update(0.0f);
-                        break;
-                    case RoundState.AI:
-                        AISys.Update(0.0f);
-                        currentRoundState++;
-                        break;
-                    case RoundState.Simulate:
-                        simulateSys.Update(0.0f);
-                        break;
-                    case RoundState.TurnVisualiser:
-                        visualiserSys.Update(0.0f);
+                    currentRoundState = currentRoundState % roundOrder.Length;
+                    int startingState = currentRoundState;
+
+                    switch (roundOrder[currentRoundState])
+                    {
+                        case RoundState.PostTurn:
+                            roundPrepSys.Update(0.0f);
+                            currentRoundState++;
+                            break;
+                        case RoundState.Player:
+                            playerInputSys.Update(0.0f);
+                            break;
+                        case RoundState.AI:
+                            AISys.Update(0.0f);
+                            currentRoundState++;
+                            break;
+                        case RoundState.Simulate:
+                            simulateSys.Update(0.0f);
+                            break;
+                        case RoundState.TurnVisualiser:
+                            visualiserSys.Update(0.0f);
+                            break;
+                    }
+
+                    if (currentRoundState == startingState || startingState == roundOrder.Length - 1)
                         break;
                 }
-
-                if (currentRoundState == startingState || startingState == roundOrder.Length - 1)
-                    break;
             }
 
             base.Update(gameTime);

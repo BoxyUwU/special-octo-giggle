@@ -8,12 +8,9 @@ namespace GigglyLib.Systems
 {
     public class MoverSys : AEntitySystem<float>
     {
-        private World _world;
-
-        public MoverSys(World world)
-            : base(world.GetEntities().With<CGridPosition>().With<CMovable>().With<CSprite>().With<CMoving>().AsSet())
+        public MoverSys()
+            : base(Game1.world.GetEntities().With<CGridPosition>().With<CMovable>().With<CSprite>().With<CMoving>().AsSet())
         {
-            _world = world;
         }
 
         protected override void Update(float state, in Entity entity)

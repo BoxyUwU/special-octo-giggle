@@ -7,10 +7,8 @@ namespace GigglyLib.Systems
 {
     public class EndVisualiseStateSys : ISystem<float>
     {
-        World _world;
-        public EndVisualiseStateSys(World world)
+        public EndVisualiseStateSys()
         {
-            _world = world;
         }
 
         public bool IsEnabled { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -18,12 +16,12 @@ namespace GigglyLib.Systems
 
         public void Update(float state)
         {
-            var movings = _world.GetEntities().With<CMoving>().AsSet();
+            var movings = Game1.world.GetEntities().With<CMoving>().AsSet();
             if (movings.Count == 0)
             {
                 Game1.currentRoundState++;
 
-                var set = _world.GetEntities().With<CSprite>().With<CGridPosition>().AsSet();
+                var set = Game1.world.GetEntities().With<CSprite>().With<CGridPosition>().AsSet();
                 foreach (var entity in set.GetEntities())
                 {
                     ref var sprite = ref entity.Get<CSprite>();

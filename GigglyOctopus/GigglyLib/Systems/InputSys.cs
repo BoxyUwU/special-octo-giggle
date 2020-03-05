@@ -8,8 +8,8 @@ namespace GigglyLib.Systems
 {
     public class InputSys : AEntitySystem<float>
     {
-        public InputSys(World world)
-            : base(world.GetEntities().With<CGridPosition>().With<CMovable>().With<CPlayer>().AsSet())
+        public InputSys()
+            : base(Game1.world.GetEntities().With<CGridPosition>().With<CMovable>().With<CPlayer>().AsSet())
         { }
 
         protected override void Update(float state, in Entity entity)

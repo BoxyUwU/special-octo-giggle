@@ -8,13 +8,9 @@ namespace GigglyLib.Systems
 {
     public class AISys : AEntitySystem<float>
     {
-        World _world;
-        Entity _player;
-        public AISys(World world, Entity player)
-            : base(world.GetEntities().With<CEnemy>().With<CMovable>().With<CGridPosition>().AsSet())
+        public AISys()
+            : base(Game1.world.GetEntities().With<CEnemy>().With<CMovable>().With<CGridPosition>().AsSet())
         {
-            _world = world;
-            _player = player;
         }
 
         public IEnumerator<CMoveAction> MoveGenerator(Entity enemy, Entity player)
@@ -121,7 +117,7 @@ namespace GigglyLib.Systems
         protected override void Update(float state, in Entity entity)
         {
             if (!entity.Has<CAIScript>())
-                entity.Set(new CAIScript { AI = MoveGenerator(entity, _player) });
+                entity.Set(new CAIScript { AI = MoveGenerator(entity, Game1._player) });
 
             var script = entity.Get<CAIScript>();
             script.AI.MoveNext();
