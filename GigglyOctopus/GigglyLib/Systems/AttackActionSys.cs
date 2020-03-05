@@ -142,7 +142,7 @@ namespace GigglyLib.Systems
 
                     if (targeted)
                     {
-                        var beamAnim = _world.CreateEntity();
+                        var beamAnim = Game1.world.CreateEntity();
                         beamAnim.Set(new CParticleBeam { 
                             SourceX = pos.X,
                             SourceY = pos.Y,

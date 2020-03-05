@@ -11,12 +11,9 @@ namespace GigglyLib.Systems
 {
     public class ParticleBeamSys : AEntitySystem<float>
     {
-        private World _world;
-
-        public ParticleBeamSys(World world)
-            : base(world.GetEntities().With<CParticleBeam>().AsSet())
+        public ParticleBeamSys()
+            : base(Game1.world.GetEntities().With<CParticleBeam>().AsSet())
         {
-            _world = world;
         }
 
         protected override void Update(float state, in Entity entity)
@@ -35,7 +32,7 @@ namespace GigglyLib.Systems
                 float tracer = 0;
                 while (tracer < distH / 6)
                 {
-                    var particle = _world.CreateEntity();
+                    var particle = Game1.world.CreateEntity();
 
                     particle.Set(new CSprite
                     {

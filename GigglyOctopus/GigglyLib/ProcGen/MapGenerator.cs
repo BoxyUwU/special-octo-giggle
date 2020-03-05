@@ -6,6 +6,7 @@ using GigglyLib.Components;
 using static GigglyLib.Game1;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace GigglyLib.ProcGen
 {
@@ -15,8 +16,9 @@ namespace GigglyLib.ProcGen
         MetaballGenerator _metaballGen;
         CAGenerator _CAGen;
         BSPGenerator _BSPGen;
+        Texture2D _particleRainbowTexture;
 
-        public MapGenerator(int seed) {_seed = seed; }
+        public MapGenerator(int seed, Texture2D particleRainbowTexture) {_seed = seed; _particleRainbowTexture = particleRainbowTexture; }
 
         public void Generate()
         {
@@ -53,7 +55,7 @@ namespace GigglyLib.ProcGen
         }
 
         private void CreatePlayer()
-        { 
+        {
             var _player = Game1.world.CreateEntity();
             Game1._player = _player;
             _player.Set(new CPlayer());
@@ -65,65 +67,10 @@ namespace GigglyLib.ProcGen
                 Transparency = 0.1f,
                 Depth = 0.5f
             });
-            //_player.Set(new CParticleSpawner
-            //{
-            //    Texture = Content.Load<Texture2D>("Sprites/particles-pink"),
-            //    Impact = 1.0f
-            //});
-            _player.Set(new CWeapon
+            _player.Set(new CParticleSpawner
             {
-                Damage = 5,
-                RangeFront = 4,
-                RangeLeft = 4,
-                RangeRight = 4,
-                RangeBack = 4,
-                CooldownMax = 5,
-                AttackPattern = new List<string>
-                    {
-                        "5555555555555",
-                        "5444444444445",
-                        "5433333333345",
-                        "5432222222345",
-                        "5432111112345",
-                        "5432100012345",
-                        "543210S012345",
-                        "5432100012345",
-                        "5432111112345",
-                        "5432222222345",
-                        "5433333333345",
-                        "5444444444445",
-                        "5555555555555",
-                    }
-            });
-            _player.Set(new CWeapon
-            {
-                Damage = 5,
-                RangeFront = 9,
-                RangeLeft = 0,
-                RangeRight = 0,
-                RangeBack = 0,
-                CooldownMax = 3,
-                AttackPattern = new List<string>
-                    {
-                        "S000111222333444555"
-                    }
-            });
-            _player.Set(new CWeapon
-            {
-                Damage = 5,
-                RangeFront = 5,
-                RangeLeft = 1,
-                RangeRight = 1,
-                RangeBack = 0,
-                CooldownMax = 3,
-                AttackPattern = new List<string>
-                    {
-                        "  2  ",
-                        "2 1 2",
-                        " 101 ",
-                        "2 1 2",
-                        "  2  "
-                    }
+                Texture = _particleRainbowTexture,
+                Impact = 1.0f
             });
             _player.Set(new CWeapon
             {
@@ -136,7 +83,9 @@ namespace GigglyLib.ProcGen
                 AttackPattern = new List<string>
                     {
                        "0"
-                    }
+                    },
+                Colour = (Colour)Config.RandInt(18),
+                RandomColours = true
             });
         }
 

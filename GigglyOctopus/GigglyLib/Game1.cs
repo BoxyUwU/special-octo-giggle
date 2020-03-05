@@ -145,46 +145,16 @@ namespace GigglyLib
                 new SpriteAnimSys(),
                 new RenderingSys(spriteBatch)
             );
-            _player = world.CreateEntity();
-            _player.Set(new CPlayer());
-            _player.Set(new CGridPosition());
-            _player.Set(new CMovable());
-            _player.Set(new CSprite { 
-                Texture = Content.Load<Texture2D>("Sprites/player"), 
-                Transparency = 0.1f, 
-                Depth = 0.5f  
-            });
-            _player.Set(new CParticleSpawner
-            {
-                Texture = Content.Load<Texture2D>("Sprites/particles-rainbow"),
-                Impact = 1.0f
-            });
-            _player.Set(new CWeapon
-            {
-                Damage = 5,
-                RangeFront = 6,
-                RangeLeft = 2,
-                RangeRight = 2,
-                RangeBack = 1,
-                CooldownMax = 0,
-                AttackPattern = new List<string>
-                    {
-                       "0"
-                    },
-                Colour = (Colour) Config.RandInt(18),
-                RandomColours = true
-            });
-            //_player.Set(Config.Weapons["Snowflake"]);
 
             particleSeqSys = new SequentialSystem<float>(
                 new ExplosionAnimSys(
-                    Content.Load<Texture2D>("Sprites/particles-explosion"),
-                    Content.Load<Texture2D>("Sprites/particles-orange")
+                    Content.Load<Texture2D>("Sprites/particles-explosion")
                 ),
                 new ParticleSpawnerSys(),
+                new ParticleBeamSys(),
                 new ParticleSys(),
                 new MarkerFadeSys()
-            ); ;
+            );
 
             roundPrepSys = new SequentialSystem<float>(
                 new RoundPrepSys(),
@@ -308,62 +278,6 @@ namespace GigglyLib
             {
                 Rectangle = new Rectangle(0, 0, Config.ScreenWidth + gridTexture.Width, Config.ScreenHeight + gridTexture.Height)
             });
-
-            drawSys = new SequentialSystem<float>(
-                new SpriteAnimSys(world),
-                new RenderingSys(world, spriteBatch)
-            );
-
-            particleSeqSys = new SequentialSystem<float>(
-                new ExplosionAnimSys(world, 
-                    Content.Load<Texture2D>("Sprites/particles-explosion")
-                ),
-                new ParticleSpawnerSys(world),
-                new ParticleBeamSys(world),
-                new ParticleSys(world),
-                new MarkerFadeSys(world)
-            ); ;
-
-            roundPrepSys = new SequentialSystem<float>(
-                new RoundPrepSys(world),
-                new AttackActionSys(world),
-                new MarkerUpdateSys(world,
-                    Content.Load<Texture2D>("Sprites/target-player"),
-                    Content.Load<Texture2D>("Sprites/target-enemy-danger"),
-                    Content.Load<Texture2D>("Sprites/target-enemy-warning")
-                )
-            );
-
-            playerInputSys = new SequentialSystem<float>(
-                new InputSys(world)
-            );
-
-            AISys = new SequentialSystem<float>(
-                new AISys(world, _player)
-            );
-
-            simulateSys = new SequentialSystem<float>(
-                new TargetDelaySys(world),
-                new DamageHereSys(world),
-                new MoveActionSys(world),
-                //new EnemySpawnSys(world, _player, Content.Load<Texture2D>("Sprites/enemy")),
-                new EndSimSys(world)
-            );
-
-            visualiserSys = new SequentialSystem<float>(
-                new MoverSys(world),
-                new ParallaxSys(world, _player),
-                new TargetHighlightingSys(
-                    world,
-                    Content.Load<Texture2D>("Sprites/target-player"),
-                    Content.Load<Texture2D>("Sprites/target-enemy-danger"),
-                    Content.Load<Texture2D>("Sprites/target-enemy-warning")
-                ),
-                // this should go last
-                new EndVisualiseStateSys(world)
-            );
-
-            new MapGenerator(world).Generate();
         }
 
         /// <summary>
@@ -398,7 +312,7 @@ namespace GigglyLib
 
                 CreateSystems();
                 CreateParallax();
-                new MapGenerator(_seed).Generate();
+                new MapGenerator(_seed, Content.Load<Texture2D>("Sprites/particles-rainbow")).Generate();
 
                 GameState = GameState.Playing;
             }

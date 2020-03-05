@@ -13,7 +13,7 @@ namespace GigglyLib.Systems
     {
         private Texture2D _explosionTexture;
 
-        public ExplosionAnimSys(World world, Texture2D explosionTexture)
+        public ExplosionAnimSys(Texture2D explosionTexture)
             : base(world.GetEntities().With<CExplosionAnim>().With<CParticleColour>().With<CGridPosition>().AsSet())
         {
             _explosionTexture = explosionTexture;
