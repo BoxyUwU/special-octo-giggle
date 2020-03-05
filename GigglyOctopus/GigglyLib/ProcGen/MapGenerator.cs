@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DefaultEcs;
 using GigglyLib.Components;
+using static GigglyLib.Game1;
 
 namespace GigglyLib.ProcGen
 {
@@ -26,7 +27,9 @@ namespace GigglyLib.ProcGen
             e.Set(new CGridPosition { X = gX, Y = gY, Facing = dir });
             e.Set<CMovable>();
             e.Set(new CHealth { Max = 15 });
-            e.Set(Config.Weapons[new List<string>(Config.Weapons.Keys)[new Random().Next(0, Config.Weapons.Count)]]);
+            var weapon = Config.Weapons[new List<string>(Config.Weapons.Keys)[Config.RandInt(Config.Weapons.Count)]];
+            weapon.Colour = (Colour)Config.RandInt(18);
+            e.Set(weapon);
             e.Set(new CSprite { Texture = Config.Textures["enemy"], Depth = 0.25f, X = gX * Config.TileSize, Y = gY * Config.TileSize, });
             return e;
         }

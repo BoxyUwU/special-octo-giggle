@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static GigglyLib.Game1;
 
 namespace GigglyLib.Components
 {
@@ -15,5 +17,6 @@ namespace GigglyLib.Components
         public float X;
         public float Y;
         public int Frame;
+        public Colour Colour;
     }
 }

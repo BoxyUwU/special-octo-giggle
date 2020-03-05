@@ -12,14 +12,12 @@ namespace GigglyLib.Systems
     {
         private World _world;
         private Texture2D _explosionTexture;
-        private Texture2D _particleTexture;
 
-        public ExplosionAnimSys(World world, Texture2D explosionTexture, Texture2D particleTexture)
+        public ExplosionAnimSys(World world, Texture2D explosionTexture)
             : base(world.GetEntities().With<CExplosionAnim>().With<CGridPosition>().AsSet())
         {
             _world = world;
             _explosionTexture = explosionTexture;
-            _particleTexture = particleTexture;
         }
 
         protected override void Update(float state, in Entity entity)
@@ -29,7 +27,7 @@ namespace GigglyLib.Systems
             if (!entity.Has<CSprite>())
             {
                 entity.Set(new CParticleSpawner {
-                    Texture = _particleTexture,
+                    Texture = Game1.PARTICLES[(int)entity.Get<CExplosionAnim>().Colour],
                     Impact = 3
                 });
                 entity.Set(new CSprite

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DefaultEcs;
 using DefaultEcs.System;
 using GigglyLib.Components;
+using static GigglyLib.Game1;
 
 namespace GigglyLib.Systems
 {
@@ -149,7 +150,8 @@ namespace GigglyLib.Systems
                             SourceX = pos.X,
                             SourceY = pos.Y,
                             DestX = targetPos.X,
-                            DestY = targetPos.Y
+                            DestY = targetPos.Y,
+                            Colour = weapon.Colour
                         });
                     }
 
@@ -183,7 +185,8 @@ namespace GigglyLib.Systems
                                 {
                                     Source = entity.Has<CPlayer>() ? "PLAYER" : "ENEMY",
                                     Damage = weapon.Damage,
-                                    Delay = (int) char.GetNumericValue(weapon.AttackPattern[y][x])
+                                    Delay = (int) char.GetNumericValue(weapon.AttackPattern[y][x]),
+                                    Colour = weapon.Colour
                                 });
 
                             }
@@ -191,6 +194,10 @@ namespace GigglyLib.Systems
                     }
                 }
                 weapon.Cooldown = 0;
+                if (weapon.RandomColours)
+                {
+                    weapon.Colour = (Colour) Config.RandInt(18);
+                }
             }
 
             entity.Remove<CAttackAction>();

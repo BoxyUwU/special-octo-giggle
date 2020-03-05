@@ -11,13 +11,11 @@ namespace GigglyLib.Systems
     public class ParticleBeamSys : AEntitySystem<float>
     {
         private World _world;
-        private Texture2D _texture;
 
-        public ParticleBeamSys(World world, Texture2D texture)
+        public ParticleBeamSys(World world)
             : base(world.GetEntities().With<CParticleBeam>().AsSet())
         {
             _world = world;
-            _texture = texture;
         }
 
         protected override void Update(float state, in Entity entity)
@@ -40,7 +38,7 @@ namespace GigglyLib.Systems
 
                     particle.Set(new CSprite
                     {
-                        Texture = _texture,
+                        Texture = Game1.PARTICLES[(int) beam.Colour],
                         Rotation = Config.Rand() * 2 * (float)Math.PI,
                         Transparency = (Config.Rand() * 0.2f) + 0.12f,
                         X = beam.SourceX * Config.TileSize + beam.X,

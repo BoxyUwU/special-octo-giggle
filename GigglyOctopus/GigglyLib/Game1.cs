@@ -49,6 +49,30 @@ namespace GigglyLib
             RoundState.TurnVisualiser,
         };
 
+        public enum Colour
+        {
+            RED,
+            ORANGE,
+            GOLDEN,
+            YELLOW,
+            LIME,
+            LIGHTGREEN,
+            GREEN,
+            SEAGREEN,
+            AQUAMARINE,
+            CYAN,
+            LIGHTBLUE,
+            BLUE,
+            VIOLET,
+            PURPLE,
+            LIGHTPURPLE,
+            PINK,
+            MAGENTA,
+            FUSCHIA
+        }
+
+        public static List<Texture2D> PARTICLES = new List<Texture2D>();
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -78,6 +102,25 @@ namespace GigglyLib
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-red"));
+            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-orange"));
+            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-golden"));
+            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-yellow"));
+            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-lime"));
+            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-lightgreen"));
+            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-green"));
+            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-seagreen"));
+            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-aquamarine"));
+            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-cyan"));
+            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-lightblue"));
+            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-blue"));
+            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-violet"));
+            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-purple"));
+            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-lightpurple"));
+            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-pink"));
+            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-magenta"));
+            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-fuschia"));
+
             Config.Textures.Add("enemy", Content.Load<Texture2D>("Sprites/enemy"));
 
             _player = world.CreateEntity();
@@ -105,7 +148,9 @@ namespace GigglyLib
                 AttackPattern = new List<string>
                     {
                        "0"
-                    }
+                    },
+                Colour = (Colour) Config.RandInt(18),
+                RandomColours = true
             });
             //_player.Set(Config.Weapons["Snowflake"]);
 
@@ -197,11 +242,10 @@ namespace GigglyLib
 
             particleSeqSys = new SequentialSystem<float>(
                 new ExplosionAnimSys(world, 
-                    Content.Load<Texture2D>("Sprites/particles-explosion"),
-                    Content.Load<Texture2D>("Sprites/particles-orange")
+                    Content.Load<Texture2D>("Sprites/particles-explosion")
                 ),
                 new ParticleSpawnerSys(world),
-                new ParticleBeamSys(world, Content.Load<Texture2D>("Sprites/particles-orange")),
+                new ParticleBeamSys(world),
                 new ParticleSys(world),
                 new MarkerFadeSys(world)
             ); ;

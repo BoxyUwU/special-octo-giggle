@@ -40,7 +40,7 @@ namespace GigglyLib.Systems
 
             var anim = _world.CreateEntity();
             anim.Set(pos);
-            anim.Set(new CExplosionAnim());
+            anim.Set(new CExplosionAnim { Colour = entity.Get<CDamageHere>().Colour });
 
             entity.Remove<CDamageHere>();
             base.Update(state, entity);
