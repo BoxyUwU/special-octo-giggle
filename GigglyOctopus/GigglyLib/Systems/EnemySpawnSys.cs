@@ -70,7 +70,7 @@ namespace GigglyLib.Systems
                         "0"
                     }
                     });
-                    enemy.Set(new CSprite { Texture = _enemyTexture, Depth = 0.25f, X = x * Config.TileSize, Y = y * Config.TileSize, });
+                    enemy.Set(new CSprite { Texture = "enemy", Depth = 0.25f, X = x * Config.TileSize, Y = y * Config.TileSize, });
                 }
             }
         }

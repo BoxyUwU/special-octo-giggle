@@ -79,7 +79,26 @@ namespace GigglyLib
             FUSCHIA
         }
 
-        public static List<Texture2D> PARTICLES = new List<Texture2D>();
+        public static List<string> PARTICLES = new List<string> { 
+            "particles-red",
+            "particles-orange",
+            "particles-golden",
+            "particles-yellow",
+            "particles-lime",
+            "particles-lightgreen",
+            "particles-green",
+            "particles-seagreen",
+            "particles-aquamarine",
+            "particles-cyan",
+            "particles-lightblue",
+            "particles-blue",
+            "particles-violet",
+            "particles-purple",
+            "particles-lightpurple",
+            "particles-pink",
+            "particles-magenta",
+            "particles-fuschia",
+        };
 
         public Game1()
         {
@@ -110,25 +129,6 @@ namespace GigglyLib
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-red"));
-            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-orange"));
-            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-golden"));
-            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-yellow"));
-            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-lime"));
-            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-lightgreen"));
-            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-green"));
-            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-seagreen"));
-            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-aquamarine"));
-            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-cyan"));
-            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-lightblue"));
-            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-blue"));
-            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-violet"));
-            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-purple"));
-            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-lightpurple"));
-            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-pink"));
-            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-magenta"));
-            PARTICLES.Add(Content.Load<Texture2D>("Sprites/particles-fuschia"));
-
             Config.Textures.Add("enemy", Content.Load<Texture2D>("Sprites/enemy"));
             Config.Textures.Add("asteroid", Content.Load<Texture2D>("Sprites/asteroid-tile"));
             Config.Textures.Add("player", Content.Load<Texture2D>("Sprites/player"));
@@ -137,6 +137,32 @@ namespace GigglyLib
             Config.Textures.Add("bg-stars-2", Content.Load<Texture2D>("Sprites/bg-stars-2"));
             Config.Textures.Add("bg-stars-3", Content.Load<Texture2D>("Sprites/bg-stars-3"));
             Config.Textures.Add("bg-stars-4", Content.Load<Texture2D>("Sprites/bg-stars-4"));
+
+            Config.Textures.Add("particles-red", Content.Load<Texture2D>("Sprites/particles-red"));
+            Config.Textures.Add("particles-orange", Content.Load<Texture2D>("Sprites/particles-orange"));
+            Config.Textures.Add("particles-golden", Content.Load<Texture2D>("Sprites/particles-golden"));
+            Config.Textures.Add("particles-yellow", Content.Load<Texture2D>("Sprites/particles-yellow"));
+            Config.Textures.Add("particles-lime", Content.Load<Texture2D>("Sprites/particles-lime"));
+            Config.Textures.Add("particles-lightgreen", Content.Load<Texture2D>("Sprites/particles-lightgreen"));
+            Config.Textures.Add("particles-green", Content.Load<Texture2D>("Sprites/particles-green"));
+            Config.Textures.Add("particles-seagreen", Content.Load<Texture2D>("Sprites/particles-seagreen"));
+            Config.Textures.Add("particles-aquamarine", Content.Load<Texture2D>("Sprites/particles-aquamarine"));
+            Config.Textures.Add("particles-cyan", Content.Load<Texture2D>("Sprites/particles-cyan"));
+            Config.Textures.Add("particles-lightblue", Content.Load<Texture2D>("Sprites/particles-lightblue"));
+            Config.Textures.Add("particles-blue", Content.Load<Texture2D>("Sprites/particles-blue"));
+            Config.Textures.Add("particles-violet", Content.Load<Texture2D>("Sprites/particles-violet"));
+            Config.Textures.Add("particles-purple", Content.Load<Texture2D>("Sprites/particles-purple"));
+            Config.Textures.Add("particles-lightpurple", Content.Load<Texture2D>("Sprites/particles-lightpurple"));
+            Config.Textures.Add("particles-pink", Content.Load<Texture2D>("Sprites/particles-pink"));
+            Config.Textures.Add("particles-magenta", Content.Load<Texture2D>("Sprites/particles-magenta"));
+            Config.Textures.Add("particles-fuschia", Content.Load<Texture2D>("Sprites/particles-fuschia"));
+            Config.Textures.Add("particles-explosion", Content.Load<Texture2D>("Sprites/particles-explosion"));
+            Config.Textures.Add("particles-smoke", Content.Load<Texture2D>("Sprites/particles-smoke"));
+            Config.Textures.Add("particles-rainbow", Content.Load<Texture2D>("Sprites/particles-rainbow"));
+            Config.Textures.Add("power-up", Content.Load<Texture2D>("Sprites/power-up"));
+            Config.Textures.Add("target-player", Content.Load<Texture2D>("Sprites/target-player"));
+            Config.Textures.Add("target-enemy-danger", Content.Load<Texture2D>("Sprites/target-enemy-danger"));
+            Config.Textures.Add("target-enemy-warning",Content.Load<Texture2D>("Sprites/target-enemy-warning"));
         }
 
         private void CreateSystems()
@@ -147,9 +173,7 @@ namespace GigglyLib
             );
 
             particleSeqSys = new SequentialSystem<float>(
-                new ExplosionAnimSys(
-                    Content.Load<Texture2D>("Sprites/particles-explosion")
-                ),
+                new ExplosionAnimSys(),
                 new ParticleSpawnerSys(),
                 new ParticleBeamSys(),
                 new ParticleSys(),
@@ -159,11 +183,7 @@ namespace GigglyLib
             roundPrepSys = new SequentialSystem<float>(
                 new RoundPrepSys(),
                 new AttackActionSys(),
-                new MarkerUpdateSys(
-                    Content.Load<Texture2D>("Sprites/target-player"),
-                    Content.Load<Texture2D>("Sprites/target-enemy-danger"),
-                    Content.Load<Texture2D>("Sprites/target-enemy-warning")
-                )
+                new MarkerUpdateSys()
             );
 
             playerInputSys = new SequentialSystem<float>(
@@ -178,17 +198,14 @@ namespace GigglyLib
                 new TargetDelaySys(),
                 new DamageHereSys(),
                 new MoveActionSys(),
+                new PowerUpSys(),
                 new EndSimSys()
             );
 
             visualiserSys = new SequentialSystem<float>(
                 new MoverSys(),
                 new ParallaxSys(),
-                new TargetHighlightingSys(
-                    Content.Load<Texture2D>("Sprites/target-player"),
-                    Content.Load<Texture2D>("Sprites/target-enemy-danger"),
-                    Content.Load<Texture2D>("Sprites/target-enemy-warning")
-                ),
+                new TargetHighlightingSys(),
                 // this should go last
                 new EndVisualiseStateSys()
             );
@@ -203,7 +220,7 @@ namespace GigglyLib
             {
                 X = -Config.ScreenWidth / 2,
                 Y = -Config.ScreenHeight / 2,
-                Texture = bgTexture1,
+                Texture = "bg-stars-1",
                 Transparency = 0.3f,
                 Depth = 0.0003f
             });
@@ -219,7 +236,7 @@ namespace GigglyLib
             {
                 X = -Config.ScreenWidth / 2,
                 Y = -Config.ScreenHeight / 2,
-                Texture = bgTexture2,
+                Texture = "bg-stars-2",
                 Transparency = 0.1f,
                 Depth = 0.0004f
             });
@@ -235,7 +252,7 @@ namespace GigglyLib
             {
                 X = -Config.ScreenWidth / 2,
                 Y = -Config.ScreenHeight / 2,
-                Texture = bgTexture3,
+                Texture = "bg-stars-3",
                 Transparency = 0.7f,
                 Depth = 0.0001f
             });
@@ -251,7 +268,7 @@ namespace GigglyLib
             {
                 X = -Config.ScreenWidth / 2,
                 Y = -Config.ScreenHeight / 2,
-                Texture = bgTexture4,
+                Texture = "bg-stars-4",
                 Transparency = 0.5f,
                 Depth = 0.0002f
             });
@@ -272,7 +289,7 @@ namespace GigglyLib
             {
                 X = 15.5f - Config.ScreenWidth / 2,
                 Y = gridTexture.Height / 2 - 0.5f - Config.ScreenHeight / 2,
-                Texture = gridTexture
+                Texture = "grid"
             });
             grid.Set(new CSourceRectangle
             {
@@ -312,7 +329,7 @@ namespace GigglyLib
 
                 CreateSystems();
                 CreateParallax();
-                new MapGenerator(_seed, Content.Load<Texture2D>("Sprites/particles-rainbow")).Generate();
+                new MapGenerator(_seed).Generate();
 
                 GameState = GameState.Playing;
             }
@@ -361,7 +378,7 @@ namespace GigglyLib
         {
             GraphicsDevice.Clear(new Color(15, 15, 15));
 
-            (float x, float y) = (-_player.Get<CSprite>().X + 640, -_player.Get<CSprite>().Y + 360);
+            (float x, float y) = (-_player.Get<CSprite>().X + Config.ScreenWidth / 2, -_player.Get<CSprite>().Y + Config.ScreenHeight / 2);
             var matrix = Matrix.CreateTranslation(x, y, 0);
             spriteBatch.Begin(SpriteSortMode.FrontToBack, null, SamplerState.LinearWrap, null, null, null, matrix);
             drawSys.Update(0.0f);

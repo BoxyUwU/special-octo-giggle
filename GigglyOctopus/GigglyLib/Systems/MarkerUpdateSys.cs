@@ -9,20 +9,13 @@ namespace GigglyLib.Systems
 {
     public class MarkerUpdateSys : AEntitySystem<float>
     {
-        Texture2D _playerTexture;
-        Texture2D _dangerTexture;
-        Texture2D _warningTexture;
-        public MarkerUpdateSys(Texture2D playerTexture, Texture2D dangerTexture, Texture2D warningTexture)
+        public MarkerUpdateSys()
             : base(Game1.world.GetEntities().With<CGridPosition>().With<CTarget>().AsSet())
-        {
-            _playerTexture = playerTexture;
-            _dangerTexture = dangerTexture;
-            _warningTexture = warningTexture;
-        }
+        { }
 
         protected override void Update(float state, in Entity entity)
         {
-            var target = entity.Get<CTarget>();
+            ref var target = ref entity.Get<CTarget>();
 
             if (target.Delay == 0)
             {

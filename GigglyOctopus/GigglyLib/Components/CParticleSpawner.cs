@@ -9,7 +9,7 @@ namespace GigglyLib.Components
 {
     struct CParticleSpawner
     {
-        public Texture2D Texture;
+        public string Texture;
         public float Impact;
         public bool RandomColours;
     }
