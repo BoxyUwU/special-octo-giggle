@@ -22,7 +22,7 @@ namespace GigglyLib.Systems
 
             for (int i = 0; i < ships.Length; i++)
             {
-                var shipPos = ships[i].Get<CGridPosition>();
+                ref var shipPos = ref ships[i].Get<CGridPosition>();
                 ref var shipHP = ref ships[i].Get<CHealth>();
                 if (shipPos.X == pos.X && shipPos.Y == pos.Y)
                 {
@@ -32,8 +32,16 @@ namespace GigglyLib.Systems
                         shipHP.Damage += damage.Amount;
                         if (shipHP.Damage > shipHP.Max)
                         {
-                            if (damage.Source == "ENEMY")
+                            if (ships[i].Has<CPlayer>())
                                 Game1.GameState = GameState.Starting;
+                            else if (ships[i].Has<CEnemy>() && ships[i].Get<CEnemy>().HasPowerUp)
+                            {
+                                ref var sprite = ref ships[i].Get<CSprite>();
+                                shipPos.Facing = Direction.NORTH;
+                                sprite.Texture = Config.Textures["power-up"];
+                                ships[i].Set<CPowerUp>();
+                                ships[i].Remove<CEnemy>();
+                            }
                             else
                                 toDispose.Add(ships[i]);
                         }
