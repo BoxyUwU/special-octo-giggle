@@ -30,7 +30,7 @@ namespace GigglyLib.ProcGen
             bool[,] tiles = null;
 
             // actual map gen code
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 1; i++)
             {
                 tiles = _metaballGen.Generate();
                 tiles = _CAGen.DoSimulationStep(tiles, 5);
