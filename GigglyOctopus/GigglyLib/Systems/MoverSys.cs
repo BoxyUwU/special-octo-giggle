@@ -31,6 +31,7 @@ namespace GigglyLib.Systems
             move.DistY -= y;
             sprite.X += x;
             move.DistX -= x;
+            sprite.Rotation = (int)pos.Facing * (float)(Math.PI / 2f);
 
             if (move.DistX == 0 && move.DistY == 0) {
                 entity.Remove<CMoving>();

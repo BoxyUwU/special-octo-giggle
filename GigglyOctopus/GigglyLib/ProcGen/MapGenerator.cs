@@ -45,11 +45,11 @@ namespace GigglyLib.ProcGen
             streamWriter.Close();*/
 
             CreateSprites(tiles);
-            //SpawnEnemy(3, -20, Direction.SOUTH);
-            //SpawnEnemy(-4, -16, Direction.SOUTH);
-            //SpawnEnemy(5, 5);
-            //SpawnEnemy(10, 7);
-            //SpawnEnemy(-7, 2, Direction.EAST);
+            SpawnEnemy(3, -20, Direction.SOUTH);
+            SpawnEnemy(-4, -16, Direction.SOUTH);
+            SpawnEnemy(5, 5);
+            SpawnEnemy(10, 7);
+            SpawnEnemy(-7, 2, Direction.EAST);
             CreatePlayer();
         }
 
@@ -82,10 +82,10 @@ namespace GigglyLib.ProcGen
             weapons.Weapons.Add(new CWeapon
             {
                 Damage = 5,
-                RangeFront = 6,
+                RangeFront = 7,
                 RangeLeft = 2,
                 RangeRight = 2,
-                RangeBack = 1,
+                RangeBack = -1,
                 CooldownMax = 0,
                 AttackPattern = new List<string>
                     {
@@ -125,9 +125,6 @@ namespace GigglyLib.ProcGen
         {
             var e = Game1.world.CreateEntity();
             bool hasPowerUp = Config.Rand() < 0.2;
-            e.Set(new CEnemy { 
-                HasPowerUp = hasPowerUp
-            });
             e.Set(new CGridPosition { X = gX, Y = gY, Facing = dir });
             e.Set<CMovable>();
             e.Set(new CHealth { Max = 15 });
@@ -136,6 +133,10 @@ namespace GigglyLib.ProcGen
             var weapons = new List<CWeapon>();
             weapons.Add(weapon);
             e.Set(new CWeaponsArray { Weapons = weapons });
+            e.Set(new CEnemy
+            {
+                HasPowerUp = hasPowerUp
+            });
             if (hasPowerUp)
             {
                 e.Set(new CParticleSpawner
@@ -144,7 +145,24 @@ namespace GigglyLib.ProcGen
                     Impact = 1.0f
                 });
             }
-            e.Set(new CSprite { Texture = "enemy", Depth = 0.25f, X = gX * Config.TileSize, Y = gY * Config.TileSize, });
+            e.Set(new CSprite { 
+                Texture = PARTICLES[(int)weapon.Colour].Replace("particles", "enemy"), 
+                Depth = 0.25f, 
+                X = gX * Config.TileSize, 
+                Y = gY * Config.TileSize,
+                Transparency = 0.05f
+            });
+            e.Set(new CScalable{ Scale = 1.5f });
+            e.Set(new CSourceRectangle
+            {
+                Rectangle = new Rectangle
+                {
+                    X = Config.RandInt(10) * Config.TileSize,
+                    Y = Config.RandInt(10) * Config.TileSize,
+                    Height = Config.TileSize,
+                    Width = Config.TileSize
+                }
+            });
             return e;
         }
 

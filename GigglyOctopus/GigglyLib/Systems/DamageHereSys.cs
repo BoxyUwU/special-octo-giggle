@@ -37,10 +37,11 @@ namespace GigglyLib.Systems
                             else if (ships[i].Has<CEnemy>() && ships[i].Get<CEnemy>().HasPowerUp)
                             {
                                 ref var sprite = ref ships[i].Get<CSprite>();
-                                shipPos.Facing = Direction.NORTH;
+                                sprite.Rotation = 0;
                                 sprite.Texture = "power-up";
                                 ships[i].Set<CPowerUp>();
                                 ships[i].Remove<CEnemy>();
+                                ships[i].Remove<CScalable>();
                             }
                             else
                                 toDispose.Add(ships[i]);

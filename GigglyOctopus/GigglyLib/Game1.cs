@@ -129,7 +129,25 @@ namespace GigglyLib
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Config.Textures.Add("enemy", Content.Load<Texture2D>("Sprites/enemy"));
+            Config.Textures.Add("enemy-red", Content.Load<Texture2D>("Sprites/enemy-red"));
+            Config.Textures.Add("enemy-orange", Content.Load<Texture2D>("Sprites/enemy-orange"));
+            Config.Textures.Add("enemy-golden", Content.Load<Texture2D>("Sprites/enemy-golden"));
+            Config.Textures.Add("enemy-yellow", Content.Load<Texture2D>("Sprites/enemy-yellow"));
+            Config.Textures.Add("enemy-lime", Content.Load<Texture2D>("Sprites/enemy-lime"));
+            Config.Textures.Add("enemy-lightgreen", Content.Load<Texture2D>("Sprites/enemy-lightgreen"));
+            Config.Textures.Add("enemy-green", Content.Load<Texture2D>("Sprites/enemy-green"));
+            Config.Textures.Add("enemy-seagreen", Content.Load<Texture2D>("Sprites/enemy-seagreen"));
+            Config.Textures.Add("enemy-aquamarine", Content.Load<Texture2D>("Sprites/enemy-aquamarine"));
+            Config.Textures.Add("enemy-cyan", Content.Load<Texture2D>("Sprites/enemy-cyan"));
+            Config.Textures.Add("enemy-lightblue", Content.Load<Texture2D>("Sprites/enemy-lightblue"));
+            Config.Textures.Add("enemy-blue", Content.Load<Texture2D>("Sprites/enemy-blue"));
+            Config.Textures.Add("enemy-violet", Content.Load<Texture2D>("Sprites/enemy-violet"));
+            Config.Textures.Add("enemy-purple", Content.Load<Texture2D>("Sprites/enemy-purple"));
+            Config.Textures.Add("enemy-lightpurple", Content.Load<Texture2D>("Sprites/enemy-lightpurple"));
+            Config.Textures.Add("enemy-pink", Content.Load<Texture2D>("Sprites/enemy-pink"));
+            Config.Textures.Add("enemy-magenta", Content.Load<Texture2D>("Sprites/enemy-magenta"));
+            Config.Textures.Add("enemy-fuschia", Content.Load<Texture2D>("Sprites/enemy-fuschia"));
+
             Config.Textures.Add("asteroid", Content.Load<Texture2D>("Sprites/asteroid-tile"));
             Config.Textures.Add("player", Content.Load<Texture2D>("Sprites/player"));
             Config.Textures.Add("grid", Content.Load<Texture2D>("Sprites/grid"));
@@ -218,8 +236,6 @@ namespace GigglyLib
             background1.Set(new CParallaxBackground { ScrollVelocity = 1.2f });
             background1.Set(new CSprite
             {
-                X = -Config.ScreenWidth / 2,
-                Y = -Config.ScreenHeight / 2,
                 Texture = "bg-stars-1",
                 Transparency = 0.3f,
                 Depth = 0.0003f
@@ -234,8 +250,6 @@ namespace GigglyLib
             background2.Set(new CParallaxBackground { ScrollVelocity = 1.5f });
             background2.Set(new CSprite
             {
-                X = -Config.ScreenWidth / 2,
-                Y = -Config.ScreenHeight / 2,
                 Texture = "bg-stars-2",
                 Transparency = 0.1f,
                 Depth = 0.0004f
@@ -250,8 +264,6 @@ namespace GigglyLib
             background3.Set(new CParallaxBackground { ScrollVelocity = 0.6f });
             background3.Set(new CSprite
             {
-                X = -Config.ScreenWidth / 2,
-                Y = -Config.ScreenHeight / 2,
                 Texture = "bg-stars-3",
                 Transparency = 0.7f,
                 Depth = 0.0001f
@@ -266,8 +278,6 @@ namespace GigglyLib
             background4.Set(new CParallaxBackground { ScrollVelocity = 0.9f });
             background4.Set(new CSprite
             {
-                X = -Config.ScreenWidth / 2,
-                Y = -Config.ScreenHeight / 2,
                 Texture = "bg-stars-4",
                 Transparency = 0.5f,
                 Depth = 0.0002f
@@ -287,8 +297,8 @@ namespace GigglyLib
             });
             grid.Set(new CSprite
             {
-                X = 15.5f - Config.ScreenWidth / 2,
-                Y = gridTexture.Height / 2 - 0.5f - Config.ScreenHeight / 2,
+                X = 15.5f,
+                Y = gridTexture.Height / 2 - 0.5f,
                 Texture = "grid"
             });
             grid.Set(new CSourceRectangle
