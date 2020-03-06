@@ -41,19 +41,32 @@ namespace GigglyLib.ProcGen
                 foreach (var neighbor in GetAdjacentTiles(current, closedMap))
                 {
                     // add neighbour to open set if current path to neighbour is better than previously visited time
+                    if (costGraph[neighbor.X, neighbor.Y] == int.MaxValue)
+                        continue;
                     int tentative_g = current.G + costGraph[neighbor.X, neighbor.Y];
                     if (tentative_g < neighbor.G)
                     {
                         neighbor.CameFrom = current;
                         neighbor.G = tentative_g;
                         neighbor.F = neighbor.G + Heuristic(neighbor.X, neighbor.Y, endX, endY);
-                        if (!openSet.Contains(neighbor))
+                        //if (!openSet.Contains(neighbor))
+                        if (!Contains(neighbor, openSet))
                             openSet.Add(neighbor);
                     }
                 }
             } while (openSet.Count > 0);
 
             return null;
+        }
+
+        private bool Contains(AStarPos pos, List<AStarPos> openSet)
+        {
+            foreach (var item in openSet)
+            {
+                if (item.X == pos.X && item.Y == pos.Y)
+                    return true;
+            }
+            return false;
         }
 
         private AStarPos GetLowest(List<AStarPos> openSet)

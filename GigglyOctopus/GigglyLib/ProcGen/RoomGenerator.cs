@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
@@ -23,6 +23,7 @@ namespace GigglyLib.ProcGen
         {
             List<Room> rooms = GenerateRooms(map);
             BuildLinks(rooms);
+            Console.WriteLine($"RoomGenerator beginning hallway carving");
             CarveHallways(rooms, map);
 
             Console.WriteLine($"RoomGenerator finished with {rooms.Count} rooms generated");
@@ -61,12 +62,31 @@ namespace GigglyLib.ProcGen
                 for (int y = 0; y < map.GetLength(1); y++)
                 {
                     costGraph[x, y] =
-                        map[x, y] ? 1 :
                         IsTileInRoom(rooms, x, y) ? 0 :
+                        IsTileAroundRoom(rooms, x, y, map) ? 2 :
+                        map[x, y] ? 1 :
                         int.MaxValue;
                 }
             }
             return costGraph;
+        }
+
+        private bool IsTileAroundRoom(List<Room> rooms, int x, int y, bool[,] map)
+        {
+            foreach (var room in rooms)
+            {
+                if (map[x, y])
+                {
+                    Rectangle expReg = room.Region;
+                    expReg.X--;
+                    expReg.Y--;
+                    expReg.Width += 2;
+                    expReg.Height += 2;
+                    if (expReg.Contains(x, y))
+                        return true;
+                }
+            }
+            return false;
         }
 
         private bool IsTileInRoom(List<Room> rooms, int x, int y)

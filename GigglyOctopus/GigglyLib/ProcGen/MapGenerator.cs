@@ -18,7 +18,7 @@ namespace GigglyLib.ProcGen
         BSPGenerator _BSPGen;
         RoomGenerator _RoomGen;
 
-        public MapGenerator(int seed) {_seed = seed;}
+        public MapGenerator(int seed) {_seed = seed; }
 
         public void Generate()
         {
