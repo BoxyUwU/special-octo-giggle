@@ -19,13 +19,13 @@ namespace GigglyLib.Systems
             if (!powerup.Animate)
             {
                 ref var pos = ref entity.Get<CGridPosition>();
-                ref var playerPos = ref Game1._player.Get<CGridPosition>();
+                ref var playerPos = ref Game1.Player.Get<CGridPosition>();
                 if (pos.X == playerPos.X && pos.Y == playerPos.Y)
                 {
                     var drop = entity.Get<CWeaponsArray>().Weapons[0];
-                    ref var playerWeapons = ref Game1._player.Get<CWeaponsArray>();
+                    ref var playerWeapons = ref Game1.Player.Get<CWeaponsArray>();
                     playerWeapons.Weapons.Add(drop);
-                    ref var playerHealth = ref Game1._player.Get<CHealth>();
+                    ref var playerHealth = ref Game1.Player.Get<CHealth>();
                     playerHealth.Damage = 0;
                     entity.Set(new CScalable { Scale = 1.0f });
                     powerup.Animate = true;

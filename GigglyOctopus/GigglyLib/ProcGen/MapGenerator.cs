@@ -43,24 +43,25 @@ namespace GigglyLib.ProcGen
                 debugOutput += DebugOutput(tiles);
             }
 
-            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
-            string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/" + "myMap" + ".txt";
-            StreamWriter streamWriter = new StreamWriter(filePath);
-            streamWriter.Write(debugOutput);
-            streamWriter.Close();
-
-            CreateTiles(tiles);
-
-            CreatePlayer(x, y);
-            int y = _rand.Next(region.Y, region.Y + region.Height);
-            int x = _rand.Next(region.X, region.X + region.Width);
-            var region = room.Region;
             var room = rooms[_rand.Next(0, rooms.Count)];
+            var region = room.Region;
+            int x = _rand.Next(region.X, region.X + region.Width);
+            int y = _rand.Next(region.Y, region.Y + region.Height);
+            CreatePlayer(x, y);
+
             SpawnEnemy(3, -20, Direction.SOUTH);
             SpawnEnemy(-4, -16, Direction.SOUTH);
             SpawnEnemy(5, 5);
             SpawnEnemy(10, 7);
             SpawnEnemy(-7, 2, Direction.EAST);
+
+            CreateTiles(tiles);
+
+            /*Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
+            string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/" + "myMap" + ".txt";
+            StreamWriter streamWriter = new StreamWriter(filePath);
+            streamWriter.Write(debugOutput);
+            streamWriter.Close();*/
         }
 
         private void CreatePlayer(int x, int y)
