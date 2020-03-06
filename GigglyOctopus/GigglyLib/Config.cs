@@ -182,7 +182,7 @@ namespace GigglyLib
                 RangeRight = 5,
                 AttackPattern = new List<string>
                 {
-                "  441 ",
+                "  441  ",
                 " 33 41 ",
                 "3223412",
                 "2 1 1 2",
@@ -290,6 +290,59 @@ namespace GigglyLib
                     "    3    ",
                 },
                 CooldownMax = 10,
+            },
+            ["MineLayer"] = new CWeapon
+            {
+                Damage = 5,
+                RangeFront = -3,
+                RangeBack = 7,
+                RangeLeft = 2,
+                RangeRight = 2,
+                AttackPattern = new List<string>
+                {
+                    "  5  ",
+                    " 555 ",
+                    "55S55",
+                    " 555 ",
+                    "  5  ",
+                },
+                CooldownMax = 5,
+            },
+            ["Forcefield"] = new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 4,
+                RangeBack = 4,
+                RangeLeft = 4,
+                RangeRight = 4,
+                AttackPattern = new List<string>
+                {
+                    " 000 ",
+                    "0   0",
+                    "0 S 0",
+                    "0   0",
+                    " 000 ",
+                },
+                CooldownMax = 0,
+            },
+            ["Starburst"] = new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 10,
+                RangeBack = -4,
+                RangeLeft = 1,
+                RangeRight = 1,
+                AttackPattern = new List<string>
+                {
+                    "   2   ",
+                    " 1 2 1 ",
+                    "  121  ",
+                    "2222222",
+                    "  121  ",
+                    " 1 2 1 ",
+                    "   2   ",
+                },
+                CooldownMax = 4,
             },
         };
 
