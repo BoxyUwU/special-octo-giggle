@@ -515,6 +515,35 @@ namespace GigglyLib
                 },
                 CooldownMax = 13,
             },
+            ["Wings"] = new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 1,
+                RangeBack = 1,
+                RangeLeft = 8,
+                RangeRight = 8,
+                AttackPattern = new List<string>
+                {
+                    "        4",
+                    "     3  4",
+                    "  2   3 4",
+                    "1   2 3 4",
+                    "   1 234 ",
+                    " 0  123  ",
+                    "  0 12   ",
+                    " 0 1     ",
+                    "S        ",
+                    " 0 1     ",
+                    "  0 12   ",
+                    " 0  123  ",
+                    "   1 234 ",
+                    "1   2 3 4",
+                    "  2   3 4",
+                    "     3  4",
+                    "        4",
+                },
+                CooldownMax = 15,
+            },
         };
 
         public static float Rand()
