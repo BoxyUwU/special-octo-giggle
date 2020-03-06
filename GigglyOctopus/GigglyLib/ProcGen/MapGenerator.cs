@@ -15,10 +15,14 @@ namespace GigglyLib.ProcGen
         int _seed;
         MetaballGenerator _metaballGen;
         CAGenerator _CAGen;
-        BSPGenerator _BSPGen;
         RoomGenerator _RoomGen;
+        Random _rand;
 
-        public MapGenerator(int seed) {_seed = seed; }
+        public MapGenerator(int seed) 
+        {
+            _seed = seed;
+            _rand = new Random(seed);
+        }
 
         public void Generate()
         {
@@ -28,13 +32,13 @@ namespace GigglyLib.ProcGen
 
             string debugOutput = "";
             bool[,] tiles = null;
-
+            List<Room> rooms = null;
             // actual map gen code
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 1; i++)
             {
                 tiles = _metaballGen.Generate();
                 tiles = _CAGen.DoSimulationStep(tiles, 5, 0);
-                _RoomGen.Generate(tiles);
+                rooms = _RoomGen.Generate(tiles);
                 tiles = _CAGen.DoSimulationStep(tiles, 1, 1);
                 debugOutput += DebugOutput(tiles);
             }
@@ -45,21 +49,26 @@ namespace GigglyLib.ProcGen
             streamWriter.Write(debugOutput);
             streamWriter.Close();
 
+            var room = rooms[_rand.Next(0, rooms.Count)];
+            var region = room.Region;
+            int x = _rand.Next(region.X, region.X + region.Width);
+            int y = _rand.Next(region.Y, region.Y + region.Height);
+            CreatePlayer(x, y);
+
             CreateSprites(tiles);
             //SpawnEnemy(3, -20, Direction.SOUTH);
             //SpawnEnemy(-4, -16, Direction.SOUTH);
             //SpawnEnemy(5, 5);
             //SpawnEnemy(10, 7);
             //SpawnEnemy(-7, 2, Direction.EAST);
-            CreatePlayer();
         }
 
-        private void CreatePlayer()
+        private void CreatePlayer(int x, int y)
         {
             var _player = Game1.world.CreateEntity();
             Game1._player = _player;
             _player.Set(new CPlayer());
-            _player.Set(new CGridPosition());
+            _player.Set(new CGridPosition { X = x, Y = y });
             _player.Set(new CMovable());
             _player.Set(new CHealth
             {
@@ -69,7 +78,9 @@ namespace GigglyLib.ProcGen
             {
                 Texture = "player",
                 Transparency = 0.1f,
-                Depth = 0.5f
+                Depth = 0.5f,
+                X = x * Config.TileSize,
+                Y = y * Config.TileSize
             });
             _player.Set(new CParticleSpawner
             {

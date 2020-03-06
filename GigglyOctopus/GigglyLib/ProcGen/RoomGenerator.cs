@@ -19,14 +19,14 @@ namespace GigglyLib.ProcGen
             _rand = new Random(seed);
         }
 
-        public void Generate(bool[,] map)
+        public List<Room> Generate(bool[,] map)
         {
             List<Room> rooms = GenerateRooms(map);
             BuildLinks(rooms);
-            Console.WriteLine($"RoomGenerator beginning hallway carving");
             CarveHallways(rooms, map);
 
             Console.WriteLine($"RoomGenerator finished with {rooms.Count} rooms generated");
+            return rooms;
         }
 
         private void CarveHallways(List<Room> rooms, bool[,] map)
