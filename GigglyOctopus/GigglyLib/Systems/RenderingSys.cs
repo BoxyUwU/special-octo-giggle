@@ -27,6 +27,12 @@ namespace GigglyLib.Systems
                 scale = entity.Get<CScalable>().Scale;
             }
 
+            CGridPosition pPos = Game1.Player.Get<CGridPosition>();
+            if (sprite.X >= (pPos.X * Config.TileSize) - Config.ScreenWidth && sprite.X <= (pPos.X * Config.TileSize) + Config.ScreenWidth &&
+                sprite.Y >= (pPos.Y * Config.TileSize) - Config.ScreenHeight && sprite.Y <= (pPos.Y * Config.TileSize) + Config.ScreenHeight)
+            { }
+            else return;
+
             if (entity.Has<CSourceRectangle>()) {
                 Rectangle rect = entity.Get<CSourceRectangle>().Rectangle;
                 sb.Draw(
