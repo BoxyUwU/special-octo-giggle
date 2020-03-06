@@ -43,17 +43,27 @@ namespace GigglyLib.ProcGen
                 debugOutput += DebugOutput(tiles);
             }
 
-            var room = rooms[_rand.Next(0, rooms.Count)];
-            var region = room.Region;
-            int x = _rand.Next(region.X, region.X + region.Width);
-            int y = _rand.Next(region.Y, region.Y + region.Height);
-            CreatePlayer(x, y);
+            {
+                var room = rooms[0];
+                var region = room.Region;
+                int x = _rand.Next(region.X, region.X + region.Width);
+                int y = _rand.Next(region.Y, region.Y + region.Height);
+                CreatePlayer(x, y);
+            }
 
-            SpawnEnemy(3, -20, Direction.SOUTH);
-            SpawnEnemy(-4, -16, Direction.SOUTH);
-            SpawnEnemy(5, 5);
-            SpawnEnemy(10, 7);
-            SpawnEnemy(-7, 2, Direction.EAST);
+            for (int i = 1; i < rooms.Count; i++)
+            {
+                var room = rooms[i];
+                var region = room.Region;
+
+                int enemiesToSpawn = _rand.Next(2, 5);
+                for (int j = 0; j < enemiesToSpawn; j++)
+                {
+                    int x = _rand.Next(region.X, region.X + region.Width);
+                    int y = _rand.Next(region.Y, region.Y + region.Height);
+                    SpawnEnemy(x, y);
+                }
+            }
 
             CreateTiles(tiles);
 
