@@ -43,8 +43,8 @@ namespace GigglyLib.Systems
             if (parallax.OffsetY >= height/2)
                 parallax.OffsetY -= height;
 
-            sprite.X = playerSprite.X - Config.ScreenWidth / 2 + parallax.OffsetX;
-            sprite.Y = playerSprite.Y - Config.ScreenHeight / 2 + parallax.OffsetY;
+            sprite.X = playerSprite.X + parallax.OffsetX;
+            sprite.Y = playerSprite.Y + parallax.OffsetY;
 
             base.Update(state, entity);
         }

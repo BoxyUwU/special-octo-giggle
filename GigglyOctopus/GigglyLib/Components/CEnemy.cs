@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DefaultEcs;
+using System;
 namespace GigglyLib.Components
 {
     public struct CEnemy
