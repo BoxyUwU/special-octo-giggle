@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
 using GigglyLib.ProcGen;
+using Microsoft.Xna.Framework.Media;
 
 namespace GigglyLib
 {
@@ -36,6 +37,8 @@ namespace GigglyLib
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         public static World world = new World();
+
+        Song BGM;
 
         SequentialSystem<float> simulateSys;
         SequentialSystem<float> playerInputSys;
@@ -182,6 +185,9 @@ namespace GigglyLib
             Config.Textures.Add("target-player", Content.Load<Texture2D>("Sprites/target-player"));
             Config.Textures.Add("target-enemy-danger", Content.Load<Texture2D>("Sprites/target-enemy-danger"));
             Config.Textures.Add("target-enemy-warning",Content.Load<Texture2D>("Sprites/target-enemy-warning"));
+
+            // Audio
+            BGM = Content.Load<Song>("Sounds/background-music");
         }
 
         private void CreateSystems()
@@ -352,6 +358,8 @@ namespace GigglyLib
                 CreateSystems();
                 new MapGenerator(_seed).Generate();
                 CreateParallax();
+                MediaPlayer.Play(BGM);
+                MediaPlayer.IsRepeating = true;
 
                 GameState = GameState.Playing;
             }
