@@ -45,7 +45,8 @@ namespace GigglyLib
         SequentialSystem<float> drawSys;
         SequentialSystem<float> roundPrepSys;
 
-        public static Entity _player;
+        public static bool[,] Tiles;
+        public static Entity Player;
         public static GameState GameState = GameState.Starting;
         public static int currentRoundState = 0;
         public static RoundState[] roundOrder = new RoundState[]
@@ -389,7 +390,7 @@ namespace GigglyLib
         {
             GraphicsDevice.Clear(new Color(15, 15, 15));
 
-            (float x, float y) = (-_player.Get<CSprite>().X + Config.ScreenWidth / 2, -_player.Get<CSprite>().Y + Config.ScreenHeight / 2);
+            (float x, float y) = (-Player.Get<CSprite>().X + Config.ScreenWidth / 2, -Player.Get<CSprite>().Y + Config.ScreenHeight / 2);
             var matrix = Matrix.CreateTranslation(x, y, 0);
             spriteBatch.Begin(SpriteSortMode.FrontToBack, null, SamplerState.LinearWrap, null, null, null, matrix);
             drawSys.Update(0.0f);

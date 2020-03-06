@@ -117,7 +117,7 @@ namespace GigglyLib.Systems
         protected override void Update(float state, in Entity entity)
         {
             if (!entity.Has<CAIScript>())
-                entity.Set(new CAIScript { AI = MoveGenerator(entity, Game1._player) });
+                entity.Set(new CAIScript { AI = MoveGenerator(entity, Game1.Player) });
 
             var script = entity.Get<CAIScript>();
             script.AI.MoveNext();
