@@ -41,19 +41,29 @@ namespace GigglyLib.Systems
                     {
                         case 0:
                             for (int i = 0; i < patrolHeight; ++i)
-                                yield return NORTH;
+                                if (enemy.Get<CGridPosition>().Y - 1 >= 0
+                                && !Game1.Tiles[enemy.Get<CGridPosition>().X, enemy.Get<CGridPosition>().Y - 1])
+                                    yield return NORTH;
+                                else break;
                             break;
                         case 1:
                             for (int i = 0; i < patrolWidth; ++i)
-                                yield return EAST;
+                                if (!Game1.Tiles[enemy.Get<CGridPosition>().X + 1, enemy.Get<CGridPosition>().Y])
+                                    yield return EAST;
+                                else break;
                             break;
                         case 2:
                             for (int i = 0; i < patrolHeight; ++i)
-                                yield return SOUTH;
+                                if (!Game1.Tiles[enemy.Get<CGridPosition>().X, enemy.Get<CGridPosition>().Y + 1])
+                                    yield return SOUTH;
+                                else break;
                             break;
                         case 3:
                             for (int i = 0; i < patrolWidth; ++i)
-                                yield return WEST;
+                                if (enemy.Get<CGridPosition>().X - 1 >= 0
+                                && !Game1.Tiles[enemy.Get<CGridPosition>().X - 1, enemy.Get<CGridPosition>().Y])
+                                    yield return WEST;
+                                else break;
                             break;
                     }
                     patrol += patrolDir;
@@ -70,20 +80,26 @@ namespace GigglyLib.Systems
                     var playerPos = player.Get<CGridPosition>();
                     var enemyPos = enemy.Get<CGridPosition>();
 
+                    CMoveAction next;
+
                     if (Math.Abs(playerPos.Y - enemyPos.Y) >= Math.Abs(playerPos.X - enemyPos.X))
-                        yield return
+                        next =
                             playerPos.Y > enemyPos.Y ? SOUTH :
                             playerPos.Y < enemyPos.Y ? NORTH :
                             playerPos.X > enemyPos.X ? EAST :
                             playerPos.X < enemyPos.X ? WEST :
                             NONE;
 
-                    else yield return
+                    else next =
                         playerPos.X > enemyPos.X ? EAST :
                         playerPos.X < enemyPos.X ? WEST :
                         playerPos.Y > enemyPos.Y ? SOUTH :
                         playerPos.Y < enemyPos.Y ? NORTH :
                         NONE;
+
+                    if (Game1.Tiles[enemyPos.X + next.DistX, enemyPos.Y + next.DistY])
+                        break;
+                    else yield return next;
 
                 }
 
@@ -94,22 +110,31 @@ namespace GigglyLib.Systems
                     var playerPos = player.Get<CGridPosition>();
                     var enemyPos = enemy.Get<CGridPosition>();
 
+                    CMoveAction next;
+
                     if (Math.Abs(playerPos.Y - enemyPos.Y) >= Math.Abs(playerPos.X - enemyPos.X))
-                        yield return
+                        next =
                             playerPos.X < enemyPos.X ? EAST :
                             playerPos.X > enemyPos.X ? WEST :
                             playerPos.Y < enemyPos.Y ? SOUTH :
                             playerPos.Y > enemyPos.Y ? NORTH :
                             NONE;
 
-                    else yield return
+
+                    else next =
                         playerPos.Y < enemyPos.Y ? SOUTH :
                         playerPos.Y > enemyPos.Y ? NORTH :
                         playerPos.X < enemyPos.X ? EAST :
                         playerPos.X > enemyPos.X ? WEST :
                         NONE;
 
+                    if (Game1.Tiles[enemyPos.X + next.DistX, enemyPos.Y + next.DistY])
+                        break;
+                    else yield return next;
+
                 }
+
+                yield return NONE;
 
             }
         }
