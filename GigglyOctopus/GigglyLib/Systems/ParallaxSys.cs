@@ -16,8 +16,8 @@ namespace GigglyLib.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-            ref var pos = ref Game1._player.Get<CGridPosition>();
-            ref var playerSprite = ref Game1._player.Get<CSprite>();
+            ref var pos = ref Game1.Player.Get<CGridPosition>();
+            ref var playerSprite = ref Game1.Player.Get<CSprite>();
             ref var sprite = ref entity.Get<CSprite>();
             ref var parallax = ref entity.Get<CParallaxBackground>();
 

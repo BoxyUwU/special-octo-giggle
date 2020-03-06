@@ -17,27 +17,28 @@ namespace GigglyLib.Systems
             var keyState = Keyboard.GetState();
             ref var pos = ref entity.Get<CGridPosition>();
 
-            bool moved = true;
             if (keyState.IsKeyDown(Keys.W) || keyState.IsKeyDown(Keys.Up))
             {
-                entity.Set(new CMoveAction { DistY = -1 });
+                if (pos.Y - 1 >= 0 && !Game1.Tiles[pos.X, pos.Y - 1])
+                    entity.Set(new CMoveAction { DistY = -1 });
             }
-            else if (keyState.IsKeyDown(Keys.S) || keyState.IsKeyDown(Keys.Down))
+            if (keyState.IsKeyDown(Keys.S) || keyState.IsKeyDown(Keys.Down))
             {
-                entity.Set(new CMoveAction { DistY = 1 });
+                if (pos.Y + 1 < Game1.Tiles.GetLength(1) && !Game1.Tiles[pos.X, pos.Y + 1])
+                    entity.Set(new CMoveAction { DistY = 1 });
             }
-            else if (keyState.IsKeyDown(Keys.A) || keyState.IsKeyDown(Keys.Left))
+            if (keyState.IsKeyDown(Keys.A) || keyState.IsKeyDown(Keys.Left))
             {
-                entity.Set(new CMoveAction { DistX = -1 });
+                if (pos.X - 1 >= 0 && !Game1.Tiles[pos.X - 1, pos.Y])
+                    entity.Set(new CMoveAction { DistX = -1 });
             }
-            else if (keyState.IsKeyDown(Keys.D) || keyState.IsKeyDown(Keys.Right))
+            if (keyState.IsKeyDown(Keys.D) || keyState.IsKeyDown(Keys.Right))
             {
-                entity.Set(new CMoveAction { DistX = 1 });
+                if (pos.X + 1 < Game1.Tiles.GetLength(0) && !Game1.Tiles[pos.X + 1, pos.Y])
+                    entity.Set(new CMoveAction { DistX = 1 });
             }
-            else
-                moved = false;
 
-            if (moved)
+            if (entity.Has<CMoveAction>())
                 Game1.currentRoundState++;
 
             base.Update(state, entity);

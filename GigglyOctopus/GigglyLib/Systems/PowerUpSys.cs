@@ -16,14 +16,14 @@ namespace GigglyLib.Systems
         protected override void Update(float state, in Entity entity)
         {
             ref var pos = ref entity.Get<CGridPosition>();
-            ref var playerPos = ref Game1._player.Get<CGridPosition>();
+            ref var playerPos = ref Game1.Player.Get<CGridPosition>();
             var toDispose = new List<Entity>();
             if (pos.X == playerPos.X && pos.Y == playerPos.Y)
             {
                 var drop = entity.Get<CWeaponsArray>().Weapons[0];
-                ref var playerWeapons = ref Game1._player.Get<CWeaponsArray>();
+                ref var playerWeapons = ref Game1.Player.Get<CWeaponsArray>();
                 playerWeapons.Weapons.Add(drop);
-                ref var playerHealth = ref Game1._player.Get<CHealth>();
+                ref var playerHealth = ref Game1.Player.Get<CHealth>();
                 playerHealth.Damage = 0;
                 toDispose.Add(entity);
             }

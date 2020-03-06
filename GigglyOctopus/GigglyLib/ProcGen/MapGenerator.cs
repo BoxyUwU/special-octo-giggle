@@ -55,7 +55,7 @@ namespace GigglyLib.ProcGen
             int y = _rand.Next(region.Y, region.Y + region.Height);
             CreatePlayer(x, y);
 
-            CreateSprites(tiles);
+            CreateTiles(tiles);
             //SpawnEnemy(3, -20, Direction.SOUTH);
             //SpawnEnemy(-4, -16, Direction.SOUTH);
             //SpawnEnemy(5, 5);
@@ -66,7 +66,7 @@ namespace GigglyLib.ProcGen
         private void CreatePlayer(int x, int y)
         {
             var _player = Game1.world.CreateEntity();
-            Game1._player = _player;
+            Game1.Player = _player;
             _player.Set(new CPlayer());
             _player.Set(new CGridPosition { X = x, Y = y });
             _player.Set(new CMovable());
@@ -120,8 +120,9 @@ namespace GigglyLib.ProcGen
             _player.Set(weapons);
         }
 
-        private void CreateSprites(bool[,] tiles)
+        private void CreateTiles(bool[,] tiles)
         {
+            Game1.Tiles = tiles;
             for (int x = 0; x < tiles.GetLength(0); x++)
                 for (int y = 0; y < tiles.GetLength(1); y++)
                 {
