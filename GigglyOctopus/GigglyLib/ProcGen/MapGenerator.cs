@@ -15,50 +15,61 @@ namespace GigglyLib.ProcGen
         int _seed;
         MetaballGenerator _metaballGen;
         CAGenerator _CAGen;
-        BSPGenerator _BSPGen;
+        RoomGenerator _RoomGen;
+        Random _rand;
 
-        public MapGenerator(int seed) {_seed = seed;}
+        public MapGenerator(int seed) 
+        {
+            _seed = seed;
+            _rand = new Random(seed);
+        }
 
         public void Generate()
         {
-            _metaballGen = new MetaballGenerator(20f, 0.95f, _seed, 2, 4, angleVariance: 3.141f / 2f, angleVarianceDeadzone: 1f);
+            _metaballGen = new MetaballGenerator(30f, 0.90f, _seed, 2, 4, angleVariance: 3.141f / 2f, angleVarianceDeadzone: 1f);
             _CAGen = new CAGenerator(_seed);
-            _BSPGen = new BSPGenerator();
+            _RoomGen = new RoomGenerator(_seed);
 
             string debugOutput = "";
             bool[,] tiles = null;
-
+            List<Room> rooms = null;
             // actual map gen code
             for (int i = 0; i < 1; i++)
             {
                 tiles = _metaballGen.Generate();
-                tiles = _CAGen.DoSimulationStep(tiles, 5);
-                _BSPGen.Generate(tiles);
-
+                tiles = _CAGen.DoSimulationStep(tiles, 5, 0);
+                rooms = _RoomGen.Generate(tiles);
+                tiles = _CAGen.DoSimulationStep(tiles, 1, 1);
                 debugOutput += DebugOutput(tiles);
             }
+
+            var room = rooms[_rand.Next(0, rooms.Count)];
+            var region = room.Region;
+            int x = _rand.Next(region.X, region.X + region.Width);
+            int y = _rand.Next(region.Y, region.Y + region.Height);
+            CreatePlayer(x, y);
+
+            SpawnEnemy(3, -20, Direction.SOUTH);
+            SpawnEnemy(-4, -16, Direction.SOUTH);
+            SpawnEnemy(5, 5);
+            SpawnEnemy(10, 7);
+            SpawnEnemy(-7, 2, Direction.EAST);
+
+            CreateTiles(tiles);
 
             /*Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
             string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/" + "myMap" + ".txt";
             StreamWriter streamWriter = new StreamWriter(filePath);
             streamWriter.Write(debugOutput);
             streamWriter.Close();*/
-
-            CreateSprites(tiles);
-            SpawnEnemy(3, -20, Direction.SOUTH);
-            SpawnEnemy(-4, -16, Direction.SOUTH);
-            SpawnEnemy(5, 5);
-            SpawnEnemy(10, 7);
-            SpawnEnemy(-7, 2, Direction.EAST);
-            CreatePlayer();
         }
 
-        private void CreatePlayer()
+        private void CreatePlayer(int x, int y)
         {
             var _player = Game1.world.CreateEntity();
-            Game1._player = _player;
+            Game1.Player = _player;
             _player.Set(new CPlayer());
-            _player.Set(new CGridPosition());
+            _player.Set(new CGridPosition { X = x, Y = y });
             _player.Set(new CMovable());
             _player.Set(new CHealth
             {
@@ -68,7 +79,9 @@ namespace GigglyLib.ProcGen
             {
                 Texture = "player",
                 Transparency = 0.1f,
-                Depth = 0.5f
+                Depth = 0.5f,
+                X = x * Config.TileSize,
+                Y = y * Config.TileSize
             });
             _player.Set(new CParticleSpawner
             {
@@ -111,8 +124,9 @@ namespace GigglyLib.ProcGen
             _player.Set(weapons);
         }
 
-        private void CreateSprites(bool[,] tiles)
+        private void CreateTiles(bool[,] tiles)
         {
+            Game1.Tiles = tiles;
             for (int x = 0; x < tiles.GetLength(0); x++)
                 for (int y = 0; y < tiles.GetLength(1); y++)
                 {
@@ -169,14 +183,25 @@ namespace GigglyLib.ProcGen
             return e;
         }
 
-        private string DebugOutput(bool[,] tileGrid)
+        private string DebugOutput(bool[,] tileGrid, List<BSPSplit> BSPLeafs = null)
         {
             string output = "";
             for (int y = 0; y < tileGrid.GetLength(1); y++)
             {
                 for (int x = 0; x < tileGrid.GetLength(0); x++)
                 {
-                    if (tileGrid[x, y])
+                    string leaf = "";
+                    if (BSPLeafs != null)
+                        for (int i = 0; i < BSPLeafs.Count; i++)
+                            if (BSPLeafs[i].Region[x, y])
+                            {
+                                leaf = i.ToString();
+                                if (leaf.Length == 1)
+                                    leaf = "0" + leaf;
+                            }
+                    if (leaf != "")
+                        output += leaf;
+                    else if (tileGrid[x, y])
                         output += "##";
                     else
                         output += "  ";

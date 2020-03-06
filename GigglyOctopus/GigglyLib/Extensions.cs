@@ -22,5 +22,10 @@ namespace GigglyLib
                 rand.Range(min, (((max - min) / 2) + min) - deadzone) : 
                 rand.Range((((max - min) / 2) + min) + deadzone, max);
         }
+
+        public static bool Bool(this Random rand)
+        {
+            return rand.Next(0, 2) == 1;
+        }
     }
 }

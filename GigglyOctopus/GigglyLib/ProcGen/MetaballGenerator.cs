@@ -50,15 +50,18 @@ namespace GigglyLib.ProcGen
 
         public bool[,] Generate()
         {
-            Console.WriteLine("Metaball generator Generate() method was called");
             _circles = new List<Circle> {
+                new Circle(0, 0, _rStart, 0f),
+                new Circle(0, 0, _rStart, 0f),
                 new Circle(0, 0, _rStart, 0f),
                 new Circle(0, 0, _rStart, 0f),
                 new Circle(0, 0, _rStart, 0f)
             };
 
             AddCircles(_circles);
-            return ConvertToGrid(GetOverlappingTiles());
+            var tiles = GetOverlappingTiles();
+            Console.WriteLine($"Metaball finished with {tiles.Count} overlapping tiles");
+            return ConvertToGrid(tiles);
         }
 
         private void AddCircles(List<Circle> roots)
