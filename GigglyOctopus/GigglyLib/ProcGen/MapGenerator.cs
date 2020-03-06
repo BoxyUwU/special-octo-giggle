@@ -16,33 +16,33 @@ namespace GigglyLib.ProcGen
         MetaballGenerator _metaballGen;
         CAGenerator _CAGen;
         BSPGenerator _BSPGen;
+        RoomGenerator _RoomGen;
 
         public MapGenerator(int seed) {_seed = seed;}
 
         public void Generate()
         {
-            _metaballGen = new MetaballGenerator(20f, 0.95f, _seed, 2, 4, angleVariance: 3.141f / 2f, angleVarianceDeadzone: 1f);
+            _metaballGen = new MetaballGenerator(30f, 0.90f, _seed, 2, 4, angleVariance: 3.141f / 2f, angleVarianceDeadzone: 1f);
             _CAGen = new CAGenerator(_seed);
-            _BSPGen = new BSPGenerator(_seed);
+            _RoomGen = new RoomGenerator(_seed);
 
             string debugOutput = "";
             bool[,] tiles = null;
 
             // actual map gen code
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 10; i++)
             {
                 tiles = _metaballGen.Generate();
                 tiles = _CAGen.DoSimulationStep(tiles, 5);
-                var (root, leafs) = _BSPGen.Generate(tiles, 200);
-
-                //debugOutput += DebugOutput(tiles, leafs);
+                _RoomGen.Generate(tiles);
+                debugOutput += DebugOutput(tiles);
             }
 
-            //Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
-            //string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/" + "myMap" + ".txt";
-            //StreamWriter streamWriter = new StreamWriter(filePath);
-            //streamWriter.Write(debugOutput);
-            //streamWriter.Close();
+            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
+            string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/" + "myMap" + ".txt";
+            StreamWriter streamWriter = new StreamWriter(filePath);
+            streamWriter.Write(debugOutput);
+            streamWriter.Close();
 
             CreateSprites(tiles);
             //SpawnEnemy(3, -20, Direction.SOUTH);
@@ -148,7 +148,7 @@ namespace GigglyLib.ProcGen
             return e;
         }
 
-        private string DebugOutput(bool[,] tileGrid, List<BSPSplit> BSPLeafs)
+        private string DebugOutput(bool[,] tileGrid, List<BSPSplit> BSPLeafs = null)
         {
             string output = "";
             for (int y = 0; y < tileGrid.GetLength(1); y++)
@@ -156,13 +156,14 @@ namespace GigglyLib.ProcGen
                 for (int x = 0; x < tileGrid.GetLength(0); x++)
                 {
                     string leaf = "";
-                    for (int i = 0; i < BSPLeafs.Count; i++)
-                        if (BSPLeafs[i].Region[x, y])
-                        {
-                            leaf = i.ToString();
-                            if (leaf.Length == 1)
-                                leaf = "0" + leaf;
-                        }
+                    if (BSPLeafs != null)
+                        for (int i = 0; i < BSPLeafs.Count; i++)
+                            if (BSPLeafs[i].Region[x, y])
+                            {
+                                leaf = i.ToString();
+                                if (leaf.Length == 1)
+                                    leaf = "0" + leaf;
+                            }
                     if (leaf != "")
                         output += leaf;
                     else if (tileGrid[x, y])

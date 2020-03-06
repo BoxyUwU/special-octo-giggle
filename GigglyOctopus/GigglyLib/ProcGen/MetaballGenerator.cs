@@ -53,6 +53,8 @@ namespace GigglyLib.ProcGen
             _circles = new List<Circle> {
                 new Circle(0, 0, _rStart, 0f),
                 new Circle(0, 0, _rStart, 0f),
+                new Circle(0, 0, _rStart, 0f),
+                new Circle(0, 0, _rStart, 0f),
                 new Circle(0, 0, _rStart, 0f)
             };
 
