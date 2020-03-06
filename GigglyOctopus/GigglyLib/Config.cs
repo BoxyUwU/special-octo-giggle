@@ -228,6 +228,69 @@ namespace GigglyLib
                 },
                 CooldownMax = 5,
             },
+            ["Railgun"] = new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 25,
+                RangeBack = -2,
+                RangeLeft = 0,
+                RangeRight = 0,
+                AttackPattern = new List<string>
+                {
+                    " 0                       ",
+                    "  1                     3",
+                    "S  233333333333333333333 ",
+                    "  1                     3",
+                    " 0                       ",
+                },
+                CooldownMax = 15,
+            },
+            ["ClusterBombs"] = new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 5,
+                RangeBack =  5,
+                RangeLeft =  5,
+                RangeRight = 5,
+                AttackPattern = new List<string>
+                {
+                    "      3      ",
+                    "     333     ",
+                    "    33333    ",
+                    "  5  323  1  ",
+                    " 555  3  111 ",
+                    "55455   11011",
+                    " 555     111 ",
+                    "  5   S   1  ",
+                    "   2     4   ",
+                    "  222   444  ",
+                    " 22122 44344 ",
+                    "  222   444  ",
+                    "   2     4   ",
+                },
+                CooldownMax = 20,
+            },
+            ["Cage"] = new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 6,
+                RangeBack = 0,
+                RangeLeft = 6,
+                RangeRight = 6,
+                AttackPattern = new List<string>
+                {
+                    "    3   ",
+                    "   333  ",
+                    "  33133 ",
+                    " 33   33",
+                    "331   133",
+                    " 33   33",
+                    "  33133 ",
+                    "   333  ",
+                    "    3   ",
+                },
+                CooldownMax = 10,
+            },
         };
 
         public static float Rand()

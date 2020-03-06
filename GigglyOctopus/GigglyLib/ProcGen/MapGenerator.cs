@@ -96,7 +96,7 @@ namespace GigglyLib.ProcGen
             });
 
             // FOR TESTING
-            weapons.Weapons.Add(Config.Weapons["Claws"]);
+            weapons.Weapons.Add(Config.Weapons["Cage"]);
 
             //////////////////////////////////////////////////
             //                  GODMODE +w+                 //
