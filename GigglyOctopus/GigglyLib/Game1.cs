@@ -233,6 +233,8 @@ namespace GigglyLib
 
         private void CreateParallax()
         {
+            var X = Player.Get<CGridPosition>().X * Config.TileSize;
+            var Y = Player.Get<CGridPosition>().Y * Config.TileSize;
             var bgTexture1 = Config.Textures["bg-stars-1"];
             var background1 = Game1.world.CreateEntity();
             background1.Set(new CParallaxBackground { ScrollVelocity = 1.2f });
@@ -240,7 +242,9 @@ namespace GigglyLib
             {
                 Texture = "bg-stars-1",
                 Transparency = 0.3f,
-                Depth = 0.0003f
+                Depth = 0.0003f,
+                X = X,
+                Y = Y
             });
             background1.Set(new CSourceRectangle
             {
@@ -254,7 +258,9 @@ namespace GigglyLib
             {
                 Texture = "bg-stars-2",
                 Transparency = 0.1f,
-                Depth = 0.0004f
+                Depth = 0.0004f,
+                X = X,
+                Y = Y
             });
             background2.Set(new CSourceRectangle
             {
@@ -268,7 +274,9 @@ namespace GigglyLib
             {
                 Texture = "bg-stars-3",
                 Transparency = 0.7f,
-                Depth = 0.0001f
+                Depth = 0.0001f,
+                X = X,
+                Y = Y
             });
             background3.Set(new CSourceRectangle
             {
@@ -282,7 +290,9 @@ namespace GigglyLib
             {
                 Texture = "bg-stars-4",
                 Transparency = 0.5f,
-                Depth = 0.0002f
+                Depth = 0.0002f,
+                X = X,
+                Y = Y
             });
             background4.Set(new CSourceRectangle
             {
@@ -299,8 +309,8 @@ namespace GigglyLib
             });
             grid.Set(new CSprite
             {
-                X = 15.5f,
-                Y = gridTexture.Height / 2 - 0.5f,
+                X = X + 15.5f,
+                Y = Y + gridTexture.Height / 2 - 0.5f,
                 Texture = "grid"
             });
             grid.Set(new CSourceRectangle
@@ -340,8 +350,8 @@ namespace GigglyLib
                 Console.WriteLine($"seed: {_seed}");
 
                 CreateSystems();
-                CreateParallax();
                 new MapGenerator(_seed).Generate();
+                CreateParallax();
 
                 GameState = GameState.Playing;
             }

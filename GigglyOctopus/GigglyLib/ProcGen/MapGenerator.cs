@@ -119,7 +119,7 @@ namespace GigglyLib.ProcGen
             });
 
             // FOR TESTING
-            weapons.Weapons.Add(Config.Weapons["Sukima"]);
+            //weapons.Weapons.Add(Config.Weapons["Sukima"]);
 
             //////////////////////////////////////////////////
             //                  GODMODE +w+                 //
