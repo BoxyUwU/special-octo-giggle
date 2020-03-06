@@ -344,6 +344,79 @@ namespace GigglyLib
                 },
                 CooldownMax = 4,
             },
+            ["TwinLasers"] = new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 15,
+                RangeBack = -4,
+                RangeLeft = 1,
+                RangeRight = 1,
+                AttackPattern = new List<string>
+                {
+                    "0                      ",
+                    " 0011111222223333344444",
+                    "0S                     ",
+                    " 0011111222223333344444",
+                    "0                      ",
+                },
+                CooldownMax = 15,
+            },
+            ["Heart"] = new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 13,
+                RangeBack = -4,
+                RangeLeft = 5,
+                RangeRight = 5,
+                AttackPattern = new List<string>
+                {
+                    "     0000  ",
+                    "    055550 ",
+                    "   05555550",
+                    "  055555550",
+                    " 055555550 ",
+                    "055555550  ",
+                    " 055555550 ",
+                    "  055555550",
+                    "   05555550",
+                    "    055550 ",
+                    "     0000  ",
+                },
+                CooldownMax = 16,
+            },
+            ["LightningStorm"] = new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 7,
+                RangeBack = 7,
+                RangeLeft = 7,
+                RangeRight = 7,
+                AttackPattern = new List<string>
+                {
+                    "      3       3      ",
+                    "      33     33      ",
+                    "       3     3       ",
+                    "        2   2        ",
+                    "       22   22       ",
+                    "       2     2       ",
+                    "33      1   1      33",
+                    " 33 22  11 11  22 33 ",
+                    "   22 11 1 1 11 22   ",
+                    "       110 011       ",
+                    "          S          ",
+                    "       110 011       ",
+                    "   22 11 1 1 11 22   ",
+                    " 33 22  11 11  22 33 ",
+                    "33      1   1      33",
+                    "       2     2       ",
+                    "       22   22       ",
+                    "        2   2        ",
+                    "       3     3       ",
+                    "      33     33      ",
+                    "      3       3      ",
+                },
+                CooldownMax = 20,
+            },
         };
 
         public static float Rand()
