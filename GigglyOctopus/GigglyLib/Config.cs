@@ -498,6 +498,23 @@ namespace GigglyLib
                 },
                 CooldownMax = 0,
             },
+            ["Sukima"] = new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 13,
+                RangeBack = 13,
+                RangeLeft = 0,
+                RangeRight = 0,
+                AttackPattern = new List<string>
+                {
+                    "     22222     ",
+                    "   227463822   ",
+                    "2228131 1915222",
+                    "   229574622   ",
+                    "     22222     ",
+                },
+                CooldownMax = 13,
+            },
         };
 
         public static float Rand()
