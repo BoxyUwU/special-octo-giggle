@@ -46,11 +46,26 @@ namespace GigglyLib.ProcGen
         private void CarveHallway(Room room1, Room room2, bool[,] map, int[,] costGraph)
         {
             AStar aStar = new AStar();
-            var path = aStar.GetPath(room1.Region.X, room1.Region.Y, room2.Region.X, room2.Region.Y, costGraph);
-            foreach (var step in path)
+            int goalX = room2.Region.X + (room2.Region.Width / 2);
+            int goalY = room2.Region.Y + (room2.Region.Height / 2);
+            int startX = room1.Region.X + (room1.Region.Width / 2);
+            int startY = room1.Region.Y + (room1.Region.Height / 2);
+            var path = aStar.GetPath(startX, startY, goalX, goalY, costGraph);
+            foreach (var (x, y) in path)
             {
-                map[step.x, step.y] = false;
-                costGraph[step.x, step.y] = 0;
+                CarveSquare(x, y, 2, 2, map);
+                costGraph[x, y] = 0;
+            }
+        }
+
+        private void CarveSquare(int cX, int cY, int width, int height, bool[,] map)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    map[cX + x, cY + y] = false;
+                }
             }
         }
 
@@ -63,7 +78,7 @@ namespace GigglyLib.ProcGen
                 {
                     costGraph[x, y] =
                         IsTileInRoom(rooms, x, y) ? 0 :
-                        IsTileAroundRoom(rooms, x, y, map) ? 2 :
+                        IsTileAroundRoom(rooms, x, y, map) ? 4 :
                         map[x, y] ? 1 :
                         int.MaxValue;
                 }

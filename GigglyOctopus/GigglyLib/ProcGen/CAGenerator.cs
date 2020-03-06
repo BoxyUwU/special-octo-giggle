@@ -10,7 +10,7 @@ namespace GigglyLib.ProcGen
             _rand = new Random(seed);
         }
 
-        public bool[,] DoSimulationStep(bool[,] map, int iterations)
+        public bool[,] DoSimulationStep(bool[,] map, int iterations, int logicVersion)
         {
             int mapWidth = map.GetLength(0);
             int mapHeight = map.GetLength(1);
@@ -21,7 +21,7 @@ namespace GigglyLib.ProcGen
                 {
                     for (y = 0; y < mapHeight; y++)
                     {
-                        newMap[x, y] = DoWallLogic(map, x, y);
+                        newMap[x, y] = DoWallLogic(map, x, y, logicVersion);
                     }
                 }
                 map = newMap;
@@ -30,23 +30,35 @@ namespace GigglyLib.ProcGen
             return map;
         }
 
-        private bool DoWallLogic(bool[,] map, int x, int y)
+        private bool DoWallLogic(bool[,] map, int x, int y, int version)
         {
             int amount = GetAdjacentTiles(map, x, y);
 
-            if (amount == 1)
-                return false;
-            if (amount == 2)
+            if (version == 0)
             {
-                if (RandomPercent(20))
+                if (amount == 1)
+                    return false;
+                if (amount == 2)
+                {
+                    if (RandomPercent(20))
+                        return true;
+                    return false;
+                }
+                if (amount == 3 && RandomPercent(50))
                     return true;
-                return false;
+                if (amount == 4 && RandomPercent(90))
+                    return true;
+                return map[x, y];
             }
-            if (amount == 3 && RandomPercent(50))
-                return true;
-            if (amount == 4 && RandomPercent(90))
-                return true;
-            return map[x, y];
+            else if (version == 1)
+            {
+                if (amount == 2)
+                    return RandomPercent(80);
+                if (amount == 3)
+                    return RandomPercent(60);
+                return map[x, y];
+            }
+            throw (new Exception("wrong version passed"));
         }
 
         private int GetAdjacentTiles(bool[,] map, int x, int y)
