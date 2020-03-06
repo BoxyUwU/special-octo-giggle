@@ -294,7 +294,7 @@ namespace GigglyLib
             ["MineLayer"] = new CWeapon
             {
                 Damage = 5,
-                RangeFront = -3,
+                RangeFront = -2,
                 RangeBack = 7,
                 RangeLeft = 2,
                 RangeRight = 2,
@@ -306,7 +306,7 @@ namespace GigglyLib
                     " 555 ",
                     "  5  ",
                 },
-                CooldownMax = 5,
+                CooldownMax = 3,
             },
             ["Forcefield"] = new CWeapon
             {
@@ -387,10 +387,10 @@ namespace GigglyLib
             ["LightningStorm"] = new CWeapon
             {
                 Damage = 5,
-                RangeFront = 7,
-                RangeBack = 7,
-                RangeLeft = 7,
-                RangeRight = 7,
+                RangeFront = 5,
+                RangeBack = 5,
+                RangeLeft = 5,
+                RangeRight = 5,
                 AttackPattern = new List<string>
                 {
                     "      3       3      ",
@@ -416,6 +416,87 @@ namespace GigglyLib
                     "      3       3      ",
                 },
                 CooldownMax = 20,
+            },
+            ["Creeper"] = new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 1,
+                RangeBack = 1,
+                RangeLeft = 6,
+                RangeRight = 6,
+                AttackPattern = new List<string>
+                {
+                    " 443323344 ",
+                    " 5 9 2 9 5 ",
+                    " 566919665 ",
+                    "   79197   ",
+                    "   79097   ",
+                    "9  88088  9",
+                    " 9990S0999 ",
+                    "9  88088  9",
+                    "   79097   ",
+                    "   79197   ",
+                    " 566919665 ",
+                    " 5 9 2 9 5 ",
+                    " 443323344 ",
+                },
+                CooldownMax = 12,
+            },
+            ["PrivateSquare"] = new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 7,
+                RangeBack = -1,
+                RangeLeft = 3,
+                RangeRight = 3,
+                AttackPattern = new List<string>
+                {
+                    "              7            ",
+                    "              7            ",
+                    "                           ",
+                    "    7                      ",
+                    "     7        6        7   ",
+                    "              6       7    ",
+                    "       6                   ",
+                    "        6           6      ",
+                    "              5    6       ",
+                    "          5 0 5            ",
+                    "           50  0 5         ",
+                    "          0 4 0 5          ",
+                    "77  66  55 0444400         ",
+                    "            4 4            ",
+                    "         0044440 55  66  77",
+                    "          5 0 4 0          ",
+                    "         5 0  0            ",
+                    "            5 0 5          ",
+                    "       6    5    5         ",
+                    "      6                    ",
+                    "                   6       ",
+                    "    7       6       6      ",
+                    "   7        6              ",
+                    "                      7    ",
+                    "                       7   ",
+                    "            7              ",
+                    "            7              ",
+                },
+                CooldownMax = 24,
+            },
+            ["Flamethrower"] = new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 4,
+                RangeBack = 0,
+                RangeLeft = 1,
+                RangeRight = 1,
+                AttackPattern = new List<string>
+                {
+                    "       12",
+                    "0   1212 ",
+                    "S011212 2",
+                    "0   1212 ",
+                    "       12",
+                },
+                CooldownMax = 0,
             },
         };
 

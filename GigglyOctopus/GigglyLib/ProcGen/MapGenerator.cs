@@ -96,7 +96,7 @@ namespace GigglyLib.ProcGen
             });
 
             // FOR TESTING
-            weapons.Weapons.Add(Config.Weapons["LightningStorm"]);
+            weapons.Weapons.Add(Config.Weapons["Flamethrower"]);
 
             //////////////////////////////////////////////////
             //                  GODMODE +w+                 //
