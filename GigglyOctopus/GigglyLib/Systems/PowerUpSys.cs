@@ -29,7 +29,6 @@ namespace GigglyLib.Systems
                     playerHealth.Damage = 0;
                     entity.Set(new CScalable { Scale = 1.0f });
                     powerup.Animate = true;
-                    Console.WriteLine("owo");
                 }
             }
 

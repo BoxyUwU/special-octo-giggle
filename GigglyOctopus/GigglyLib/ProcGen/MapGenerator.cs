@@ -95,6 +95,9 @@ namespace GigglyLib.ProcGen
                 RandomColours = true
             });
 
+            // FOR TESTING
+            weapons.Weapons.Add(Config.Weapons["Claws"]);
+
             //////////////////////////////////////////////////
             //                  GODMODE +w+                 //
             //////////////////////////////////////////////////
