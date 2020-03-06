@@ -195,7 +195,8 @@ namespace GigglyLib
                 new ParticleSpawnerSys(),
                 new ParticleBeamSys(),
                 new ParticleSys(),
-                new MarkerFadeSys()
+                new MarkerFadeSys(),
+                new PowerUpAnimSys()
             );
 
             roundPrepSys = new SequentialSystem<float>(

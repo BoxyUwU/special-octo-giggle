@@ -8,5 +8,6 @@ namespace GigglyLib.Components
 {
     struct CPowerUp
     {
+        public bool Animate;
     }
 }
