@@ -116,11 +116,13 @@ namespace GigglyLib
 
         public Game1()
         {
+            Window.Title = "PulseEXE";
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = Config.ScreenWidth;
             graphics.PreferredBackBufferHeight = Config.ScreenHeight;
             IsMouseVisible = true;
             Content.RootDirectory = "Content";
+            graphics.ApplyChanges();
         }
 
         /// <summary>
