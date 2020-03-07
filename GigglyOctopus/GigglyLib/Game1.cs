@@ -381,7 +381,7 @@ namespace GigglyLib
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            var kS = Keyboard.GetState();
+            /*var kS = Keyboard.GetState();
             if (kS.IsKeyDown(Keys.LeftShift) && kS.IsKeyDown(Keys.D))
             {
                 Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
@@ -389,7 +389,7 @@ namespace GigglyLib
                 StreamWriter streamWriter = new StreamWriter(filePath);
                 streamWriter.Write(DebugOutput);
                 streamWriter.Close();
-            }
+            }*/
 
             if (GameState == GameState.Starting)
             {
