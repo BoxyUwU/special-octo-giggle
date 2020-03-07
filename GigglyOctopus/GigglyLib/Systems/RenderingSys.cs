@@ -33,6 +33,11 @@ namespace GigglyLib.Systems
             { }
             else return;
 
+            Vector2 origin =
+                entity.Has<CSpriteOrigin>() ? new Vector2(entity.Get<CSpriteOrigin>().X, entity.Get<CSpriteOrigin>().Y) :
+                entity.Has<CSourceRectangle>() ? new Vector2(entity.Get<CSourceRectangle>().Rectangle.Width / 2, entity.Get<CSourceRectangle>().Rectangle.Height / 2) :
+                new Vector2(texture.Width/2, texture.Height/2);
+
             if (entity.Has<CSourceRectangle>()) {
                 Rectangle rect = entity.Get<CSourceRectangle>().Rectangle;
                 sb.Draw(
@@ -47,7 +52,7 @@ namespace GigglyLib.Systems
                     // Rotation
                     sprite.Rotation,
                     // Origin
-                    new Vector2(rect.Width / 2, rect.Height / 2),
+                    origin,
                     // Scale
                     scale,
                     // Sprite Effects
@@ -69,7 +74,7 @@ namespace GigglyLib.Systems
                     // Rotation
                     sprite.Rotation,
                     // Origin
-                    new Vector2(texture.Width / 2, texture.Height / 2),
+                    origin,
                     // Scale
                     scale,
                     // Sprite Effects

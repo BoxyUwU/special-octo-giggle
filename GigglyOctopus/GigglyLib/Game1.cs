@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Content;
 using GigglyLib.ProcGen;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
+using System.IO;
 
 namespace GigglyLib
 {
@@ -36,6 +37,9 @@ namespace GigglyLib
     /// </summary>
     public class Game1 : Game
     {
+        public static string DebugOutput = "";
+
+        public static CWeaponsArray startingWeapons;
         int _seed;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -163,6 +167,7 @@ namespace GigglyLib
             Config.Textures.Add("bg-stars-2", Content.Load<Texture2D>("Sprites/bg-stars-2"));
             Config.Textures.Add("bg-stars-3", Content.Load<Texture2D>("Sprites/bg-stars-3"));
             Config.Textures.Add("bg-stars-4", Content.Load<Texture2D>("Sprites/bg-stars-4"));
+            Config.Textures.Add("portal", Content.Load<Texture2D>("Sprites/portal"));
 
             Config.Textures.Add("particles-red", Content.Load<Texture2D>("Sprites/particles-red"));
             Config.Textures.Add("particles-orange", Content.Load<Texture2D>("Sprites/particles-orange"));
@@ -236,6 +241,7 @@ namespace GigglyLib
                 new DamageHereSys(),
                 new MoveActionSys(),
                 new PowerUpSys(),
+                new PortalSys(),
                 new EndSimSys()
             );
 
@@ -366,6 +372,16 @@ namespace GigglyLib
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            var kS = Keyboard.GetState();
+            if (kS.IsKeyDown(Keys.LeftShift) && kS.IsKeyDown(Keys.D))
+            {
+                Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
+                string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/" + "myMap" + ".txt";
+                StreamWriter streamWriter = new StreamWriter(filePath);
+                streamWriter.Write(DebugOutput);
+                streamWriter.Close();
+            }
+
             if (GameState == GameState.Starting)
             {
                 world.Dispose();
@@ -373,6 +389,7 @@ namespace GigglyLib
 
                 _seed = new Random().Next();
                 Console.WriteLine($"seed: {_seed}");
+                DebugOutput += "SEED: " + _seed.ToString();
 
                 CreateSystems();
                 new MapGenerator(_seed).Generate();

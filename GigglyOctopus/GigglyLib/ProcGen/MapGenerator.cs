@@ -30,7 +30,6 @@ namespace GigglyLib.ProcGen
             _CAGen = new CAGenerator(_seed);
             _RoomGen = new RoomGenerator(_seed);
 
-            string debugOutput = "";
             bool[,] tiles = null;
             List<Room> rooms = null;
             int startRoom=-1;
@@ -42,15 +41,25 @@ namespace GigglyLib.ProcGen
                 tiles = _CAGen.DoSimulationStep(tiles, 5, 0);
                 (rooms, startRoom, endRoom) = _RoomGen.Generate(tiles);
                 tiles = _CAGen.DoSimulationStep(tiles, 1, 1);
-                debugOutput += DebugOutput(tiles);
+                Game1.DebugOutput += DebugOutput(tiles);
             }
 
+            // Start room
             {
                 var room = rooms[startRoom];
                 var region = room.Region;
                 int x = _rand.Next(region.X, region.X + region.Width);
                 int y = _rand.Next(region.Y, region.Y + region.Height);
                 CreatePlayer(x, y);
+            }
+
+            // End room
+            {
+                var room = rooms[endRoom];
+                var region = room.Region;
+                int x = (region.X + (region.Width / 2)) - 2;
+                int y = (region.Y + (region.Height / 2)) - 2;
+                CreatePortal(x, y);
             }
 
             for (int i = 0; i < rooms.Count; i++)
@@ -70,12 +79,19 @@ namespace GigglyLib.ProcGen
             }
 
             CreateTiles(tiles);
+        }
 
-            //Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
-            //string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/" + "myMap" + ".txt";
-            //StreamWriter streamWriter = new StreamWriter(filePath);
-            //streamWriter.Write(debugOutput);
-            //streamWriter.Close();
+        private void CreatePortal(int x, int y)
+        {
+            var portal = Game1.world.CreateEntity();
+            portal.Set(new CPortal());
+            portal.Set(new CGridPosition { X = x, Y = y });
+            portal.Set(new CSprite {
+                Texture = "portal",
+                Depth = 1f,
+                X = x * Config.TileSize,
+                Y = y * Config.TileSize,
+            });
         }
 
         private void CreatePlayer(int x, int y)
@@ -104,7 +120,7 @@ namespace GigglyLib.ProcGen
             });
             var weapons = new CWeaponsArray
             {
-                Weapons = new List<CWeapon>()
+                Weapons = Game1.startingWeapons.Weapons ?? new List<CWeapon>()
             };
             weapons.Weapons.Add(new CWeapon
             {

@@ -26,6 +26,5 @@ namespace GigglyLib.Components
         public bool RandomColours;
 
         public List<string> AttackPattern;
-
     }
 }

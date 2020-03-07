@@ -6,8 +6,20 @@ using System.Threading.Tasks;
 
 namespace GigglyLib.Components
 {
-    struct CWeaponsArray
+    public struct CWeaponsArray
     {
         public List<CWeapon> Weapons;
+
+        public CWeaponsArray(CWeaponsArray wepArray)
+        {
+            Weapons = new List<CWeapon>();
+            if (wepArray.Weapons != null)
+            {
+                for (int i = 0; i < wepArray.Weapons.Count; i++)
+                {
+                    Weapons.Add(wepArray.Weapons[i]);
+                }
+            }
+        }
     }
 }
