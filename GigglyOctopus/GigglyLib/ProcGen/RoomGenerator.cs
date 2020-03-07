@@ -31,7 +31,6 @@ namespace GigglyLib.ProcGen
             List<Room> rooms = GenerateRooms(map);
             BuildLinks(rooms);
             GenerateHallways(rooms, map);
-
             Console.WriteLine($"RoomGenerator finished with {rooms.Count} rooms generated");
             return rooms;
         }
@@ -40,18 +39,28 @@ namespace GigglyLib.ProcGen
         {
             int[,] costGraph = BuildCostGraph(map, rooms);
 
-            List<(int room, int link)> actionStack = new List<(int room, int link)>();
-
-            int startRoom = _rand.Next(0, rooms.Count);
-            int endRoom;
-            do { endRoom = _rand.Next(0, rooms.Count); } while (endRoom == startRoom);
-
-            List<Room> newRooms = new List<Room>();
+            List<(int start, int end)> possibilities = new List<(int start, int end)>();
             for (int i = 0; i < rooms.Count; i++)
-                newRooms.Add(new Room(rooms[i]));
-            List<Room> path = new List<Room> { newRooms[startRoom] };
-            bool res = RecursiveGetPath(newRooms[endRoom], path, newRooms, map, costGraph);
-            Console.WriteLine(res);
+                for (int j = 0; j < rooms.Count; j++)
+                    if (i != j)
+                    {
+                        possibilities.Add((i, j));
+                    }
+
+            bool res = false;
+            do
+            {
+                List<Room> newRooms = new List<Room>();
+                for (int i = 0; i < rooms.Count; i++)
+                    newRooms.Add(new Room(rooms[i]));
+
+                int possibility = _rand.Next(0, possibilities.Count);
+                var (start, end) = possibilities[possibility];
+
+                List<Room> path = new List<Room> { newRooms[start] };
+                res = RecursiveGetPath(newRooms[end], path, newRooms, map, costGraph);
+                possibilities.RemoveAt(possibility);
+            } while (possibilities.Count > 0 && res == false);
         }
 
         private bool RecursiveGetPath(Room end, List<Room> path, List<Room> roomSet, bool[,] map, int[,] costGraph)
@@ -75,11 +84,10 @@ namespace GigglyLib.ProcGen
                 if (path[path.Count-1].Region.X == end.Region.X && path[path.Count-1].Region.Y == end.Region.Y)
                 {
                     // any constraints we want
-                    if (path.Count == roomSet.Count)
+                    if (path.Count == roomSet.Count - 3)
                     {
                         if (CarveHallways(path, map, costGraph))
                             return true;
-                        //return true;
                     }
                 }
 
