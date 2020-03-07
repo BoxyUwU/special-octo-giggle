@@ -40,6 +40,7 @@ namespace GigglyLib.Systems
                 {
                     Scale = 0.1f
                 });
+                Game1.playExplosion = true;
             }
             else
             {

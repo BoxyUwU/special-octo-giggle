@@ -45,6 +45,8 @@ namespace GigglyLib
         SpriteBatch spriteBatch;
         public static World world = new World();
 
+        public static bool playExplosion = false;
+
         Song BGM;
 
         SequentialSystem<float> simulateSys;
@@ -203,6 +205,13 @@ namespace GigglyLib
             Config.SFX.Add("player-heal", Content.Load<SoundEffect>("Sounds/player-heal"));
             Config.SFX.Add("player-upgrade", Content.Load<SoundEffect>("Sounds/player-upgrade"));
             Config.SFX.Add("player-move", Content.Load<SoundEffect>("Sounds/player-move"));
+            Config.SFX.Add("player-death", Content.Load<SoundEffect>("Sounds/player-death"));
+            Config.SFX.Add("player-hit", Content.Load<SoundEffect>("Sounds/player-hit"));
+            Config.SFX.Add("game-over", Content.Load<SoundEffect>("Sounds/game-over"));
+            Config.SFX.Add("danger", Content.Load<SoundEffect>("Sounds/danger"));
+            Config.SFX.Add("warning", Content.Load<SoundEffect>("Sounds/warning"));
+            Config.SFX.Add("explosion", Content.Load<SoundEffect>("Sounds/explosion"));
+            Config.SFX.Add("charging", Content.Load<SoundEffect>("Sounds/charging"));
         }
 
         private void CreateSystems()
@@ -440,12 +449,17 @@ namespace GigglyLib
 
                 foreach (var e in toDispose)
                     e.Dispose();
+
+                Config.SFX["player-death"].Play();
+
                 Player.Remove<CPlayer>();
+                Player.Remove<CHealth>();
                 Player.Remove<CParticleSpawner>();
                 Player.Set(new CScalable { 
                     Scale = 1.0f
                 });
 
+                Config.SFX["game-over"].Play();
                 ref var sprite = ref Player.Get<CSprite>();
                 for (int i = 0; i < 18; ++i)
                 {
@@ -486,7 +500,12 @@ namespace GigglyLib
                 }
                 else if (scale.Scale > 1.0f && sprite.Texture != "particles-explosion")
                 {
-                    scale.Scale /= 1.01f;
+                    scale.Scale /= 1.005f;
+                }
+                else if (!Player.Has<CCharging>())
+                {
+                    Config.SFX["charging"].Play();
+                    Player.Set<CCharging>();
                 }
                 else
                 {
@@ -506,6 +525,12 @@ namespace GigglyLib
                         GameState = GameState.Starting;
                 }
                 particleSeqSys.Update(0.0f);
+            }
+
+            if(playExplosion)
+            {
+                Config.SFX["explosion"].Play();
+                playExplosion = false;
             }
 
             base.Update(gameTime);
