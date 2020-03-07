@@ -47,20 +47,44 @@ namespace GigglyLib.ProcGen
                         possibilities.Add((i, j));
                     }
 
+            List<Room> newRooms;
+            List<Room> path;
             bool res = false;
             do
             {
-                List<Room> newRooms = new List<Room>();
+                newRooms = new List<Room>();
                 for (int i = 0; i < rooms.Count; i++)
                     newRooms.Add(new Room(rooms[i]));
 
                 int possibility = _rand.Next(0, possibilities.Count);
                 var (start, end) = possibilities[possibility];
 
-                List<Room> path = new List<Room> { newRooms[start] };
+                path = new List<Room> { newRooms[start] };
                 res = RecursiveGetPath(newRooms[end], path, newRooms, map, costGraph);
                 possibilities.RemoveAt(possibility);
             } while (possibilities.Count > 0 && res == false);
+
+            List<Room> leafs = new List<Room>();
+            for (int i = 0; i < newRooms.Count; i++)
+                if (!path.Contains(newRooms[i]))
+                    leafs.Add(newRooms[i]);
+            ConnectLeafs(leafs, newRooms, map, costGraph);
+        }
+
+        private void ConnectLeafs(List<Room> leafs, List<Room> rooms, bool[,] map, int[,] costGraph)
+        {
+            for (int i = 0; i < leafs.Count; i++)
+            {
+                Room leaf = leafs[i];
+                bool worked = false;
+                List<int> possibleConnections = new List<int>(leaf.Links);
+                do
+                {
+                    int connection = _rand.Next(0, possibleConnections.Count);
+                    worked = CarveHallway(leaf, rooms[possibleConnections[connection]], map, costGraph, false);
+                    possibleConnections.RemoveAt(connection);
+                } while (possibleConnections.Count > 0 && !worked);
+            }
         }
 
         private bool RecursiveGetPath(Room end, List<Room> path, List<Room> roomSet, bool[,] map, int[,] costGraph)
@@ -114,7 +138,7 @@ namespace GigglyLib.ProcGen
             return true;
         }
 
-        private bool CarveHallway(Room room1, Room room2, bool[,] map, int[,] costGraph)
+        private bool CarveHallway(Room room1, Room room2, bool[,] map, int[,] costGraph, bool forceCarve = false)
         {
             AStar aStar = new AStar();
             int goalX = room2.Region.X + (room2.Region.Width / 2);
@@ -124,7 +148,7 @@ namespace GigglyLib.ProcGen
             var path = aStar.GetPath(startX, startY, goalX, goalY, costGraph);
 
             foreach (var (x, y) in path)
-                if (OverlapsWithEmpty(x, y, 2, 2, map, room1.Region, room2.Region))
+                if (OverlapsWithEmpty(x, y, 2, 2, map, room1.Region, room2.Region) && !forceCarve)
                     return false;
             foreach (var (x, y) in path)
                 CarveSquare(x, y, 2, 2, map, costGraph);
