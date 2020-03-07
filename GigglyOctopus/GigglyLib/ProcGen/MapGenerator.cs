@@ -20,7 +20,7 @@ namespace GigglyLib.ProcGen
 
         public MapGenerator(int seed) 
         {
-            _seed = seed;
+            _seed = 733021554;
             _rand = new Random(_seed);
         }
 
@@ -94,7 +94,7 @@ namespace GigglyLib.ProcGen
             });
             portal.Set(new CParticleSpawner
             {
-                Impact = 3,
+                Impact = 3.5f,
                 RandomColours = true
             });
         }

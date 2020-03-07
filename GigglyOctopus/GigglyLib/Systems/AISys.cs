@@ -86,7 +86,13 @@ namespace GigglyLib.Systems
 
                     retries++;
                     if (retries > 3)
+                    {
+                        var toDispose = new List<Entity>();
+                        toDispose.Add(enemy);
+                        foreach (var e in toDispose)
+                            e.Dispose();
                         yield return NONE;
+                    }
                 }
 
                 AStar astar = new AStar();
