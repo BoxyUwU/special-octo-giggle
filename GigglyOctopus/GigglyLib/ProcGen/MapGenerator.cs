@@ -127,21 +127,24 @@ namespace GigglyLib.ProcGen
             {
                 Weapons = new CWeaponsArray(Game1.startingWeapons).Weapons
             };
-            weapons.Weapons.Add(new CWeapon
+            if (weapons.Weapons.Count == 0)
             {
-                Damage = 5,
-                RangeFront = 7,
-                RangeLeft = 2,
-                RangeRight = 2,
-                RangeBack = -1,
-                CooldownMax = 0,
-                AttackPattern = new List<string>
+                weapons.Weapons.Add(new CWeapon
+                {
+                    Damage = 5,
+                    RangeFront = 7,
+                    RangeLeft = 2,
+                    RangeRight = 2,
+                    RangeBack = -1,
+                    CooldownMax = 0,
+                    AttackPattern = new List<string>
                     {
                        "0"
                     },
-                Colour = (Colour)Config.RandInt(18),
-                RandomColours = true
-            });
+                    Colour = (Colour)Config.RandInt(18),
+                    RandomColours = true
+                });
+            }
             Game1.startingWeapons.Weapons = null;
             // FOR TESTING
             //weapons.Weapons.Add(Config.Weapons["Sukima"]);
