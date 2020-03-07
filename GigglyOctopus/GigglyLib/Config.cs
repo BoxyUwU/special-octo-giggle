@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using GigglyLib.Components;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 
 namespace GigglyLib
 {
@@ -16,6 +17,7 @@ namespace GigglyLib
         public static int ScreenWidth = 1280;
         public static int ScreenHeight = 720;
         public static Dictionary<string, Texture2D> Textures = new Dictionary<string, Texture2D>();
+        public static Dictionary<string, SoundEffect> SFX = new Dictionary<string, SoundEffect>();
 
         public static Dictionary<string, CWeapon> Weapons = new Dictionary<string, CWeapon>
         {

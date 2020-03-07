@@ -146,6 +146,7 @@ namespace GigglyLib.Systems
 
                         if (targeted)
                         {
+                            Config.SFX["laser-basic"].Play();
                             var beamAnim = Game1.world.CreateEntity();
                             beamAnim.Set(new CParticleBeam
                             {

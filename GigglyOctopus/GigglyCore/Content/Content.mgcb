@@ -19,6 +19,54 @@
 /processorParam:Quality=Best
 /build:Sounds/background-music.mp3
 
+#begin Sounds/enemy-destroyed.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/enemy-destroyed.wav
+
+#begin Sounds/enemy-hit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/enemy-hit.wav
+
+#begin Sounds/game-over.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/game-over.wav
+
+#begin Sounds/laser-basic.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/laser-basic.wav
+
+#begin Sounds/player-heal.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/player-heal.wav
+
+#begin Sounds/player-move.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/player-move.wav
+
+#begin Sounds/player-move.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/player-move.wav
+
+#begin Sounds/player-upgrade.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/player-upgrade.wav
+
 #begin Sprites/asteroid-tile.png
 /importer:TextureImporter
 /processor:TextureProcessor

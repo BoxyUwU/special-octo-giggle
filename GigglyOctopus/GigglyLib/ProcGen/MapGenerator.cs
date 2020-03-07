@@ -151,7 +151,7 @@ namespace GigglyLib.ProcGen
         public Entity SpawnEnemy(int gX, int gY, Direction dir = Direction.WEST)
         {
             var e = Game1.world.CreateEntity();
-            bool hasPowerUp = Config.Rand() < 0.2;
+            bool hasPowerUp = Config.Rand() < 0.05;
             e.Set(new CGridPosition { X = gX, Y = gY, Facing = dir });
             e.Set<CMovable>();
             e.Set(new CHealth { Max = 15 });

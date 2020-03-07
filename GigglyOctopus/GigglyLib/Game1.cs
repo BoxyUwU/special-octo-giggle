@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
 using GigglyLib.ProcGen;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 
 namespace GigglyLib
 {
@@ -188,6 +189,12 @@ namespace GigglyLib
 
             // Audio
             BGM = Content.Load<Song>("Sounds/background-music");
+            Config.SFX.Add("laser-basic", Content.Load<SoundEffect>("Sounds/laser-basic"));
+            Config.SFX.Add("enemy-hit", Content.Load<SoundEffect>("Sounds/enemy-hit"));
+            Config.SFX.Add("enemy-destroyed", Content.Load<SoundEffect>("Sounds/enemy-destroyed"));
+            Config.SFX.Add("player-heal", Content.Load<SoundEffect>("Sounds/player-heal"));
+            Config.SFX.Add("player-upgrade", Content.Load<SoundEffect>("Sounds/player-upgrade"));
+            Config.SFX.Add("player-move", Content.Load<SoundEffect>("Sounds/player-move"));
         }
 
         private void CreateSystems()

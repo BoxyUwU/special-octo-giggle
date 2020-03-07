@@ -29,6 +29,8 @@ namespace GigglyLib.Systems
                     playerHealth.Damage = 0;
                     entity.Set(new CScalable { Scale = 1.0f });
                     powerup.Animate = true;
+                    Config.SFX["player-heal"].Play();
+                    Config.SFX["player-upgrade"].Play();
                 }
             }
 

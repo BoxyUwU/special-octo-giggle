@@ -39,7 +39,10 @@ namespace GigglyLib.Systems
             }
 
             if (entity.Has<CMoveAction>())
+            {
                 Game1.currentRoundState++;
+                Config.SFX["player-move"].Play();
+            }
 
             base.Update(state, entity);
         }
