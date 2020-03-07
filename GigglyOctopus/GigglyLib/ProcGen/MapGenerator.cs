@@ -92,6 +92,11 @@ namespace GigglyLib.ProcGen
                 X = x * Config.TileSize,
                 Y = y * Config.TileSize,
             });
+            portal.Set(new CParticleSpawner
+            {
+                Impact = 3,
+                RandomColours = true
+            });
         }
 
         private void CreatePlayer(int x, int y)
