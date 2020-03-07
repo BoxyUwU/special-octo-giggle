@@ -69,7 +69,7 @@ namespace GigglyLib.ProcGen
                 var room = rooms[i];
                 var region = room.Region;
 
-                int enemiesToSpawn = _rand.Next(2, 5);
+                int enemiesToSpawn = _rand.Next(1, 4) + 2 * Player.Get<CWeaponsArray>().Weapons.Count;
                 for (int j = 0; j < enemiesToSpawn; j++)
                 {
                     int x = _rand.Next(region.X, region.X + region.Width);
