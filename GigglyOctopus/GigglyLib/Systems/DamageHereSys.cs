@@ -37,7 +37,7 @@ namespace GigglyLib.Systems
                         if (shipHP.Damage > shipHP.Max)
                         {
                             if (ships[i].Has<CPlayer>())
-                                Game1.GameState = GameState.Starting;
+                                Game1.GameState = GameState.GameOver;
                             else if (ships[i].Has<CEnemy>() && ships[i].Get<CEnemy>().HasPowerUp)
                             {
                                 Config.SFX["enemy-destroyed"].Play();

@@ -18,6 +18,8 @@ namespace GigglyLib
     {
         Starting,
         Playing,
+        GameOver,
+        Respawning
     }
 
     public enum RoundState
@@ -210,7 +212,8 @@ namespace GigglyLib
                 new ParticleBeamSys(),
                 new ParticleSys(),
                 new MarkerFadeSys(),
-                new PowerUpAnimSys()
+                new PowerUpAnimSys(),
+                new FadeInSys()
             );
 
             roundPrepSys = new SequentialSystem<float>(
@@ -330,6 +333,17 @@ namespace GigglyLib
             {
                 Rectangle = new Rectangle(0, 0, Config.ScreenWidth + gridTexture.Width, Config.ScreenHeight + gridTexture.Height)
             });
+
+            var fadeIn = Game1.world.CreateEntity();
+            fadeIn.Set(new CSprite
+            {
+                X = X,
+                Y = Y,
+                Texture = "particles-rainbow",
+                Depth = 1
+            });
+            fadeIn.Set(new CScalable{ Scale = 500 });
+            fadeIn.Set<CFadeIn>();
         }
 
         /// <summary>
@@ -350,9 +364,6 @@ namespace GigglyLib
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            if (Keyboard.GetState().IsKeyDown(Keys.J))
-               GameState = GameState.Starting;
 
             if (GameState == GameState.Starting)
             {
@@ -402,6 +413,81 @@ namespace GigglyLib
                     if (currentRoundState == startingState || startingState == roundOrder.Length - 1)
                         break;
                 }
+            }
+            else if (GameState == GameState.GameOver)
+            {
+                MediaPlayer.Stop();
+                var targetBuilder = world.GetEntities().Without<CPlayer>().Without<CParallaxBackground>();
+                var toDispose = targetBuilder.AsSet().GetEntities();
+
+                foreach (var e in toDispose)
+                    e.Dispose();
+                Player.Remove<CPlayer>();
+                Player.Remove<CParticleSpawner>();
+                Player.Set(new CScalable { 
+                    Scale = 1.0f
+                });
+
+                ref var sprite = ref Player.Get<CSprite>();
+                for (int i = 0; i < 18; ++i)
+                {
+                    int times = 10;
+                    while(times --> 0)
+                    {
+                        var particle = world.CreateEntity();
+                        particle.Set(new CSprite
+                        {
+                            Texture = PARTICLES[i],
+                            Rotation = Config.Rand() * 2 * (float)Math.PI,
+                            Transparency = (Config.Rand() * 0.2f) + 0.12f,
+                            X = sprite.X,
+                            Y = sprite.Y,
+                            Depth = 0.3f
+                        });
+
+                        particle.Set(new CScalable { Scale = (Config.Rand() * 0.4f) + 0.3f });
+                        particle.Set(new CParticle { DeltaRotation = Config.Rand() * 0.05f, Velocity = Config.Rand() * 0.1f + 0.1f });
+                    }
+                }
+
+                GameState = GameState.Respawning;
+            }
+            else if(GameState == GameState.Respawning)
+            {
+                ref var sprite = ref Player.Get<CSprite>();
+                ref var scale = ref Player.Get<CScalable>();
+                if (sprite.Transparency < 1 && !Player.Has<CPlayer>())
+                {
+                    sprite.Transparency += 0.1f;
+                    scale.Scale *= 1.1f;
+                }
+                else if (!Player.Has<CPlayer>())
+                {
+                    sprite.Rotation = 0;
+                    Player.Set<CPlayer>();
+                }
+                else if (scale.Scale > 1.0f && sprite.Texture != "particles-explosion")
+                {
+                    scale.Scale /= 1.01f;
+                }
+                else
+                {
+                    var beamAnim = Game1.world.CreateEntity();
+                    beamAnim.Set(new CParticleBeam
+                    {
+                        SourceX = Player.Get<CGridPosition>().X + Config.RandInt(27) - 13,
+                        SourceY = Player.Get<CGridPosition>().Y + Config.RandInt(15) - 7,
+                        DestX = Player.Get<CGridPosition>().X,
+                        DestY = Player.Get<CGridPosition>().Y,
+                        RandomColours = true
+                    });
+                    sprite.Texture = "particles-explosion";
+                    scale.Scale *= 1.1f;
+                    sprite.Transparency -= 0.01f;
+                    if (sprite.Transparency < 0f)
+                        GameState = GameState.Starting;
+                }
+                particleSeqSys.Update(0.0f);
             }
 
             base.Update(gameTime);
