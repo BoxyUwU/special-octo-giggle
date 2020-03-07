@@ -20,7 +20,7 @@ namespace GigglyLib.ProcGen
 
         public MapGenerator(int seed) 
         {
-            _seed = seed;
+            _seed = 155848173;
             _rand = new Random(seed);
         }
 

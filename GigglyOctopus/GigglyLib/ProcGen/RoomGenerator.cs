@@ -71,8 +71,11 @@ namespace GigglyLib.ProcGen
             ConnectLeafs(leafs, newRooms, map, costGraph);
         }
 
-        private void ConnectLeafs(List<Room> leafs, List<Room> rooms, bool[,] map, int[,] costGraph)
+        private bool ConnectLeafs(List<Room> leafs, List<Room> rooms, bool[,] map, int[,] costGraph)
         {
+            bool[,] copyMap = (bool[,])map.Clone();
+            int[,] copyCost = (int[,])costGraph.Clone();
+
             for (int i = 0; i < leafs.Count; i++)
             {
                 Room leaf = leafs[i];
@@ -81,10 +84,16 @@ namespace GigglyLib.ProcGen
                 do
                 {
                     int connection = _rand.Next(0, possibleConnections.Count);
-                    worked = CarveHallway(leaf, rooms[possibleConnections[connection]], map, costGraph, false);
+                    worked = CarveHallway(leaf, rooms[possibleConnections[connection]], copyMap, copyCost, false);
                     possibleConnections.RemoveAt(connection);
                 } while (possibleConnections.Count > 0 && !worked);
+                if (worked == false)
+                    return false;
             }
+
+            UpdateOriginalsFromCopy(map, copyMap);
+            UpdateOriginalsFromCopy(costGraph, copyCost);
+            return true;
         }
 
         private bool RecursiveGetPath(Room end, List<Room> path, List<Room> roomSet, bool[,] map, int[,] costGraph)
