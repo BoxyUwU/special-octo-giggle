@@ -124,13 +124,10 @@ namespace GigglyLib.ProcGen
             var path = aStar.GetPath(startX, startY, goalX, goalY, costGraph);
 
             foreach (var (x, y) in path)
-            {
-                if (/*OverlapsWithEmpty(x, y, 2, 2, map)*/!map[x,y] && !room2.Region.Contains(x, y) && !room1.Region.Contains(x, y))
+                if (OverlapsWithEmpty(x, y, 2, 2, map, room1.Region, room2.Region))
                     return false;
-                //CarveSquare(x, y, 2, 2, map, costGraph);
-                map[x, y] = false;
-                costGraph[x, y] = int.MaxValue;
-            }
+            foreach (var (x, y) in path)
+                CarveSquare(x, y, 2, 2, map, costGraph);
             return true;
         }
 
@@ -145,13 +142,13 @@ namespace GigglyLib.ProcGen
             }
         }
 
-        private bool OverlapsWithEmpty(int cX, int cY, int width, int height, bool[,] map)
+        private bool OverlapsWithEmpty(int cX, int cY, int width, int height, bool[,] map, Rectangle room1, Rectangle room2)
         {
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
-                    if (map[cX + x, cY + y] == false)
+                    if (!map[cX + x, cY + y] && !room1.Contains(cX + x, cY + y) && !room2.Contains(cX + x, cY + y))
                         return true;
                 }
             }
