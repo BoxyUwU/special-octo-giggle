@@ -137,12 +137,17 @@ namespace GigglyLib.ProcGen
         private void CreateTiles(bool[,] tiles)
         {
             Tiles = new HashSet<(int, int)>();
+            CostGrid = new int[tiles.GetLength(0), tiles.GetLength(1)];
             for (int x = 0; x < tiles.GetLength(0); x++)
                 for (int y = 0; y < tiles.GetLength(1); y++)
                 {
                     if (!tiles[x, y])
+                    {
+                        CostGrid[x, y] = 1;
                         continue;
+                    }
                     Tiles.Add((x, y));
+                    CostGrid[x, y] = int.MaxValue;
                     var tileEntity = Game1.world.CreateEntity();
                     tileEntity.Set(new CSprite { Texture = "asteroid", Depth = 0.49f, X = x * Config.TileSize, Y = y * Config.TileSize });
                     tileEntity.Set(new CGridPosition { X = x, Y = y });

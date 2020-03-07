@@ -52,6 +52,7 @@ namespace GigglyLib
         SequentialSystem<float> roundPrepSys;
 
         public static HashSet<(int,int)> Tiles;
+        public static int[,] CostGrid;
         public static Entity Player;
         public static GameState GameState = GameState.Starting;
         public static int currentRoundState = 0;

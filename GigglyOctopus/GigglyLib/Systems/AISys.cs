@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DefaultEcs;
 using DefaultEcs.System;
 using GigglyLib.Components;
+using GigglyLib.ProcGen;
 
 namespace GigglyLib.Systems
 {
@@ -88,34 +89,22 @@ namespace GigglyLib.Systems
                         yield return NONE;
                 }
 
-                int aggroTimer = 5;
+                AStar astar = new AStar();
+                var path = astar.GetPath(
+                    enemy.Get<CGridPosition>().X,
+                    enemy.Get<CGridPosition>().Y,
+                    player.Get<CGridPosition>().X,
+                    player.Get<CGridPosition>().Y,
+                    Game1.CostGrid
+                );
+                path.Reverse();
 
-                while (aggroTimer --> 0)
+                foreach (var point in path)
                 {
-                    var playerPos = player.Get<CGridPosition>();
-                    var enemyPos = enemy.Get<CGridPosition>();
-
-                    CMoveAction next;
-
-                    if (Math.Abs(playerPos.Y - enemyPos.Y) >= Math.Abs(playerPos.X - enemyPos.X))
-                        next =
-                            playerPos.Y > enemyPos.Y ? SOUTH :
-                            playerPos.Y < enemyPos.Y ? NORTH :
-                            playerPos.X > enemyPos.X ? EAST :
-                            playerPos.X < enemyPos.X ? WEST :
-                            NONE;
-
-                    else next =
-                        playerPos.X > enemyPos.X ? EAST :
-                        playerPos.X < enemyPos.X ? WEST :
-                        playerPos.Y > enemyPos.Y ? SOUTH :
-                        playerPos.Y < enemyPos.Y ? NORTH :
-                        NONE;
-
-                    if (Game1.Tiles.Contains((enemyPos.X + next.DistX, enemyPos.Y + next.DistY)))
-                        break;
-                    else yield return next;
-
+                    yield return new CMoveAction {
+                        DistX = point.x - enemy.Get<CGridPosition>().X,
+                        DistY = point.y - enemy.Get<CGridPosition>().Y,
+                    };
                 }
 
                 int escapeTimer = 1 + Config.RandInt(5);
