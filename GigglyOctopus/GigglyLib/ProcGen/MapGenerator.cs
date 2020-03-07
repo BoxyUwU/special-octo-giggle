@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using DefaultEcs;
@@ -21,7 +21,7 @@ namespace GigglyLib.ProcGen
         public MapGenerator(int seed) 
         {
             _seed = seed;
-            _rand = new Random(seed);
+            _rand = new Random(_seed);
         }
 
         public void Generate()
