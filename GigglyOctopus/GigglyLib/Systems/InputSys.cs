@@ -19,27 +19,30 @@ namespace GigglyLib.Systems
 
             if (keyState.IsKeyDown(Keys.W) || keyState.IsKeyDown(Keys.Up))
             {
-                if (pos.Y - 1 >= 0 && !Game1.Tiles[pos.X, pos.Y - 1])
+                if (!Game1.Tiles.Contains((pos.X, pos.Y - 1)))
                     entity.Set(new CMoveAction { DistY = -1 });
             }
             if (keyState.IsKeyDown(Keys.S) || keyState.IsKeyDown(Keys.Down))
             {
-                if (pos.Y + 1 < Game1.Tiles.GetLength(1) && !Game1.Tiles[pos.X, pos.Y + 1])
+                if (!Game1.Tiles.Contains((pos.X, pos.Y + 1)))
                     entity.Set(new CMoveAction { DistY = 1 });
             }
             if (keyState.IsKeyDown(Keys.A) || keyState.IsKeyDown(Keys.Left))
             {
-                if (pos.X - 1 >= 0 && !Game1.Tiles[pos.X - 1, pos.Y])
+                if (!Game1.Tiles.Contains((pos.X - 1, pos.Y)))
                     entity.Set(new CMoveAction { DistX = -1 });
             }
             if (keyState.IsKeyDown(Keys.D) || keyState.IsKeyDown(Keys.Right))
             {
-                if (pos.X + 1 < Game1.Tiles.GetLength(0) && !Game1.Tiles[pos.X + 1, pos.Y])
+                if (!Game1.Tiles.Contains((pos.X + 1, pos.Y)))
                     entity.Set(new CMoveAction { DistX = 1 });
             }
 
             if (entity.Has<CMoveAction>())
+            {
                 Game1.currentRoundState++;
+                Config.SFX["player-move"].Play();
+            }
 
             base.Update(state, entity);
         }

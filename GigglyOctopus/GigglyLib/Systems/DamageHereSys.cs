@@ -30,12 +30,17 @@ namespace GigglyLib.Systems
                         ships[i].Has<CPlayer>() && damage.Source == "ENEMY")
                     {
                         shipHP.Damage += damage.Amount;
+
+                        if (ships[i].Has<CEnemy>())
+                            Config.SFX["enemy-hit"].Play();
+
                         if (shipHP.Damage > shipHP.Max)
                         {
                             if (ships[i].Has<CPlayer>())
-                                Game1.GameState = GameState.Starting;
+                                Game1.GameState = GameState.GameOver;
                             else if (ships[i].Has<CEnemy>() && ships[i].Get<CEnemy>().HasPowerUp)
                             {
+                                Config.SFX["enemy-destroyed"].Play();
                                 ref var sprite = ref ships[i].Get<CSprite>();
                                 sprite.Rotation = 0;
                                 sprite.Texture = "power-up";
@@ -44,7 +49,10 @@ namespace GigglyLib.Systems
                                 ships[i].Remove<CScalable>();
                             }
                             else
+                            {
+                                Config.SFX["enemy-destroyed"].Play();
                                 toDispose.Add(ships[i]);
+                            }
                         }
                     }
                 }
