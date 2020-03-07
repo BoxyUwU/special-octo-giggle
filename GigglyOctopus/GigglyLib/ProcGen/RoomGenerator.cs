@@ -106,17 +106,6 @@ namespace GigglyLib.ProcGen
             return true;
         }
 
-        private void UpdateOriginalsFromCopy<T>(T[,] original, T[,] copy)
-        {
-            for (int i = 0; i < original.GetLength(0); i++)
-            {
-                for (int j = 0; j < original.GetLength(1); j++)
-                {
-                    original[i, j] = copy[i, j];
-                }
-            }
-        }
-
         private bool CarveHallway(Room room1, Room room2, bool[,] map, int[,] costGraph)
         {
             AStar aStar = new AStar();
@@ -128,13 +117,24 @@ namespace GigglyLib.ProcGen
 
             foreach (var (x, y) in path)
             {
-                //if (/*OverlapsWithEmpty(x, y, 2, 2, map)*/!map[x,y] && !room2.Region.Contains(x, y) && !room1.Region.Contains(x, y))
-                    //return false;
+                if (/*OverlapsWithEmpty(x, y, 2, 2, map)*/!map[x,y] && !room2.Region.Contains(x, y) && !room1.Region.Contains(x, y))
+                    return false;
                 //CarveSquare(x, y, 2, 2, map, costGraph);
                 map[x, y] = false;
                 costGraph[x, y] = int.MaxValue;
             }
             return true;
+        }
+
+        private void UpdateOriginalsFromCopy<T>(T[,] original, T[,] copy)
+        {
+            for (int i = 0; i < original.GetLength(0); i++)
+            {
+                for (int j = 0; j < original.GetLength(1); j++)
+                {
+                    original[i, j] = copy[i, j];
+                }
+            }
         }
 
         private bool OverlapsWithEmpty(int cX, int cY, int width, int height, bool[,] map)
