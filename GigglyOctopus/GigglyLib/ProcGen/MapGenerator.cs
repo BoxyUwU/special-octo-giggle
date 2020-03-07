@@ -33,26 +33,30 @@ namespace GigglyLib.ProcGen
             string debugOutput = "";
             bool[,] tiles = null;
             List<Room> rooms = null;
+            int startRoom=-1;
+            int endRoom=-1;
             // actual map gen code
             for (int i = 0; i < 1; i++)
             {
                 tiles = _metaballGen.Generate();
                 tiles = _CAGen.DoSimulationStep(tiles, 5, 0);
-                rooms = _RoomGen.Generate(tiles);
+                (rooms, startRoom, endRoom) = _RoomGen.Generate(tiles);
                 tiles = _CAGen.DoSimulationStep(tiles, 1, 1);
                 debugOutput += DebugOutput(tiles);
             }
 
             {
-                var room = rooms[0];
+                var room = rooms[startRoom];
                 var region = room.Region;
                 int x = _rand.Next(region.X, region.X + region.Width);
                 int y = _rand.Next(region.Y, region.Y + region.Height);
                 CreatePlayer(x, y);
             }
 
-            for (int i = 1; i < rooms.Count; i++)
+            for (int i = 0; i < rooms.Count; i++)
             {
+                if (i == startRoom)
+                    continue;
                 var room = rooms[i];
                 var region = room.Region;
 
@@ -67,11 +71,11 @@ namespace GigglyLib.ProcGen
 
             CreateTiles(tiles);
 
-            /*Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
-            string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/" + "myMap" + ".txt";
-            StreamWriter streamWriter = new StreamWriter(filePath);
-            streamWriter.Write(debugOutput);
-            streamWriter.Close();*/
+            //Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
+            //string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/" + "myMap" + ".txt";
+            //StreamWriter streamWriter = new StreamWriter(filePath);
+            //streamWriter.Write(debugOutput);
+            //streamWriter.Close();
         }
 
         private void CreatePlayer(int x, int y)
