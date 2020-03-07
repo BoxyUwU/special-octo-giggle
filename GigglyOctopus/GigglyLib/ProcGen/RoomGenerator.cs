@@ -68,32 +68,80 @@ namespace GigglyLib.ProcGen
             for (int i = 0; i < newRooms.Count; i++)
                 if (!path.Contains(newRooms[i]))
                     leafs.Add(newRooms[i]);
-            ConnectLeafs(leafs, newRooms, map, costGraph);
+            //ConnectLeafs(leafs, newRooms, map, costGraph);
+            RecursiveConnectLeafs(leafs, newRooms, new List<Room>(), map, costGraph);
         }
 
-        private bool ConnectLeafs(List<Room> leafs, List<Room> rooms, bool[,] map, int[,] costGraph)
+        //private bool ConnectLeafs(List<Room> leafs, List<Room> rooms, bool[,] map, int[,] costGraph)
+        //{
+        //    bool[,] copyMap = (bool[,])map.Clone();
+        //    int[,] copyCost = (int[,])costGraph.Clone();
+
+        //    for (int i = 0; i < leafs.Count; i++)
+        //    {
+        //        Room leaf = leafs[i];
+        //        bool worked = false;
+        //        List<int> possibleConnections = new List<int>(leaf.Links);
+        //        do
+        //        {
+        //            int connection = _rand.Next(0, possibleConnections.Count);
+        //            worked = CarveHallway(leaf, rooms[possibleConnections[connection]], copyMap, copyCost, false);
+        //            possibleConnections.RemoveAt(connection);
+        //        } while (possibleConnections.Count > 0 && !worked);
+        //        //if (worked == false)
+        //        //    return false;
+        //    }
+
+        //    UpdateOriginalsFromCopy(map, copyMap);
+        //    UpdateOriginalsFromCopy(costGraph, copyCost);
+        //    return true;
+        //}
+
+        private bool RecursiveConnectLeafs(List<Room> leafs, List<Room> rooms, List<Room> connectedLeafs, bool[,] map, int[,] cost)
         {
-            bool[,] copyMap = (bool[,])map.Clone();
-            int[,] copyCost = (int[,])costGraph.Clone();
-
+            List<Room> validLeafs = new List<Room>();
             for (int i = 0; i < leafs.Count; i++)
-            {
-                Room leaf = leafs[i];
-                bool worked = false;
-                List<int> possibleConnections = new List<int>(leaf.Links);
-                do
-                {
-                    int connection = _rand.Next(0, possibleConnections.Count);
-                    worked = CarveHallway(leaf, rooms[possibleConnections[connection]], copyMap, copyCost, false);
-                    possibleConnections.RemoveAt(connection);
-                } while (possibleConnections.Count > 0 && !worked);
-                if (worked == false)
-                    return false;
-            }
+                if (!connectedLeafs.Contains(leafs[i]))
+                    validLeafs.Add(leafs[i]);
 
-            UpdateOriginalsFromCopy(map, copyMap);
-            UpdateOriginalsFromCopy(costGraph, copyCost);
-            return true;
+            List<Room> goalRooms = new List<Room>();
+            for (int i = 0; i < rooms.Count; i++)
+                if (!leafs.Contains(rooms[i]) || (leafs.Contains(rooms[i]) && connectedLeafs.Contains(rooms[i])))
+                    goalRooms.Add(rooms[i]);
+
+            bool[,] copyMap = (bool[,])map.Clone();
+            int[,] copyCost = (int[,])cost.Clone();
+            for (int i = 0; i < validLeafs.Count; i++)
+            {
+                Room chosenLeaf = validLeafs[_rand.Next(0, validLeafs.Count)];
+                for (int j = 0; j < goalRooms.Count; j++)
+                {
+                    if (CarveHallway(chosenLeaf, goalRooms[j], copyMap, copyCost))
+                    {
+                        connectedLeafs.Add(chosenLeaf);
+                        if (connectedLeafs.Count == leafs.Count)
+                        {
+                            UpdateOriginalsFromCopy(map, copyMap);
+                            UpdateOriginalsFromCopy(cost, copyCost);
+                            return true;
+                        }
+                        if (RecursiveConnectLeafs(leafs, rooms, connectedLeafs, copyMap, copyCost))
+                        {
+                            UpdateOriginalsFromCopy(map, copyMap);
+                            UpdateOriginalsFromCopy(cost, copyCost);
+                            return true;
+                        }
+                        else
+                        {
+                            // reset copyMap to map
+                            copyMap = (bool[,])map.Clone();
+                            copyCost = (int[,])cost.Clone();
+                            connectedLeafs.Remove(chosenLeaf);
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         private bool RecursiveGetPath(Room end, List<Room> path, List<Room> roomSet, bool[,] map, int[,] costGraph)
