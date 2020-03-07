@@ -39,6 +39,19 @@ namespace GigglyLib.Systems
                     TotalFrames = 24,
                     SkipFrames = 1,
                 });
+
+                if(pos.X == Game1.Player.Get<CGridPosition>().X && pos.Y == Game1.Player.Get<CGridPosition>().Y)
+                {
+                    if (anim.TargetType == CTargetAnim.Type.DANGER)
+                    {
+                        Config.SFX["danger"].Play();
+                    }
+                    if (anim.TargetType == CTargetAnim.Type.WARNING)
+                    {
+                        Config.SFX["warning"].Play();
+                    }
+                }
+
             }
             if (!entity.Has<CTarget>())
                 anim.FadingOut = true;

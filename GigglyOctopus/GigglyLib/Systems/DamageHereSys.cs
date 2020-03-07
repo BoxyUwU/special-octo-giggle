@@ -33,6 +33,7 @@ namespace GigglyLib.Systems
 
                         if (ships[i].Has<CEnemy>())
                             Config.SFX["enemy-hit"].Play();
+                        else Config.SFX["player-hit"].Play();
 
                         if (shipHP.Damage > shipHP.Max)
                         {
