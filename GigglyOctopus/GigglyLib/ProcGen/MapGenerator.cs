@@ -83,7 +83,7 @@ namespace GigglyLib.ProcGen
             _player.Set(new CMovable());
             _player.Set(new CHealth
             {
-                Max = 30
+                Max = 15
             });
             _player.Set(new CSprite
             {
@@ -136,12 +136,13 @@ namespace GigglyLib.ProcGen
 
         private void CreateTiles(bool[,] tiles)
         {
-            Game1.Tiles = tiles;
+            Tiles = new HashSet<(int, int)>();
             for (int x = 0; x < tiles.GetLength(0); x++)
                 for (int y = 0; y < tiles.GetLength(1); y++)
                 {
                     if (!tiles[x, y])
                         continue;
+                    Tiles.Add((x, y));
                     var tileEntity = Game1.world.CreateEntity();
                     tileEntity.Set(new CSprite { Texture = "asteroid", Depth = 0.49f, X = x * Config.TileSize, Y = y * Config.TileSize });
                     tileEntity.Set(new CGridPosition { X = x, Y = y });

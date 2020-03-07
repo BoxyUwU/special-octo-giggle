@@ -41,27 +41,25 @@ namespace GigglyLib.Systems
                     {
                         case 0:
                             for (int i = 0; i < patrolHeight; ++i)
-                                if (enemy.Get<CGridPosition>().Y - 1 >= 0
-                                && !Game1.Tiles[enemy.Get<CGridPosition>().X, enemy.Get<CGridPosition>().Y - 1])
+                                if (!Game1.Tiles.Contains((enemy.Get<CGridPosition>().X, enemy.Get<CGridPosition>().Y - 1)))
                                     yield return NORTH;
                                 else break;
                             break;
                         case 1:
                             for (int i = 0; i < patrolWidth; ++i)
-                                if (!Game1.Tiles[enemy.Get<CGridPosition>().X + 1, enemy.Get<CGridPosition>().Y])
+                                if (!Game1.Tiles.Contains((enemy.Get<CGridPosition>().X + 1, enemy.Get<CGridPosition>().Y)))
                                     yield return EAST;
                                 else break;
                             break;
                         case 2:
                             for (int i = 0; i < patrolHeight; ++i)
-                                if (!Game1.Tiles[enemy.Get<CGridPosition>().X, enemy.Get<CGridPosition>().Y + 1])
+                                if (!Game1.Tiles.Contains((enemy.Get<CGridPosition>().X, enemy.Get<CGridPosition>().Y + 1)))
                                     yield return SOUTH;
                                 else break;
                             break;
                         case 3:
                             for (int i = 0; i < patrolWidth; ++i)
-                                if (enemy.Get<CGridPosition>().X - 1 >= 0
-                                && !Game1.Tiles[enemy.Get<CGridPosition>().X - 1, enemy.Get<CGridPosition>().Y])
+                                if (!Game1.Tiles.Contains((enemy.Get<CGridPosition>().X - 1, enemy.Get<CGridPosition>().Y)))
                                     yield return WEST;
                                 else break;
                             break;
@@ -97,7 +95,7 @@ namespace GigglyLib.Systems
                         playerPos.Y < enemyPos.Y ? NORTH :
                         NONE;
 
-                    if (Game1.Tiles[enemyPos.X + next.DistX, enemyPos.Y + next.DistY])
+                    if (Game1.Tiles.Contains((enemyPos.X + next.DistX, enemyPos.Y + next.DistY)))
                         break;
                     else yield return next;
 
@@ -128,7 +126,7 @@ namespace GigglyLib.Systems
                         playerPos.X > enemyPos.X ? WEST :
                         NONE;
 
-                    if (Game1.Tiles[enemyPos.X + next.DistX, enemyPos.Y + next.DistY])
+                    if (Game1.Tiles.Contains((enemyPos.X + next.DistX, enemyPos.Y + next.DistY)))
                         break;
                     else yield return next;
 
