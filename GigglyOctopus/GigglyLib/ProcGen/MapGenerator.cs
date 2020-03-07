@@ -120,7 +120,7 @@ namespace GigglyLib.ProcGen
             });
             var weapons = new CWeaponsArray
             {
-                Weapons = Game1.startingWeapons.Weapons ?? new List<CWeapon>()
+                Weapons = new CWeaponsArray(Game1.startingWeapons).Weapons
             };
             weapons.Weapons.Add(new CWeapon
             {
@@ -137,7 +137,7 @@ namespace GigglyLib.ProcGen
                 Colour = (Colour)Config.RandInt(18),
                 RandomColours = true
             });
-
+            Game1.startingWeapons.Weapons = null;
             // FOR TESTING
             //weapons.Weapons.Add(Config.Weapons["Sukima"]);
 
