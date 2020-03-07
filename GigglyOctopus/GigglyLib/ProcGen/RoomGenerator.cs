@@ -101,9 +101,20 @@ namespace GigglyLib.ProcGen
                     return false;
             }
 
-            map = mapCopy;
-            costGraph = costCopy;
+            UpdateOriginalsFromCopy(map, mapCopy);
+            UpdateOriginalsFromCopy(costGraph, costCopy);
             return true;
+        }
+
+        private void UpdateOriginalsFromCopy<T>(T[,] original, T[,] copy)
+        {
+            for (int i = 0; i < original.GetLength(0); i++)
+            {
+                for (int j = 0; j < original.GetLength(1); j++)
+                {
+                    original[i, j] = copy[i, j];
+                }
+            }
         }
 
         private bool CarveHallway(Room room1, Room room2, bool[,] map, int[,] costGraph)
