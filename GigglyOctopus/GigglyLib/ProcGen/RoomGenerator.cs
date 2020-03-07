@@ -8,6 +8,13 @@ namespace GigglyLib.ProcGen
     {
         public Rectangle Region;
         public List<int> Links;
+
+        public Room() { }
+        public Room(Room room)
+        {
+            Region = room.Region;
+            Links = new List<int>(room.Links);
+        }
     }
 
     public class RoomGenerator
@@ -23,27 +30,83 @@ namespace GigglyLib.ProcGen
         {
             List<Room> rooms = GenerateRooms(map);
             BuildLinks(rooms);
-            CarveHallways(rooms, map);
+            GenerateHallways(rooms, map);
 
             Console.WriteLine($"RoomGenerator finished with {rooms.Count} rooms generated");
             return rooms;
         }
 
-        private void CarveHallways(List<Room> rooms, bool[,] map)
+        private void GenerateHallways(List<Room> rooms, bool[,] map)
         {
             int[,] costGraph = BuildCostGraph(map, rooms);
+
+            List<(int room, int link)> actionStack = new List<(int room, int link)>();
+
+            int startRoom = _rand.Next(0, rooms.Count);
+            int endRoom;
+            do { endRoom = _rand.Next(0, rooms.Count); } while (endRoom == startRoom);
+
+            List<Room> newRooms = new List<Room>();
             for (int i = 0; i < rooms.Count; i++)
-            {
-                var room = rooms[i];
-                foreach (var idx in room.Links)
-                {
-                    rooms[idx].Links.Remove(i);
-                    CarveHallway(room, rooms[idx], map, costGraph);
-                }
-            }
+                newRooms.Add(new Room(rooms[i]));
+            List<Room> path = new List<Room> { newRooms[startRoom] };
+            bool res = RecursiveGetPath(newRooms[endRoom], path, newRooms, map, costGraph);
+            Console.WriteLine(res);
         }
 
-        private void CarveHallway(Room room1, Room room2, bool[,] map, int[,] costGraph)
+        private bool RecursiveGetPath(Room end, List<Room> path, List<Room> roomSet, bool[,] map, int[,] costGraph)
+        {
+            List<int> options = new List<int>(path[path.Count-1].Links);
+            for (int i = 0; i < options.Count;)
+            {
+                if (path.Contains(roomSet[options[i]]))
+                    options.RemoveAt(i);
+                else
+                    i++;
+            }
+
+            while (options.Count > 0)
+            {
+                int picked = _rand.Next(0, options.Count);
+                path.Add(roomSet[options[picked]]);
+                options.RemoveAt(picked);
+
+                // If we reached goal
+                if (path[path.Count-1].Region.X == end.Region.X && path[path.Count-1].Region.Y == end.Region.Y)
+                {
+                    // any constraints we want
+                    if (path.Count == roomSet.Count)
+                    {
+                        if (CarveHallways(path, map, costGraph))
+                            return true;
+                        //return true;
+                    }
+                }
+
+                bool res = RecursiveGetPath(end, path, roomSet, map, costGraph);
+                if (res)
+                    return true;
+                path.RemoveAt(path.Count-1);
+            }
+            return false;
+        }
+
+        private bool CarveHallways(List<Room> path, bool[,] map, int[,] costGraph)
+        {
+            bool[,] mapCopy = (bool[,])map.Clone();
+            int[,] costCopy = (int[,])costGraph.Clone();
+            for (int i = 0; i < path.Count - 1; i++)
+            {
+                if (CarveHallway(path[i], path[i + 1], mapCopy, costCopy) == false)
+                    return false;
+            }
+
+            map = mapCopy;
+            costGraph = costCopy;
+            return true;
+        }
+
+        private bool CarveHallway(Room room1, Room room2, bool[,] map, int[,] costGraph)
         {
             AStar aStar = new AStar();
             int goalX = room2.Region.X + (room2.Region.Width / 2);
@@ -51,20 +114,39 @@ namespace GigglyLib.ProcGen
             int startX = room1.Region.X + (room1.Region.Width / 2);
             int startY = room1.Region.Y + (room1.Region.Height / 2);
             var path = aStar.GetPath(startX, startY, goalX, goalY, costGraph);
+
             foreach (var (x, y) in path)
             {
-                CarveSquare(x, y, 2, 2, map);
-                costGraph[x, y] = 0;
+                //if (/*OverlapsWithEmpty(x, y, 2, 2, map)*/!map[x,y] && !room2.Region.Contains(x, y) && !room1.Region.Contains(x, y))
+                    //return false;
+                //CarveSquare(x, y, 2, 2, map, costGraph);
+                map[x, y] = false;
+                costGraph[x, y] = int.MaxValue;
             }
+            return true;
         }
 
-        private void CarveSquare(int cX, int cY, int width, int height, bool[,] map)
+        private bool OverlapsWithEmpty(int cX, int cY, int width, int height, bool[,] map)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (map[cX + x, cY + y] == false)
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        private void CarveSquare(int cX, int cY, int width, int height, bool[,] map, int[,] costGraph)
         {
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
                     map[cX + x, cY + y] = false;
+                    costGraph[x, y] = int.MaxValue;
                 }
             }
         }
@@ -78,7 +160,7 @@ namespace GigglyLib.ProcGen
                 {
                     costGraph[x, y] =
                         IsTileInRoom(rooms, x, y) ? 0 :
-                        IsTileAroundRoom(rooms, x, y, map) ? 4 :
+                        IsTileAroundRoom(rooms, x, y, map) ? 1 :
                         map[x, y] ? 1 :
                         int.MaxValue;
                 }
@@ -118,7 +200,8 @@ namespace GigglyLib.ProcGen
             {
                 Rectangle region = rooms[i].Region;
 
-                rooms[i].Links = new List<int>();
+                if (rooms[i].Links == null)
+                    rooms[i].Links = new List<int>();
                 // TL Corner
                 rooms[i].Links.Add(RaycastToRoom(rooms, region.X - 1, region.Y, -1, 0));
                 rooms[i].Links.Add(RaycastToRoom(rooms, region.X, region.Y - 1, 0, -1));

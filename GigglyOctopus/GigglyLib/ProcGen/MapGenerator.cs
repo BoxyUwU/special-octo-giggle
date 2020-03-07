@@ -20,7 +20,7 @@ namespace GigglyLib.ProcGen
 
         public MapGenerator(int seed) 
         {
-            _seed = seed;
+            _seed = 454290276;
             _rand = new Random(seed);
         }
 
@@ -39,7 +39,7 @@ namespace GigglyLib.ProcGen
                 tiles = _metaballGen.Generate();
                 tiles = _CAGen.DoSimulationStep(tiles, 5, 0);
                 rooms = _RoomGen.Generate(tiles);
-                tiles = _CAGen.DoSimulationStep(tiles, 1, 1);
+                //tiles = _CAGen.DoSimulationStep(tiles, 1, 1);
                 debugOutput += DebugOutput(tiles);
             }
 
@@ -67,11 +67,11 @@ namespace GigglyLib.ProcGen
 
             CreateTiles(tiles);
 
-            /*Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
+            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
             string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/" + "myMap" + ".txt";
             StreamWriter streamWriter = new StreamWriter(filePath);
             streamWriter.Write(debugOutput);
-            streamWriter.Close();*/
+            streamWriter.Close();
         }
 
         private void CreatePlayer(int x, int y)
