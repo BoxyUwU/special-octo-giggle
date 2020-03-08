@@ -45,10 +45,12 @@ namespace GigglyLib.Systems
                     if (anim.TargetType == CTargetAnim.Type.DANGER)
                     {
                         Config.SFX["danger"].Play();
+                        Game1.warningStop = true;
                     }
                     if (anim.TargetType == CTargetAnim.Type.WARNING)
                     {
                         Config.SFX["warning"].Play();
+                        Game1.warningStop = true;
                     }
                 }
 

@@ -46,6 +46,7 @@ namespace GigglyLib
         public static World world = new World();
 
         public static bool playExplosion = false;
+        public static bool warningStop = false;
 
         Song BGM;
 
