@@ -198,6 +198,7 @@ namespace GigglyLib
             Config.Textures.Add("target-player", Content.Load<Texture2D>("Sprites/target-player"));
             Config.Textures.Add("target-enemy-danger", Content.Load<Texture2D>("Sprites/target-enemy-danger"));
             Config.Textures.Add("target-enemy-warning",Content.Load<Texture2D>("Sprites/target-enemy-warning"));
+            Config.Textures.Add("blank", Content.Load<Texture2D>("Sprites/blank"));
 
             // Audio
             BGM = Content.Load<Song>("Sounds/background-music");
@@ -443,11 +444,13 @@ namespace GigglyLib
             else if (GameState == GameState.GameOver)
             {
                 MediaPlayer.Stop();
-                var targetBuilder = world.GetEntities().Without<CPlayer>().Without<CParallaxBackground>();
-                var toDispose = targetBuilder.AsSet().GetEntities();
-
-                foreach (var e in toDispose)
-                    e.Dispose();
+                var targetBuilder = world.GetEntities().Without<CPlayer>().Without<CParallaxBackground>().With<CSprite>();
+                var toClear = targetBuilder.AsSet().GetEntities();
+                foreach (var e in toClear)
+                {
+                    ref var s = ref e.Get<CSprite>();
+                    s.Texture = "blank";
+                }
 
                 Config.SFX["player-death"].Play();
 
