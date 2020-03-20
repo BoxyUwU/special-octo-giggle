@@ -36,8 +36,8 @@ namespace GigglyLib.Systems
 
                 int retries = 0;
                 // We needa use the function to recalculate every time since this is a generator
-                while (Math.Abs(player.Get<CGridPosition>().X - enemy.Get<CGridPosition>().X) > 7
-                   || Math.Abs(player.Get<CGridPosition>().Y - enemy.Get<CGridPosition>().Y) > 7)
+                while (Math.Abs(player.Get<CGridPosition>().X - enemy.Get<CGridPosition>().X) > 10
+                   || Math.Abs(player.Get<CGridPosition>().Y - enemy.Get<CGridPosition>().Y) > 10)
                 {
                     switch (patrol)
                     {
@@ -107,15 +107,20 @@ namespace GigglyLib.Systems
 
                 foreach (var point in path)
                 {
-                    yield return new CMoveAction {
+                    if (Math.Abs(player.Get<CGridPosition>().X - enemy.Get<CGridPosition>().X) > 12
+                      || Math.Abs(player.Get<CGridPosition>().Y - enemy.Get<CGridPosition>().Y) > 12)
+                    break;
+                    yield return new CMoveAction
+                    {
                         DistX = point.x - enemy.Get<CGridPosition>().X,
                         DistY = point.y - enemy.Get<CGridPosition>().Y,
                     };
                 }
 
-                int escapeTimer = 1 + Config.RandInt(5);
+                int forwardRange = enemy.Get<CWeaponsArray>().Weapons[0].RangeFront / 2;
 
-                while (escapeTimer --> 0)
+                while (Math.Abs(player.Get<CGridPosition>().X - enemy.Get<CGridPosition>().X) < Math.Max(forwardRange,2)
+                   || Math.Abs(player.Get<CGridPosition>().Y - enemy.Get<CGridPosition>().Y) < Math.Max(forwardRange, 2))
                 {
                     var playerPos = player.Get<CGridPosition>();
                     var enemyPos = enemy.Get<CGridPosition>();
@@ -141,7 +146,6 @@ namespace GigglyLib.Systems
                     if (Game1.Tiles.Contains((enemyPos.X + next.DistX, enemyPos.Y + next.DistY)))
                         break;
                     else yield return next;
-
                 }
 
             }

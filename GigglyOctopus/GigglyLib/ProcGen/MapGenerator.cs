@@ -62,6 +62,8 @@ namespace GigglyLib.ProcGen
                 CreatePortal(x, y);
             }
 
+            List<Entity> enemies = new List<Entity>();
+
             for (int i = 0; i < rooms.Count; i++)
             {
                 if (i == startRoom)
@@ -69,14 +71,36 @@ namespace GigglyLib.ProcGen
                 var room = rooms[i];
                 var region = room.Region;
 
-                int enemiesToSpawn = _rand.Next(1, 4) + 2 * Player.Get<CWeaponsArray>().Weapons.Count;
+                int enemiesToSpawn = _rand.Next(1, 4) + 2 * stageCount;
                 for (int j = 0; j < enemiesToSpawn; j++)
                 {
                     int x = _rand.Next(region.X, region.X + region.Width);
                     int y = _rand.Next(region.Y, region.Y + region.Height);
-                    SpawnEnemy(x, y);
+                    enemies.Add(SpawnEnemy(x, y));
                 }
             }
+            int randomEnemy = _rand.Next(enemies.Count);
+
+            var specialEnemy = enemies[randomEnemy];
+            specialEnemy.Set(new CEnemy { HasPowerUp = true });
+            specialEnemy.Set(new CParticleSpawner
+            {
+                Texture = PARTICLES[(int)specialEnemy.Get<CWeaponsArray>().Weapons[0].Colour],
+                Impact = 1.0f
+            });
+            enemies.RemoveAt(randomEnemy);
+
+
+            randomEnemy = _rand.Next(enemies.Count);
+
+            specialEnemy = enemies[randomEnemy];
+            specialEnemy.Set(new CEnemy { HasPowerUp = true });
+            specialEnemy.Set(new CParticleSpawner
+            {
+                Texture = PARTICLES[(int)specialEnemy.Get<CWeaponsArray>().Weapons[0].Colour],
+                Impact = 1.0f
+            });
+            enemies.RemoveAt(randomEnemy);
 
             CreateTiles(tiles);
         }
@@ -194,18 +218,7 @@ namespace GigglyLib.ProcGen
             var weapons = new List<CWeapon>();
             weapons.Add(weapon);
             e.Set(new CWeaponsArray { Weapons = weapons });
-            e.Set(new CEnemy
-            {
-                HasPowerUp = hasPowerUp
-            });
-            if (hasPowerUp)
-            {
-                e.Set(new CParticleSpawner
-                {
-                    Texture = PARTICLES[(int)weapons[0].Colour],
-                    Impact = 1.0f
-                });
-            }
+            e.Set(new CEnemy());
             e.Set(new CSprite { 
                 Texture = PARTICLES[(int)weapon.Colour].Replace("particles", "enemy"), 
                 Depth = 0.25f, 

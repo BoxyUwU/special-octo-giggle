@@ -187,7 +187,7 @@ namespace GigglyLib
                 "  441  ",
                 " 33 41 ",
                 "3223412",
-                "2 1 1 2",
+                "2 111 2",
                 "2143223",
                 " 14 33 ",
                 "  144  ",
@@ -209,26 +209,26 @@ namespace GigglyLib
                 "0 0 1112 2 ",
                 "        2 2",
                 },
-                CooldownMax = 5,
+                CooldownMax = 6,
             },
             ["Claws"] = new CWeapon
             {
                 Damage = 5,
                 RangeFront = 3,
                 RangeBack = 0,
-                RangeLeft = 2,
-                RangeRight = 2,
+                RangeLeft = 1,
+                RangeRight = 1,
                 AttackPattern = new List<string>
                 {
-                    "    0 0 0 ",
-                    " 2 2020 0 ",
-                    "  202020  ",
-                    "S 020202  ",
-                    " 0 0202 2 ",
-                    "0 0 02 2 2",
+                    "    1 1 1 ",
+                    " 2 2121 1 ",
+                    "  212121  ",
+                    "S 121212  ",
+                    " 1 1212 2 ",
+                    "1 1 12 2 2",
                     "     2 2 2",
                 },
-                CooldownMax = 5,
+                CooldownMax = 4,
             },
             ["Railgun"] = new CWeapon
             {
@@ -308,7 +308,7 @@ namespace GigglyLib
                     " 555 ",
                     "  5  ",
                 },
-                CooldownMax = 3,
+                CooldownMax = 2,
             },
             ["Forcefield"] = new CWeapon
             {
@@ -510,9 +510,9 @@ namespace GigglyLib
                 AttackPattern = new List<string>
                 {
                     "     22222     ",
-                    "   227463822   ",
-                    "2228131 1915222",
-                    "   229574622   ",
+                    "   227456822   ",
+                    "222131819151222",
+                    "   229674322   ",
                     "     22222     ",
                 },
                 CooldownMax = 13,
@@ -520,10 +520,10 @@ namespace GigglyLib
             ["Wings"] = new CWeapon
             {
                 Damage = 5,
-                RangeFront = 1,
-                RangeBack = 1,
-                RangeLeft = 8,
-                RangeRight = 8,
+                RangeFront = 3,
+                RangeBack = -1,
+                RangeLeft = 5,
+                RangeRight = 5,
                 AttackPattern = new List<string>
                 {
                     "        4",

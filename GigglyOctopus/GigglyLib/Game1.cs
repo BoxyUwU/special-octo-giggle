@@ -47,6 +47,7 @@ namespace GigglyLib
 
         public static bool playExplosion = false;
         public static bool warningStop = false;
+        public static int stageCount = 0;
 
         Song BGM;
 
@@ -396,6 +397,7 @@ namespace GigglyLib
             {
                 world.Dispose();
                 world = new World();
+                stageCount++;
 
                 _seed = new Random().Next();
                 Console.WriteLine($"seed: {_seed}");
