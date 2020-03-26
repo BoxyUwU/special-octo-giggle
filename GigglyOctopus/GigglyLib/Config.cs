@@ -546,6 +546,31 @@ namespace GigglyLib
                 },
                 CooldownMax = 15,
             },
+            ["Contrails"] = new CWeapon
+            {
+                Damage = 5,
+                RangeFront = 10,
+                RangeBack =  10,
+                RangeLeft =  10,
+                RangeRight = 10,
+                AttackPattern = new List<string>
+                {
+                    "6      ",
+                    " 5     ",
+                    "  4    ",
+                    "   3   ",
+                    "    2  ",
+                    "     1 ",
+                    "      S",
+                    "     1 ",
+                    "    2  ",
+                    "   3   ",
+                    "  4    ",
+                    " 5     ",
+                    "6      ",
+                },
+                CooldownMax = 0,
+            },
         };
 
         public static float Rand()
