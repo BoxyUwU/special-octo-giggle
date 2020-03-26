@@ -447,7 +447,7 @@ namespace GigglyLib
             else if (GameState == GameState.GameOver)
             {
                 MediaPlayer.Stop();
-                var targetBuilder = world.GetEntities().Without<CPlayer>().Without<CParallaxBackground>().With<CSprite>();
+                var targetBuilder = world.GetEntities().Without<CPlayer>().Without<CParallaxBackground>().WithEither<CSprite>().Or<CParticleSpawner>();
                 var toClear = targetBuilder.AsSet().GetEntities();
                 foreach (var e in toClear)
                 {
