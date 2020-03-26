@@ -8,16 +8,20 @@ namespace GigglyLib.Systems
 {
     public class DamageHereSys : AEntityBufferedSystem<float>
     {
+        EntitySet pooledExplosionSet;
+        EntitySet shipSet;
         public DamageHereSys()
             : base(Game1.world.GetEntities().With<CGridPosition>().With<CDamageHere>().AsSet())
         {
+            pooledExplosionSet = Game1.world.GetEntities().With<CExplosionPooled>().AsSet();
+            shipSet = Game1.world.GetEntities().With<CGridPosition>().With<CHealth>().AsSet();
         }
 
         protected override void Update(float state, in Entity entity)
         {
             var pos = entity.Get<CGridPosition>();
             var damage = entity.Get<CDamageHere>();
-            var ships = Game1.world.GetEntities().With<CGridPosition>().With<CHealth>().AsSet().GetEntities();
+            var ships = shipSet.GetEntities();
             var toDispose = new List<Entity>();
 
             for (int i = 0; i < ships.Length; i++)
@@ -62,8 +66,10 @@ namespace GigglyLib.Systems
             foreach (var e in toDispose)
                 e.Dispose();
 
-            var anim = Game1.world.CreateEntity();
-            anim.Set(pos);
+            var anim = pooledExplosionSet.GetEntities().Length > 0 ? pooledExplosionSet.GetEntities()[0] : Game1.world.CreateEntity();
+            anim.Remove<CExplosionPooled>();
+
+            anim.Set(new CGridPosition { Facing = pos.Facing, X = pos.X, Y = pos.Y });
             anim.Set(new CExplosionAnim());
             anim.Set(entity.Get<CParticleColour>());
 

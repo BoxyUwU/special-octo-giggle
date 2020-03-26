@@ -9,9 +9,11 @@ namespace GigglyLib.Systems
 {
     public class AttackActionSys : AEntitySystem<float>
     {
+        EntitySet pooledMarkerSet;
         public AttackActionSys()
             : base(Game1.world.GetEntities().With<CWeaponsArray>().With<CGridPosition>().With<CSimTurn>().AsSet())
         {
+            pooledMarkerSet = Game1.world.GetEntities().With<CMarkerPooled>().AsSet();
         }
 
         protected override void Update(float state, in Entity entity)
@@ -165,7 +167,8 @@ namespace GigglyLib.Systems
                             {
                                 if (char.IsDigit(weapon.AttackPattern[y][x]))
                                 {
-                                    var target = Game1.world.CreateEntity();
+                                    var target = pooledMarkerSet.GetEntities().Length > 0 ? pooledMarkerSet.GetEntities()[0] : Game1.world.CreateEntity();
+                                    target.Remove<CMarkerPooled>();
 
                                     int X =
                                         pos.Facing == Direction.EAST ? targetPos.X + (x - offsetLength) :
