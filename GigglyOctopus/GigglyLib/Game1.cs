@@ -42,21 +42,6 @@ namespace GigglyLib
         public static CWeaponsArray startingWeapons = new CWeaponsArray()
         {
             Weapons = new List<CWeapon> {
-                new CWeapon
-                {
-                    Damage = 5,
-                    RangeFront = 7,
-                    RangeLeft = 2,
-                    RangeRight = 2,
-                    RangeBack = -1,
-                    CooldownMax = 0,
-                    AttackPattern = new List<string>
-                    {
-                       "0"
-                    },
-                    Colour = (Colour)Config.RandInt(18),
-                    RandomColours = true
-                }
             }
         };
 
