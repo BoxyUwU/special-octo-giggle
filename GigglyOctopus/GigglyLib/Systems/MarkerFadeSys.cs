@@ -8,6 +8,7 @@ namespace GigglyLib.Systems
 {
     public class MarkerFadeSys : AEntitySystem<float>
     {
+        List<Entity> toPool = new List<Entity>();
         public MarkerFadeSys()
             : base (Game1.world.GetEntities().With<CTargetAnim>().With<CGridPosition>().AsSet())
         {
@@ -17,13 +18,12 @@ namespace GigglyLib.Systems
         {
             ref var anim = ref entity.Get<CTargetAnim>();
             ref var sprite = ref entity.Get<CSprite>();
-            var toDispose = new List<Entity>();
 
             if (anim.FadingOut && anim.GoneVisible)
             {
                 sprite.Transparency += 0.1f;
                 if (sprite.Transparency >= 1f)
-                    toDispose.Add(entity);
+                    toPool.Add(entity);
             }
             else
             {
@@ -35,10 +35,23 @@ namespace GigglyLib.Systems
                 }
             }
 
-            foreach (var e in toDispose)
-                e.Dispose();
-
             base.Update(state, entity);
+        }
+
+        protected override void PostUpdate(float state)
+        {
+            foreach (var e in toPool)
+            {
+                e.Remove<CSprite>();
+                e.Remove<CParticleColour>();
+                e.Remove<CTarget>();
+                e.Remove<CTargetAnim>();
+                e.Remove<CGridPosition>();
+                e.Set<CMarkerPooled>();
+            }
+            toPool.Clear();
+
+            base.PostUpdate(state);
         }
     }
 }

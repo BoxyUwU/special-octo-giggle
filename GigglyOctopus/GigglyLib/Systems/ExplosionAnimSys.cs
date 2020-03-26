@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using DefaultEcs;
 using DefaultEcs.System;
 using GigglyLib.Components;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using static GigglyLib.Game1;
 
 namespace GigglyLib.Systems
 {
     public class ExplosionAnimSys : AEntitySystem<float>
     {
-
+        List<Entity> toPool = new List<Entity>();
         public ExplosionAnimSys()
             : base(world.GetEntities().With<CExplosionAnim>().With<CParticleColour>().With<CGridPosition>().AsSet())
         { }
@@ -19,7 +17,6 @@ namespace GigglyLib.Systems
         protected override void Update(float state, in Entity entity)
         {
             ref var pos = ref entity.Get<CGridPosition>();
-            var toDispose = new List<Entity>();
             if (!entity.Has<CSprite>())
             {
                 CParticleColour colour = entity.Get<CParticleColour>();
@@ -50,14 +47,28 @@ namespace GigglyLib.Systems
                 scale.Scale *= 2f;
                 if (sprite.Transparency > 1.0f)
                 {
-                    toDispose.Add(entity);
+                    toPool.Add(entity);
                 }
             }
 
-            foreach (var e in toDispose)
-                e.Dispose();
-
             base.Update(state, entity);
+        }
+
+        protected override void PostUpdate(float state)
+        {
+            foreach (var e in toPool)
+            {
+                e.Remove<CParticleSpawner>();
+                e.Remove<CSprite>();
+                e.Remove<CScalable>();
+                e.Remove<CGridPosition>();
+                e.Remove<CExplosionAnim>();
+                e.Remove<CParticleColour>();
+                e.Set<CExplosionPooled>();
+            }
+            toPool.Clear();
+
+            base.PostUpdate(state);
         }
     }
 }

@@ -8,9 +8,11 @@ namespace GigglyLib.Systems
 {
     public class DamageHereSys : AEntityBufferedSystem<float>
     {
+        EntitySet pooledExplosionSet;
         public DamageHereSys()
             : base(Game1.world.GetEntities().With<CGridPosition>().With<CDamageHere>().AsSet())
         {
+            pooledExplosionSet = Game1.world.GetEntities().With<CExplosionPooled>().AsSet();
         }
 
         protected override void Update(float state, in Entity entity)
@@ -62,7 +64,9 @@ namespace GigglyLib.Systems
             foreach (var e in toDispose)
                 e.Dispose();
 
-            var anim = Game1.world.CreateEntity();
+            var anim = pooledExplosionSet.GetEntities().Length > 0 ? pooledExplosionSet.GetEntities()[0] : Game1.world.CreateEntity();
+            anim.Remove<CExplosionPooled>();
+
             anim.Set(pos);
             anim.Set(new CExplosionAnim());
             anim.Set(entity.Get<CParticleColour>());

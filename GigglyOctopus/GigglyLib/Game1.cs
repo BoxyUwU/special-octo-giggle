@@ -39,7 +39,28 @@ namespace GigglyLib
     {
         public static string DebugOutput = "";
 
-        public static CWeaponsArray startingWeapons;
+        public static CWeaponsArray startingWeapons = new CWeaponsArray()
+        {
+            Weapons = new List<CWeapon> {
+                new CWeapon
+                {
+                    Damage = 5,
+                    RangeFront = 7,
+                    RangeLeft = 2,
+                    RangeRight = 2,
+                    RangeBack = -1,
+                    CooldownMax = 0,
+                    AttackPattern = new List<string>
+                    {
+                       "0"
+                    },
+                    Colour = (Colour)Config.RandInt(18),
+                    RandomColours = true
+                },
+                Config.Weapons["Nuke"],
+            }
+        };
+
         int _seed;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -57,7 +78,7 @@ namespace GigglyLib
         SequentialSystem<float> AISys;
         SequentialSystem<float> particleSeqSys;
         SequentialSystem<float> drawSys;
-        SequentialSystem<float> roundPrepSys;
+        SequentialSystem<float> postTurnSys;
 
         public static HashSet<(int,int)> Tiles;
         public static int[,] CostGrid;
@@ -236,18 +257,12 @@ namespace GigglyLib
                 new FadeInSys()
             );
 
-            roundPrepSys = new SequentialSystem<float>(
-                new RoundPrepSys(),
-                new AttackActionSys(),
-                new MarkerUpdateSys()
+            AISys = new SequentialSystem<float>(
+                new AISys()
             );
 
             playerInputSys = new SequentialSystem<float>(
                 new InputSys()
-            );
-
-            AISys = new SequentialSystem<float>(
-                new AISys()
             );
 
             simulateSys = new SequentialSystem<float>(
@@ -258,6 +273,12 @@ namespace GigglyLib
                 new PortalSys(),
                 new EndSimSys()
             );
+
+            postTurnSys = new SequentialSystem<float>(
+                new RoundPrepSys(),
+                new AttackActionSys(),
+                new MarkerUpdateSys()
+            );  
 
             visualiserSys = new SequentialSystem<float>(
                 new MoverSys(),
@@ -421,19 +442,19 @@ namespace GigglyLib
 
                     switch (roundOrder[currentRoundState])
                     {
-                        case RoundState.PostTurn:
-                            roundPrepSys.Update(0.0f);
+                        case RoundState.AI:
+                            AISys.Update(0.0f);
                             currentRoundState++;
                             break;
                         case RoundState.Player:
                             playerInputSys.Update(0.0f);
                             break;
-                        case RoundState.AI:
-                            AISys.Update(0.0f);
-                            currentRoundState++;
-                            break;
                         case RoundState.Simulate:
                             simulateSys.Update(0.0f);
+                            break;
+                        case RoundState.PostTurn:
+                            postTurnSys.Update(0.0f);
+                            currentRoundState++;
                             break;
                         case RoundState.TurnVisualiser:
                             visualiserSys.Update(0.0f);
