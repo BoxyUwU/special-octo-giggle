@@ -471,6 +471,7 @@ namespace GigglyLib
                 var toClear = targetBuilder.AsSet().GetEntities();
                 foreach (var e in toClear)
                 {
+                    e.Remove<CParticleSpawner>();
                     ref var s = ref e.Get<CSprite>();
                     s.Texture = "blank";
                 }
