@@ -46,7 +46,6 @@ namespace GigglyLib.Systems
                 e.Remove<CParticleColour>();
                 e.Remove<CTarget>();
                 e.Remove<CTargetAnim>();
-                e.Remove<CGridPosition>();
                 e.Set<CMarkerPooled>();
             }
             toPool.Clear();

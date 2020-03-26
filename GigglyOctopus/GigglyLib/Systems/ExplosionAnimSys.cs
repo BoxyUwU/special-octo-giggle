@@ -61,7 +61,6 @@ namespace GigglyLib.Systems
                 e.Remove<CParticleSpawner>();
                 e.Remove<CSprite>();
                 e.Remove<CScalable>();
-                e.Remove<CGridPosition>();
                 e.Remove<CExplosionAnim>();
                 e.Remove<CParticleColour>();
                 e.Set<CExplosionPooled>();

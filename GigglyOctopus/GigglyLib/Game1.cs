@@ -58,6 +58,13 @@ namespace GigglyLib
                     RandomColours = true
                 },
                 Config.Weapons["Nuke"],
+                Config.Weapons["Nuke"],
+                Config.Weapons["Nuke"],
+                Config.Weapons["Nuke"],
+                Config.Weapons["Nuke"],
+                Config.Weapons["Nuke"],
+                Config.Weapons["Nuke"],
+                Config.Weapons["Nuke"],
             }
         };
 
