@@ -42,17 +42,6 @@ namespace GigglyLib
         public static CWeaponsArray startingWeapons = new CWeaponsArray()
         {
             Weapons = new List<CWeapon> {
-                Config.Weapons["Nuke"],
-                Config.Weapons["Nuke"],
-                Config.Weapons["Nuke"],
-                Config.Weapons["Nuke"],
-                Config.Weapons["Nuke"],
-                Config.Weapons["Nuke"],
-                Config.Weapons["Nuke"],
-                Config.Weapons["Nuke"],
-                Config.Weapons["Nuke"],
-                Config.Weapons["Nuke"],
-                Config.Weapons["Nuke"],
             }
         };
 
