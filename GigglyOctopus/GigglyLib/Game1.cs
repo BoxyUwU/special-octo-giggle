@@ -440,6 +440,7 @@ namespace GigglyLib
                     ReplayData = new List<byte>();
                     ReplayIntraByteCounter = 0;
                     ReplayCounter = 5;
+                    stageCount = 0;
                     GameState = GameState.GameOver;
                 }
                 StoppedLoadingReplay = false;
@@ -552,6 +553,7 @@ namespace GigglyLib
             }
             else if (GameState == GameState.GameOver)
             {
+                stageCount = 0;
                 if (!IsReplayMode)
                     ExportReplayData();
 
