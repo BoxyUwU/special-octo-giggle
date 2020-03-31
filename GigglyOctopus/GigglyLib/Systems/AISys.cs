@@ -29,9 +29,9 @@ namespace GigglyLib.Systems
             /////////////////////////
             while (true)
             {
-                int patrolWidth = 5+Config.RandInt(20);
-                int patrolHeight = 5+Config.RandInt(20);
-                int patrolDir = Config.RandInt(1) == 0 ? 1 : -1;
+                int patrolWidth = 5+Game1.GameStateRandom.Next(20);
+                int patrolHeight = 5+ Game1.GameStateRandom.Next(20);
+                int patrolDir = Game1.GameStateRandom.Next(1) == 0 ? 1 : -1;
                 int patrol = (int)enemy.Get<CGridPosition>().Facing;
 
                 int retries = 0;

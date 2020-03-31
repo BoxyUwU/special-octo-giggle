@@ -37,7 +37,24 @@ namespace GigglyLib
     /// </summary>
     public class Game1 : Game
     {
+        public static Random GameStateRandom;
+        public static Random NonDeterministicRandom;
+
         public static string DebugOutput = "";
+
+        // The byte we are currently on in the replay
+        public static int ReplayCounter = 5;
+        // The part of the byte we are currently on in the replay
+        public static int ReplayIntraByteCounter = 0;
+        public static bool StoppedLoadingReplay = true;
+        public static bool StoppedExportingReplay = true;
+        /// <summary>
+        /// First 4 bytes are i32 for seed
+        /// 5th byte contains what ReplayIntraByteCounter was at end of replay
+        /// then each byte contains 4 moves per byte, ordered like this: 44332211
+        /// </summary>
+        public static List<byte> ReplayData = new List<byte>(1024);
+        public static bool IsReplayMode = false;
 
         public static CWeaponsArray startingWeapons = new CWeaponsArray()
         {
@@ -45,7 +62,6 @@ namespace GigglyLib
             }
         };
 
-        int _seed;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         public static World world = new World();
@@ -246,9 +262,14 @@ namespace GigglyLib
                 new AISys()
             );
 
-            playerInputSys = new SequentialSystem<float>(
-                new InputSys()
-            );
+            playerInputSys = !IsReplayMode ?
+                new SequentialSystem<float>(
+                    new InputSys(),
+                    new InputRecorder()
+                ) :
+                new SequentialSystem<float>(
+                    new ReplayInputSys()
+                );
 
             simulateSys = new SequentialSystem<float>(
                 new TargetDelaySys(),
@@ -389,8 +410,8 @@ namespace GigglyLib
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            /*var kS = Keyboard.GetState();
-            if (kS.IsKeyDown(Keys.LeftShift) && kS.IsKeyDown(Keys.D))
+            var kS = Keyboard.GetState();
+            /*if (kS.IsKeyDown(Keys.LeftShift) && kS.IsKeyDown(Keys.D))
             {
                 Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/");
                 string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Maps/" + "myMap" + ".txt";
@@ -399,18 +420,97 @@ namespace GigglyLib
                 streamWriter.Close();
             }*/
 
+            if ((kS.IsKeyDown(Keys.LeftControl) || kS.IsKeyDown(Keys.RightControl)) && kS.IsKeyDown(Keys.S))
+            {
+                if (StoppedExportingReplay)
+                    ExportReplayData();
+                StoppedExportingReplay = false;
+            }
+            if (!kS.IsKeyDown(Keys.LeftControl) && !kS.IsKeyDown(Keys.RightControl) && !kS.IsKeyDown(Keys.S))
+            {
+                StoppedExportingReplay = true;
+            }
+
+            if ((kS.IsKeyDown(Keys.LeftControl) || kS.IsKeyDown(Keys.RightControl)) && kS.IsKeyDown(Keys.L))
+            {
+                if (StoppedLoadingReplay)
+                {
+                    IsReplayMode = true;
+                    startingWeapons = new CWeaponsArray { Weapons = new List<CWeapon>() };
+                    ReplayData = new List<byte>();
+                    ReplayIntraByteCounter = 0;
+                    ReplayCounter = 5;
+                    GameState = GameState.GameOver;
+                }
+                StoppedLoadingReplay = false;
+            }
+            if (!kS.IsKeyDown(Keys.LeftControl) && !kS.IsKeyDown(Keys.RightControl) && !kS.IsKeyDown(Keys.L))
+            {
+                StoppedLoadingReplay = true;
+            }
+
             if (GameState == GameState.Starting)
             {
                 world.Dispose();
                 world = new World();
                 stageCount++;
 
-                _seed = new Random().Next();
-                Console.WriteLine($"seed: {_seed}");
-                DebugOutput += "SEED: " + _seed.ToString();
+                if (ReplayData.Count == 0)
+                {
+                    if (IsReplayMode)
+                    {
+                        // Read data in from replay file
+                        Directory.CreateDirectory("./Replays");
+                        string[] files = Directory.GetFiles("./Replays");
+                        int suffix = -1;
+                        for (int i = 0; i < files.Length; i++)
+                        {
+                            string name = files[i];
+                            name = name.Split('-')[1];
+                            name = name.Split('.')[0];
+                            int number = int.Parse(name);
+                            if (number > suffix)
+                                suffix = number;
+                        }
+
+                        if (suffix == -1)
+                            throw new Exception("Could not find replay file");
+                        var fs = new FileStream("./Replays/Replay-" + suffix.ToString() + ".pulsereplay", FileMode.Open, FileAccess.Read);
+                        byte[] data = new byte[(int)fs.Length];
+                        fs.Read(data, 0, (int)fs.Length);
+                        ReplayData = new List<byte>(data);
+
+                        int seed = BitConverter.ToInt32(data, 0);
+                        Game1.GameStateRandom = new Random(seed);
+                        Game1.NonDeterministicRandom = new Random(seed);
+
+                        Console.WriteLine($"seed: {seed}");
+                        DebugOutput += "SEED: " + seed.ToString();
+                    }
+                    else
+                    {
+                        int seed = new Random().Next();
+                        Game1.GameStateRandom = new Random(seed);
+                        Game1.NonDeterministicRandom = new Random(seed);
+
+                        foreach (var data in BitConverter.GetBytes(seed))
+                        {
+                            ReplayData.Add(data);
+                        }
+                        // 5th byte
+                        ReplayData.Add(0);
+                        // The byte for actual data storage
+                        ReplayData.Add(0);
+
+                        Console.WriteLine($"seed: {seed}");
+                        DebugOutput += "SEED: " + seed.ToString();
+                    }
+                }
+
+
 
                 CreateSystems();
-                new MapGenerator(_seed).Generate();
+                new MapGenerator().Generate();
                 CreateParallax();
                 MediaPlayer.Play(BGM);
                 MediaPlayer.IsRepeating = true;
@@ -452,6 +552,9 @@ namespace GigglyLib
             }
             else if (GameState == GameState.GameOver)
             {
+                if (!IsReplayMode)
+                    ExportReplayData();
+
                 MediaPlayer.Stop();
                 var targetBuilder = world.GetEntities().Without<CPlayer>().Without<CParallaxBackground>().WithEither<CSprite>().Or<CParticleSpawner>();
                 var toClear = targetBuilder.AsSet().GetEntities();
@@ -482,12 +585,12 @@ namespace GigglyLib
                             x: sprite.X,
                             y: sprite.Y,
                             texture: PARTICLES[i],
-                            deltaRotation: Config.Rand() * 0.0f,
-                            velocity: Config.Rand() * 0.1f + 0.1f,
-                            scale: (Config.Rand() * 0.4f) + 0.3f,
+                            deltaRotation: Game1.NonDeterministicRandom.NextFloat() * 0.0f,
+                            velocity: Game1.NonDeterministicRandom.NextFloat() * 0.1f + 0.1f,
+                            scale: (Game1.NonDeterministicRandom.NextFloat() * 0.4f) + 0.3f,
                             depth: 0.3f,
-                            transparency: (Config.Rand() * 0.2f) + 0.12f,
-                            rotation: Config.Rand() * 2 * (float)Math.PI
+                            transparency: (Game1.NonDeterministicRandom.NextFloat() * 0.2f) + 0.12f,
+                            rotation: Game1.NonDeterministicRandom.NextFloat() * 2 * (float)Math.PI
                             );
                     }
                 }
@@ -522,8 +625,8 @@ namespace GigglyLib
                     var beamAnim = Game1.world.CreateEntity();
                     beamAnim.Set(new CParticleBeam
                     {
-                        SourceX = Player.Get<CGridPosition>().X + Config.RandInt(27) - 13,
-                        SourceY = Player.Get<CGridPosition>().Y + Config.RandInt(15) - 7,
+                        SourceX = Player.Get<CGridPosition>().X + Game1.NonDeterministicRandom.Next(27) - 13,
+                        SourceY = Player.Get<CGridPosition>().Y + Game1.NonDeterministicRandom.Next(15) - 7,
                         DestX = Player.Get<CGridPosition>().X,
                         DestY = Player.Get<CGridPosition>().Y,
                         RandomColours = true
@@ -561,6 +664,27 @@ namespace GigglyLib
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        private void ExportReplayData() 
+        {
+            Directory.CreateDirectory("./Replays");
+            string[] files = Directory.GetFiles("./Replays");
+            int suffix = 0;
+            for (int i = 0; i < files.Length; i++)
+            {
+                string name = files[i];
+                name = name.Split('-')[1];
+                name = name.Split('.')[0];
+                int number = int.Parse(name);
+                if (number >= suffix)
+                    suffix = number + 1;
+            }
+            var fs = new FileStream("./Replays/Replay-" + suffix.ToString() + ".pulsereplay", FileMode.Create, FileAccess.Write);
+            var data = ReplayData.ToArray();
+            data[4] = (byte)ReplayIntraByteCounter;
+            fs.Write(data, 0, data.Length);
+            fs.Close();
         }
     }
 }

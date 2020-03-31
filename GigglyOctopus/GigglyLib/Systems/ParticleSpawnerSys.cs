@@ -22,8 +22,8 @@ namespace GigglyLib.Systems
             float x = sprite.X;
             float y = sprite.Y;
 
-            x += (Config.Rand() - 0.5f) * 0.2f * Config.TileSize * impact;
-            y += (Config.Rand() - 0.5f) * 0.2f * Config.TileSize * impact;
+            x += (Game1.NonDeterministicRandom.NextFloat() - 0.5f) * 0.2f * Config.TileSize * impact;
+            y += (Game1.NonDeterministicRandom.NextFloat() - 0.5f) * 0.2f * Config.TileSize * impact;
 
             ref var spawner = ref entity.Get<CParticleSpawner>();
             var texture = spawner.Texture;
@@ -32,9 +32,9 @@ namespace GigglyLib.Systems
             if (entity.Has<CPlayer>())
             {
                 var health = entity.Get<CHealth>();
-                if (Config.Rand() < (float) health.Damage / (float) health.Max)
+                if (Game1.NonDeterministicRandom.NextFloat() < (float) health.Damage / (float) health.Max)
                 {
-                    switch (Config.RandInt(10)) {
+                    switch (Game1.NonDeterministicRandom.Next(10)) {
                         case 0:
                             texture = Game1.PARTICLES[0];
                             break;
@@ -55,13 +55,13 @@ namespace GigglyLib.Systems
             ParticleManager.CreateParticle(
                 x: x,
                 y: y,
-                texture: spawner.RandomColours ? Game1.PARTICLES[Config.RandInt(18)] : texture,
-                deltaRotation: Config.Rand() * 0.05f,
-                velocity: Config.Rand() * 0.02f * impact,
-                scale: (Config.Rand() * 0.4f) + 0.3f,
+                texture: spawner.RandomColours ? Game1.PARTICLES[Game1.NonDeterministicRandom.Next(18)] : texture,
+                deltaRotation: Game1.NonDeterministicRandom.NextFloat() * 0.05f,
+                velocity: Game1.NonDeterministicRandom.NextFloat() * 0.02f * impact,
+                scale: (Game1.NonDeterministicRandom.NextFloat() * 0.4f) + 0.3f,
                 depth: depth,
-                transparency: (Config.Rand() * 0.2f) + 0.12f,
-                rotation: Config.Rand() * 2 * (float)Math.PI
+                transparency: (Game1.NonDeterministicRandom.NextFloat() * 0.2f) + 0.12f,
+                rotation: Game1.NonDeterministicRandom.NextFloat() * 2 * (float)Math.PI
                 );
 
             base.Update(state, entity);

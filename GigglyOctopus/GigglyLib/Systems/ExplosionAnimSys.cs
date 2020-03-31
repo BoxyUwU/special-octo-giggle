@@ -30,7 +30,7 @@ namespace GigglyLib.Systems
                     X = pos.X * Config.TileSize,
                     Y = pos.Y * Config.TileSize,
                     Texture = "particles-explosion",
-                    Rotation = Config.Rand() * (float) Math.PI * 2,
+                    Rotation = Game1.NonDeterministicRandom.NextFloat() * (float) Math.PI * 2,
                     Depth = 0.7f
                 });
                 entity.Set(new CScalable

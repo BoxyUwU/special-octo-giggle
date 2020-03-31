@@ -31,17 +31,15 @@ namespace GigglyLib.ProcGen
         List<Circle> _circles = new List<Circle>();
         float _rStart;
         float _rDecrease;
-        Random _rand;
         int _maxDepth;
         int _minDepth;
         float _angleVariance;
         float _angleVarianceDeadzone;
 
-        public MetaballGenerator(float startingR, float rDecrease, int seed, int minDepth, int maxDepth, float angleVariance, float angleVarianceDeadzone)
+        public MetaballGenerator(float startingR, float rDecrease, int minDepth, int maxDepth, float angleVariance, float angleVarianceDeadzone)
         {
             _rStart = startingR;
             _rDecrease = rDecrease;
-            _rand = new Random(seed);
             _maxDepth = maxDepth;
             _minDepth = minDepth;
             _angleVariance = angleVariance;
@@ -74,7 +72,7 @@ namespace GigglyLib.ProcGen
                 _circles.Add(circle);
 
                 open.RemoveAt(0);
-                if ((_rand.NextDouble() <= 0.8f || circle.Depth < _minDepth) && circle.Depth < _maxDepth)
+                if ((Game1.GameStateRandom.NextDouble() <= 0.8f || circle.Depth < _minDepth) && circle.Depth < _maxDepth)
                     open.Add(circle);
             }
         }
@@ -84,9 +82,9 @@ namespace GigglyLib.ProcGen
             float radius = parent.R * _rDecrease;
             float angle = 0f;
             if (parent.SpawnDir == 0f)
-                angle = (float)_rand.NextDouble() * 6.282f;
+                angle = (float)Game1.GameStateRandom.NextDouble() * 6.282f;
             else
-                angle = parent.SpawnDir + (float)_rand.Range(-_angleVariance, _angleVariance, _angleVarianceDeadzone);
+                angle = parent.SpawnDir + (float)Game1.GameStateRandom.Range(-_angleVariance, _angleVariance, _angleVarianceDeadzone);
 
             Vector2 offset = new Vector2(radius, 0f).RotateBy(angle);
 

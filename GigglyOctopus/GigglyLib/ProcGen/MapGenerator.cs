@@ -12,23 +12,17 @@ namespace GigglyLib.ProcGen
 {
     public class MapGenerator
     {
-        int _seed;
         MetaballGenerator _metaballGen;
         CAGenerator _CAGen;
         RoomGenerator _RoomGen;
-        Random _rand;
 
-        public MapGenerator(int seed) 
-        {
-            _seed = seed;
-            _rand = new Random(_seed);
-        }
+        public MapGenerator() { }
 
         public void Generate()
         {
-            _metaballGen = new MetaballGenerator(30f, 0.90f, _seed, 2, 4, angleVariance: 3.141f / 2f, angleVarianceDeadzone: 1f);
-            _CAGen = new CAGenerator(_seed);
-            _RoomGen = new RoomGenerator(_seed);
+            _metaballGen = new MetaballGenerator(30f, 0.90f, 2, 4, angleVariance: 3.141f / 2f, angleVarianceDeadzone: 1f);
+            _CAGen = new CAGenerator();
+            _RoomGen = new RoomGenerator();
 
             bool[,] tiles = null;
             List<Room> rooms = null;
@@ -48,8 +42,8 @@ namespace GigglyLib.ProcGen
             {
                 var room = rooms[startRoom];
                 var region = room.Region;
-                int x = _rand.Next(region.X, region.X + region.Width);
-                int y = _rand.Next(region.Y, region.Y + region.Height);
+                int x = Game1.GameStateRandom.Next(region.X, region.X + region.Width);
+                int y = Game1.GameStateRandom.Next(region.Y, region.Y + region.Height);
                 CreatePlayer(x, y);
             }
 
@@ -71,15 +65,15 @@ namespace GigglyLib.ProcGen
                 var room = rooms[i];
                 var region = room.Region;
 
-                int enemiesToSpawn = _rand.Next(1, 4) + 2 * stageCount;
+                int enemiesToSpawn = Game1.GameStateRandom.Next(1, 4) + 2 * stageCount;
                 for (int j = 0; j < enemiesToSpawn; j++)
                 {
-                    int x = _rand.Next(region.X, region.X + region.Width);
-                    int y = _rand.Next(region.Y, region.Y + region.Height);
+                    int x = Game1.GameStateRandom.Next(region.X, region.X + region.Width);
+                    int y = Game1.GameStateRandom.Next(region.Y, region.Y + region.Height);
                     enemies.Add(SpawnEnemy(x, y));
                 }
             }
-            int randomEnemy = _rand.Next(enemies.Count);
+            int randomEnemy = Game1.GameStateRandom.Next(enemies.Count);
 
             var specialEnemy = enemies[randomEnemy];
             specialEnemy.Set(new CEnemy { HasPowerUp = true });
@@ -91,7 +85,7 @@ namespace GigglyLib.ProcGen
             enemies.RemoveAt(randomEnemy);
 
 
-            randomEnemy = _rand.Next(enemies.Count);
+            randomEnemy = Game1.GameStateRandom.Next(enemies.Count);
 
             specialEnemy = enemies[randomEnemy];
             specialEnemy.Set(new CEnemy { HasPowerUp = true });
@@ -165,7 +159,7 @@ namespace GigglyLib.ProcGen
                     {
                        "0"
                     },
-                    Colour = (Colour)Config.RandInt(18),
+                    Colour = (Colour)Game1.NonDeterministicRandom.Next(18),
                     RandomColours = true
                 });
             }
@@ -209,12 +203,12 @@ namespace GigglyLib.ProcGen
         public Entity SpawnEnemy(int gX, int gY, Direction dir = Direction.WEST)
         {
             var e = Game1.world.CreateEntity();
-            bool hasPowerUp = Config.Rand() < 0.05;
+            bool hasPowerUp = (float)Game1.GameStateRandom.NextDouble() < 0.05;
             e.Set(new CGridPosition { X = gX, Y = gY, Facing = dir });
             e.Set<CMovable>();
             e.Set(new CHealth { Max = 15 });
-            var weapon = Config.Weapons[new List<string>(Config.Weapons.Keys)[Config.RandInt(Config.Weapons.Count)]];
-            weapon.Colour = (Colour)Config.RandInt(18);
+            var weapon = Config.Weapons[new List<string>(Config.Weapons.Keys)[Game1.GameStateRandom.Next(Config.Weapons.Count)]];
+            weapon.Colour = (Colour)Game1.NonDeterministicRandom.Next(18);
             var weapons = new List<CWeapon>();
             weapons.Add(weapon);
             e.Set(new CWeaponsArray { Weapons = weapons });
@@ -231,8 +225,8 @@ namespace GigglyLib.ProcGen
             {
                 Rectangle = new Rectangle
                 {
-                    X = Config.RandInt(10) * Config.TileSize,
-                    Y = Config.RandInt(10) * Config.TileSize,
+                    X = Game1.GameStateRandom.Next(10) * Config.TileSize,
+                    Y = Game1.GameStateRandom.Next(10) * Config.TileSize,
                     Height = Config.TileSize,
                     Width = Config.TileSize
                 }

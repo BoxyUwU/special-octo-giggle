@@ -27,5 +27,10 @@ namespace GigglyLib
         {
             return rand.Next(0, 2) == 1;
         }
+
+        public static float NextFloat(this Random rand)
+        {
+            return (float)rand.NextDouble();
+        }
     }
 }

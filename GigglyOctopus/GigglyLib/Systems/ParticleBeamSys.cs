@@ -35,12 +35,12 @@ namespace GigglyLib.Systems
                     ParticleManager.CreateParticle(
                         x: beam.SourceX * Config.TileSize + beam.X,
                         y: beam.SourceY * Config.TileSize + beam.Y,
-                        texture: PARTICLES[beam.RandomColours ? Config.RandInt(18) : (int)beam.Colour],
-                        deltaRotation: Config.Rand() * 0.05f,
-                        velocity: Config.Rand() * 0.02f,
-                        scale: (Config.Rand() * 0.25f) + 0.15f,
-                        transparency: (Config.Rand() * 0.2f) + 0.12f,
-                        rotation: (Config.Rand() * 0.2f) + 0.12f
+                        texture: PARTICLES[beam.RandomColours ? Game1.NonDeterministicRandom.Next(18) : (int)beam.Colour],
+                        deltaRotation: Game1.NonDeterministicRandom.NextFloat() * 0.05f,
+                        velocity: Game1.NonDeterministicRandom.NextFloat() * 0.02f,
+                        scale: (Game1.NonDeterministicRandom.NextFloat() * 0.25f) + 0.15f,
+                        transparency: (Game1.NonDeterministicRandom.NextFloat() * 0.2f) + 0.12f,
+                        rotation: (Game1.NonDeterministicRandom.NextFloat() * 0.2f) + 0.12f
                         );
 
                     beam.X += deltaX;

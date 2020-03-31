@@ -3,12 +3,7 @@ namespace GigglyLib.ProcGen
 {
     public class CAGenerator
     {
-        Random _rand;
-
-        public CAGenerator(int seed)
-        {
-            _rand = new Random(seed);
-        }
+        public CAGenerator() { }
 
         public bool[,] DoSimulationStep(bool[,] map, int iterations, int logicVersion)
         {
@@ -79,7 +74,7 @@ namespace GigglyLib.ProcGen
 
         private bool RandomPercent(int percent)
         {
-            int randomInt = _rand.Next(0, 100);
+            int randomInt = Game1.GameStateRandom.Next(0, 100);
             if (randomInt < percent) { return true; }
             return false;
         }

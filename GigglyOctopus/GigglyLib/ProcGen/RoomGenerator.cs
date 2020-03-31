@@ -19,12 +19,7 @@ namespace GigglyLib.ProcGen
 
     public class RoomGenerator
     {
-        Random _rand;
-
-        public RoomGenerator(int seed)
-        {
-            _rand = new Random(seed);
-        }
+        public RoomGenerator() { }
 
         public (List<Room> rooms, int startRoom, int endRoom) Generate(bool[,] map)
         {
@@ -57,7 +52,7 @@ namespace GigglyLib.ProcGen
                 for (int i = 0; i < rooms.Count; i++)
                     newRooms.Add(new Room(rooms[i]));
 
-                int possibility = _rand.Next(0, possibilities.Count);
+                int possibility = Game1.GameStateRandom.Next(0, possibilities.Count);
                 (start, end) = possibilities[possibility];
 
                 path = new List<Room> { newRooms[start] };
@@ -90,7 +85,7 @@ namespace GigglyLib.ProcGen
             int[,] copyCost = (int[,])cost.Clone();
             for (int i = 0; i < validLeafs.Count; i++)
             {
-                Room chosenLeaf = validLeafs[_rand.Next(0, validLeafs.Count)];
+                Room chosenLeaf = validLeafs[Game1.GameStateRandom.Next(0, validLeafs.Count)];
                 for (int j = 0; j < goalRooms.Count; j++)
                 {
                     if (CarveHallway(chosenLeaf, goalRooms[j], copyMap, copyCost))
@@ -134,7 +129,7 @@ namespace GigglyLib.ProcGen
 
             while (options.Count > 0)
             {
-                int picked = _rand.Next(0, options.Count);
+                int picked = Game1.GameStateRandom.Next(0, options.Count);
                 path.Add(roomSet[options[picked]]);
                 options.RemoveAt(picked);
 
@@ -364,9 +359,9 @@ namespace GigglyLib.ProcGen
             {
                 if (points.Count == 0)
                     break;
-                var spawnPoint = points[_rand.Next(0, points.Count)];
-                int width = _rand.Next(7, 13);
-                int height = _rand.Next(7, 13);
+                var spawnPoint = points[Game1.GameStateRandom.Next(0, points.Count)];
+                int width = Game1.GameStateRandom.Next(7, 13);
+                int height = Game1.GameStateRandom.Next(7, 13);
                 if (CreateRoom(spawnPoint.x, spawnPoint.y, width, height, map, points, out Room room))
                     rooms.Add(room);
             }
@@ -408,8 +403,8 @@ namespace GigglyLib.ProcGen
             var output = new List<(int x, int y)>();
             for (int i = 0; i < 500; i++)
             {
-                double a = _rand.NextDouble();
-                double b = _rand.NextDouble();
+                double a = Game1.GameStateRandom.NextDouble();
+                double b = Game1.GameStateRandom.NextDouble();
                 if (b < a)
                 {
                     double swap = a;

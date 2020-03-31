@@ -39,7 +39,7 @@ namespace GigglyLib.Systems
                     if (!Game1.Tiles.Contains((pos.X, pos.Y - 1)))
                         entity.Set(new CMoveAction { DistY = -1 });
                 }
-                if (keyState.IsKeyDown(Keys.S) || keyState.IsKeyDown(Keys.Down))
+                if ((keyState.IsKeyDown(Keys.S) && Game1.StoppedExportingReplay) || keyState.IsKeyDown(Keys.Down))
                 {
                     if (!Game1.Tiles.Contains((pos.X, pos.Y + 1)))
                         entity.Set(new CMoveAction { DistY = 1 });
