@@ -9,19 +9,13 @@ namespace GigglyLib.Systems
 {
     public class ParticleSpawnerSys : AEntitySystem<float>
     {
-        EntitySet pooledParticleSet;
         public ParticleSpawnerSys()
             : base(Game1.world.GetEntities().With<CParticleSpawner>().With<CSprite>().AsSet())
-        {
-            pooledParticleSet = Game1.world.GetEntities().With<CPartPooled>().AsSet();
-        }
+        { }
 
         protected override void Update(float state, in Entity entity)
         {
             ref var sprite = ref entity.Get<CSprite>();
-
-            var particle = pooledParticleSet.GetEntities().Length > 0 ? pooledParticleSet.GetEntities()[0] : Game1.world.CreateEntity();
-            particle.Remove<CPartPooled>();
 
             float impact = entity.Get<CParticleSpawner>().Impact;
 
@@ -58,17 +52,17 @@ namespace GigglyLib.Systems
                 }
             }
 
-            particle.Set(new CSprite {
-                Texture = spawner.RandomColours ? Game1.PARTICLES[Config.RandInt(18)] : texture,
-                Rotation = Config.Rand() * 2 * (float)Math.PI,
-                Transparency = (Config.Rand() * 0.2f) + 0.12f,
-                X = x,
-                Y = y,
-                Depth = depth
-            });
-
-            particle.Set(new CScalable { Scale = (Config.Rand() * 0.4f) + 0.3f });
-            particle.Set(new CParticle { DeltaRotation = Config.Rand() * 0.05f, Velocity = Config.Rand() * 0.02f * impact });
+            ParticleManager.CreateParticle(
+                x: x,
+                y: y,
+                texture: spawner.RandomColours ? Game1.PARTICLES[Config.RandInt(18)] : texture,
+                deltaRotation: Config.Rand() * 0.05f,
+                velocity: Config.Rand() * 0.02f * impact,
+                scale: (Config.Rand() * 0.4f) + 0.3f,
+                depth: depth,
+                transparency: (Config.Rand() * 0.2f) + 0.12f,
+                rotation: Config.Rand() * 2 * (float)Math.PI
+                );
 
             base.Update(state, entity);
         }

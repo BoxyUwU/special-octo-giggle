@@ -42,6 +42,17 @@ namespace GigglyLib
         public static CWeaponsArray startingWeapons = new CWeaponsArray()
         {
             Weapons = new List<CWeapon> {
+                Config.Weapons["Nuke"],
+                Config.Weapons["Nuke"],
+                Config.Weapons["Nuke"],
+                Config.Weapons["Nuke"],
+                Config.Weapons["Nuke"],
+                Config.Weapons["Nuke"],
+                Config.Weapons["Nuke"],
+                Config.Weapons["Nuke"],
+                Config.Weapons["Nuke"],
+                Config.Weapons["Nuke"],
+                Config.Weapons["Nuke"],
             }
         };
 
@@ -228,7 +239,8 @@ namespace GigglyLib
         {
             drawSys = new SequentialSystem<float>(
                 new SpriteAnimSys(),
-                new RenderingSys(spriteBatch)
+                new RenderingSys(spriteBatch),
+                new ParticleRenderSys(spriteBatch)
             );
 
             particleSeqSys = new SequentialSystem<float>(
@@ -477,19 +489,17 @@ namespace GigglyLib
                     int times = 10;
                     while(times --> 0)
                     {
-                        var particle = world.CreateEntity();
-                        particle.Set(new CSprite
-                        {
-                            Texture = PARTICLES[i],
-                            Rotation = Config.Rand() * 2 * (float)Math.PI,
-                            Transparency = (Config.Rand() * 0.2f) + 0.12f,
-                            X = sprite.X,
-                            Y = sprite.Y,
-                            Depth = 0.3f
-                        });
-
-                        particle.Set(new CScalable { Scale = (Config.Rand() * 0.4f) + 0.3f });
-                        particle.Set(new CParticle { DeltaRotation = Config.Rand() * 0.05f, Velocity = Config.Rand() * 0.1f + 0.1f });
+                        ParticleManager.CreateParticle(
+                            x: sprite.X,
+                            y: sprite.Y,
+                            texture: PARTICLES[i],
+                            deltaRotation: Config.Rand() * 0.0f,
+                            velocity: Config.Rand() * 0.1f + 0.1f,
+                            scale: (Config.Rand() * 0.4f) + 0.3f,
+                            depth: 0.3f,
+                            transparency: (Config.Rand() * 0.2f) + 0.12f,
+                            rotation: Config.Rand() * 2 * (float)Math.PI
+                            );
                     }
                 }
 

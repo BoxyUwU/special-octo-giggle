@@ -32,18 +32,16 @@ namespace GigglyLib.Systems
                 float tracer = 0;
                 while (tracer < distH / 6)
                 {
-                    var particle = Game1.world.CreateEntity();
-
-                    particle.Set(new CSprite
-                    {
-                        Texture = PARTICLES[beam.RandomColours ? Config.RandInt(18) : (int) beam.Colour],
-                        Rotation = Config.Rand() * 2 * (float)Math.PI,
-                        Transparency = (Config.Rand() * 0.2f) + 0.12f,
-                        X = beam.SourceX * Config.TileSize + beam.X,
-                        Y = beam.SourceY * Config.TileSize + beam.Y
-                    });
-                    particle.Set(new CScalable { Scale = (Config.Rand() * 0.25f) + 0.15f });
-                    particle.Set(new CParticle { DeltaRotation = Config.Rand() * 0.05f, Velocity = Config.Rand() * 0.02f });
+                    ParticleManager.CreateParticle(
+                        x: beam.SourceX * Config.TileSize + beam.X,
+                        y: beam.SourceY * Config.TileSize + beam.Y,
+                        texture: PARTICLES[beam.RandomColours ? Config.RandInt(18) : (int)beam.Colour],
+                        deltaRotation: Config.Rand() * 0.05f,
+                        velocity: Config.Rand() * 0.02f,
+                        scale: (Config.Rand() * 0.25f) + 0.15f,
+                        transparency: (Config.Rand() * 0.2f) + 0.12f,
+                        rotation: (Config.Rand() * 0.2f) + 0.12f
+                        );
 
                     beam.X += deltaX;
                     beam.Y += deltaY;

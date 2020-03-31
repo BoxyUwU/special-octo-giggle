@@ -10,12 +10,7 @@ namespace GigglyLib.Systems
 {
     public class ParticleSys : ISystem<float>
     {
-        List<Entity> toPool = new List<Entity>();
-        EntitySet entitySet;
-        public ParticleSys()
-        {
-            entitySet = Game1.world.GetEntities().With<CParticle>().With<CSprite>().Without<CPartPooled>().AsSet();
-        }
+        public ParticleSys() { }
 
         public bool IsEnabled { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -23,37 +18,21 @@ namespace GigglyLib.Systems
 
         public void Update(float state)
         {
-            var set = entitySet.GetEntities();
-            for (int i = 0; i < set.Length; i++)
+            Particle p;
+            for (ulong i = 0; i < ParticleManager.EndIndex; i++)
             {
-                var entity = set[i];
-                if (entity.Has<CScalable>())
-                {
-                    ref var scale = ref entity.Get<CScalable>();
-                    scale.Scale *= 0.99f;
-                }
+                p = ParticleManager.Particles[i];
 
-                ref var sprite = ref entity.Get<CSprite>();
-                ref var particle = ref entity.Get<CParticle>();
-                sprite.Transparency *= 1.03f;
-                sprite.Rotation += particle.DeltaRotation;
-                sprite.X += (float)(Math.Cos(sprite.Rotation) * particle.Velocity) * Config.TileSize;
-                sprite.Y += (float)(Math.Sin(sprite.Rotation) * particle.Velocity) * Config.TileSize;
+                p.Scale *= 0.99f;
+                p.Transparency *= 1.03f;
+                p.Rotation += p.DeltaRotation;
+                p.X += (float)(Math.Cos(p.Rotation) * p.Velocity) * Config.TileSize;
+                p.Y += (float)(Math.Sin(p.Rotation) * p.Velocity) * Config.TileSize;
 
-                if (sprite.Transparency >= 1.0f)
-                {
-                    toPool.Add(entity);
-                }
+                ParticleManager.Particles[i] = p;
+                if (p.Transparency >= 1)
+                    ParticleManager.FreeParticle(i);
             }
-
-            foreach (var e in toPool)
-            {
-                e.Remove<CSprite>();
-                e.Remove<CParticle>();
-                e.Remove<CScalable>();
-                e.Set<CPartPooled>();
-            }
-            toPool.Clear();
         }
     }
 }
