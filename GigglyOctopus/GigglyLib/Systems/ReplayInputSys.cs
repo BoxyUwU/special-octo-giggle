@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DefaultEcs.System;
 using GigglyLib.Components;
+using Microsoft.Xna.Framework.Input;
 
 namespace GigglyLib.Systems
 {
@@ -17,6 +18,10 @@ namespace GigglyLib.Systems
         public void Update(float state)
         {
             if (Game1.ReplayCounter == Game1.ReplayData.Count-1 && (byte)Game1.ReplayIntraByteCounter == Game1.ReplayData[4])
+                return;
+
+            var keyState = Keyboard.GetState();
+            if (!keyState.IsKeyDown(Keys.Space))
                 return;
 
             byte data = Game1.ReplayData[Game1.ReplayCounter];

@@ -62,6 +62,8 @@ namespace GigglyLib
             }
         };
 
+        private static int _seed;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         public static World world = new World();
@@ -435,13 +437,19 @@ namespace GigglyLib
             {
                 if (StoppedLoadingReplay)
                 {
+                    world.Dispose();
                     IsReplayMode = true;
                     startingWeapons = new CWeaponsArray { Weapons = new List<CWeapon>() };
                     ReplayData = new List<byte>();
                     ReplayIntraByteCounter = 0;
                     ReplayCounter = 5;
+                    playExplosion = false;
+                    warningStop = false;
+                    currentRoundState = 0;
                     stageCount = 0;
-                    GameState = GameState.GameOver;
+                    ParticleManager.EndIndex = 0;
+                    ParticleManager.Particles = new Particle[ParticleManager.Particles.Length];
+                    GameState = GameState.Starting;
                 }
                 StoppedLoadingReplay = false;
             }
@@ -481,20 +489,20 @@ namespace GigglyLib
                         fs.Read(data, 0, (int)fs.Length);
                         ReplayData = new List<byte>(data);
 
-                        int seed = BitConverter.ToInt32(data, 0);
-                        Game1.GameStateRandom = new Random(seed);
-                        Game1.NonDeterministicRandom = new Random(seed);
+                        _seed = BitConverter.ToInt32(data, 0);
+                        Game1.GameStateRandom = new Random(_seed);
+                        Game1.NonDeterministicRandom = new Random(_seed);
 
-                        Console.WriteLine($"seed: {seed}");
-                        DebugOutput += "SEED: " + seed.ToString();
+                        Console.WriteLine($"seed: {_seed}");
+                        DebugOutput += "SEED: " + _seed.ToString();
                     }
                     else
                     {
-                        int seed = new Random().Next();
-                        Game1.GameStateRandom = new Random(seed);
-                        Game1.NonDeterministicRandom = new Random(seed);
+                        _seed = new Random().Next();
+                        Game1.GameStateRandom = new Random(_seed);
+                        Game1.NonDeterministicRandom = new Random(_seed);
 
-                        foreach (var data in BitConverter.GetBytes(seed))
+                        foreach (var data in BitConverter.GetBytes(_seed))
                         {
                             ReplayData.Add(data);
                         }
@@ -503,8 +511,8 @@ namespace GigglyLib
                         // The byte for actual data storage
                         ReplayData.Add(0);
 
-                        Console.WriteLine($"seed: {seed}");
-                        DebugOutput += "SEED: " + seed.ToString();
+                        Console.WriteLine($"seed: {_seed}");
+                        DebugOutput += "SEED: " + _seed.ToString();
                     }
                 }
 

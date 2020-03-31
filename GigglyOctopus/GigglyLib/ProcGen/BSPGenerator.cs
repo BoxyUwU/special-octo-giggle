@@ -18,11 +18,7 @@ namespace GigglyLib.ProcGen
 
     public class BSPGenerator
     {
-        Random _rand;
-        public BSPGenerator(int seed)
-        {
-            _rand = new Random(seed);
-        }
+        public BSPGenerator() { }
 
         public (BSPSplit root, List<BSPSplit> leafs) Generate(bool[,] tiles, int splitThreshold)
         {
